@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Admin Panel | AsiSeguros</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+
+<div class="admin-layout">
+  <!-- ========== SIDEBAR ========== -->
+  <aside class="admin-sidebar">
+    <div class="sidebar-header">
+      <div class="logo-text">Asi<span>Seguros</span></div>
+      <small>Panel de Administración</small>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="sidebar-section-label">General</div>
+      <a href="#dashboard" data-tab="dashboard" class="active"><i class="fas fa-gauge-high"></i> Dashboard</a>
+      <a href="#site-info" data-tab="site-info"><i class="fas fa-globe"></i> Info del sitio</a>
+
+      <div class="sidebar-section-label">Contenido</div>
+      <a href="#hero-edit" data-tab="hero-edit"><i class="fas fa-image"></i> Hero / Banner</a>
+      <a href="#about-edit" data-tab="about-edit"><i class="fas fa-info-circle"></i> Nosotros</a>
+      <a href="#stats-edit" data-tab="stats-edit"><i class="fas fa-chart-bar"></i> Estadísticas</a>
+      <a href="#why-edit" data-tab="why-edit"><i class="fas fa-star"></i> ¿Por qué elegirnos?</a>
+      <a href="#cta-edit" data-tab="cta-edit"><i class="fas fa-bullhorn"></i> CTA</a>
+      <a href="#testimonials-edit" data-tab="testimonials-edit"><i class="fas fa-comments"></i> Testimonios</a>
+
+      <div class="sidebar-section-label">Configuración</div>
+      <a href="#modules" data-tab="modules"><i class="fas fa-puzzle-piece"></i> Módulos</a>
+      <a href="#insurance" data-tab="insurance"><i class="fas fa-shield-halved"></i> Tipos de seguro</a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <a href="index.html" target="_blank"><i class="fas fa-external-link-alt"></i> Ver sitio web</a>
+    </div>
+  </aside>
+
+  <!-- ========== MAIN ========== -->
+  <main class="admin-main">
+    <!-- Top Bar -->
+    <div class="admin-topbar">
+      <div style="display:flex;align-items:center;gap:12px">
+        <button class="mobile-menu-btn"><i class="fas fa-bars"></i></button>
+        <h1 id="pageTitle">Dashboard</h1>
+      </div>
+      <div class="topbar-actions">
+        <button class="btn-admin btn-reset btn-sm-admin"><i class="fas fa-undo"></i> Restaurar</button>
+        <button class="btn-admin btn-preview btn-sm-admin"><i class="fas fa-eye"></i> Vista previa</button>
+        <button class="btn-admin btn-save"><i class="fas fa-save"></i> Guardar cambios</button>
+      </div>
+    </div>
+
+    <div class="admin-content">
+
+      <!-- ==================== DASHBOARD ==================== -->
+      <div class="tab-panel active" id="dashboard">
+        <div class="dashboard-stats">
+          <div class="dash-stat-card">
+            <div class="dash-stat-icon blue"><i class="fas fa-puzzle-piece"></i></div>
+            <div class="dash-stat-text">
+              <h4 id="dashActiveModules">0/0</h4>
+              <span>Módulos activos</span>
+            </div>
+          </div>
+          <div class="dash-stat-card">
+            <div class="dash-stat-icon green"><i class="fas fa-shield-halved"></i></div>
+            <div class="dash-stat-text">
+              <h4 id="dashActiveInsurance">0</h4>
+              <span>Categorías de seguro</span>
+            </div>
+          </div>
+          <div class="dash-stat-card">
+            <div class="dash-stat-icon teal"><i class="fas fa-list-check"></i></div>
+            <div class="dash-stat-text">
+              <h4 id="dashActiveSubtypes">0</h4>
+              <span>Subtipos activos</span>
+            </div>
+          </div>
+          <div class="dash-stat-card">
+            <div class="dash-stat-icon orange"><i class="fas fa-comments"></i></div>
+            <div class="dash-stat-text">
+              <h4 id="dashTestimonials">0</h4>
+              <span>Testimonios</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <h3><i class="fas fa-rocket"></i> Guía rápida</h3>
+          </div>
+          <div class="admin-card-body">
+            <p style="margin-bottom:16px;color:var(--admin-text-light)">Bienvenido al panel de administración de AsiSeguros. Desde aquí puedes gestionar todo el contenido de tu sitio web.</p>
+            <div class="form-grid">
+              <div style="padding:16px;border:1px solid var(--admin-border);border-radius:8px">
+                <strong style="color:var(--admin-primary);font-size:0.9rem"><i class="fas fa-edit" style="color:var(--admin-accent);margin-right:6px"></i> Editar contenido</strong>
+                <p style="font-size:0.82rem;color:var(--admin-text-light);margin-top:6px;margin-bottom:0">Modifica textos del hero, nosotros, estadísticas, testimonios y más desde las secciones del menú lateral.</p>
+              </div>
+              <div style="padding:16px;border:1px solid var(--admin-border);border-radius:8px">
+                <strong style="color:var(--admin-primary);font-size:0.9rem"><i class="fas fa-toggle-on" style="color:var(--admin-accent);margin-right:6px"></i> Activar / Desactivar</strong>
+                <p style="font-size:0.82rem;color:var(--admin-text-light);margin-top:6px;margin-bottom:0">Activa o desactiva módulos completos y tipos de seguros específicos desde Módulos y Tipos de seguro.</p>
+              </div>
+              <div style="padding:16px;border:1px solid var(--admin-border);border-radius:8px">
+                <strong style="color:var(--admin-primary);font-size:0.9rem"><i class="fas fa-eye" style="color:var(--admin-accent);margin-right:6px"></i> Vista previa</strong>
+                <p style="font-size:0.82rem;color:var(--admin-text-light);margin-top:6px;margin-bottom:0">Guarda los cambios y haz clic en "Vista previa" para ver cómo se ve tu sitio con la nueva configuración.</p>
+              </div>
+              <div style="padding:16px;border:1px solid var(--admin-border);border-radius:8px">
+                <strong style="color:var(--admin-primary);font-size:0.9rem"><i class="fas fa-undo" style="color:var(--admin-accent);margin-right:6px"></i> Restaurar</strong>
+                <p style="font-size:0.82rem;color:var(--admin-text-light);margin-top:6px;margin-bottom:0">Si algo sale mal, usa "Restaurar" para volver a la configuración por defecto.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== SITE INFO ==================== -->
+      <div class="tab-panel" id="site-info">
+        <div class="admin-card">
+          <div class="admin-card-header"><h3><i class="fas fa-phone-alt"></i> Información de contacto</h3></div>
+          <div class="admin-card-body">
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Teléfono</label>
+                <input type="text" id="sitePhone">
+              </div>
+              <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="siteEmail">
+              </div>
+              <div class="form-group">
+                <label>WhatsApp <span class="label-hint">(solo números, ej: 573173712260)</span></label>
+                <input type="text" id="siteWhatsapp">
+              </div>
+              <div class="form-group">
+                <label>Horario de atención</label>
+                <input type="text" id="siteSchedule">
+              </div>
+              <div class="form-group" style="grid-column:1/-1">
+                <label>Ubicación / Cobertura</label>
+                <input type="text" id="siteLocation">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="admin-card">
+          <div class="admin-card-header"><h3><i class="fas fa-share-alt"></i> Redes sociales</h3></div>
+          <div class="admin-card-body">
+            <div class="form-grid">
+              <div class="form-group">
+                <label><i class="fab fa-facebook" style="color:#1877f2;margin-right:4px"></i> Facebook</label>
+                <input type="url" id="siteFacebook">
+              </div>
+              <div class="form-group">
+                <label><i class="fab fa-instagram" style="color:#e4405f;margin-right:4px"></i> Instagram</label>
+                <input type="url" id="siteInstagram">
+              </div>
+              <div class="form-group">
+                <label><i class="fab fa-linkedin" style="color:#0077b5;margin-right:4px"></i> LinkedIn</label>
+                <input type="url" id="siteLinkedin">
+              </div>
+              <div class="form-group">
+                <label><i class="fab fa-tiktok" style="margin-right:4px"></i> TikTok</label>
+                <input type="url" id="siteTiktok">
+              </div>
+              <div class="form-group" style="grid-column:1/-1">
+                <label><i class="fab fa-youtube" style="color:#ff0000;margin-right:4px"></i> YouTube</label>
+                <input type="url" id="siteYoutube">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== HERO ==================== -->
+      <div class="tab-panel" id="hero-edit">
+        <div class="admin-card">
+          <div class="admin-card-header"><h3><i class="fas fa-image"></i> Hero / Banner principal</h3></div>
+          <div class="admin-card-body">
+            <div class="form-grid form-grid-1">
+              <div class="form-group">
+                <label>Badge superior</label>
+                <input type="text" id="heroBadge">
+              </div>
+              <div class="form-group">
+                <label>Título principal <span class="label-hint">(usa &lt;span class="highlight"&gt;texto&lt;/span&gt; para resaltar)</span></label>
+                <textarea id="heroTitle" rows="2"></textarea>
+              </div>
+              <div class="form-group">
+                <label>Subtítulo / Descripción</label>
+                <textarea id="heroSubtitle" rows="3"></textarea>
+              </div>
+            </div>
+            <div class="form-grid" style="margin-top:16px">
+              <div class="form-group">
+                <label>Texto botón primario</label>
+                <input type="text" id="heroCtaPrimary">
+              </div>
+              <div class="form-group">
+                <label>Texto botón secundario</label>
+                <input type="text" id="heroCtaSecondary">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="admin-card">
+          <div class="admin-card-header"><h3><i class="fas fa-hashtag"></i> Estadísticas del hero</h3></div>
+          <div class="admin-card-body">
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Stat 1 - Número</label>
+                <input type="text" id="heroStat1Number">
+              </div>
+              <div class="form-group">
+                <label>Stat 1 - Etiqueta</label>
+                <input type="text" id="heroStat1Label">
+              </div>
+              <div class="form-group">
+                <label>Stat 2 - Número</label>
+                <input type="text" id="heroStat2Number">
+              </div>
+              <div class="form-group">
+                <label>Stat 2 - Etiqueta</label>
+                <input type="text" id="heroStat2Label">
+              </div>
+              <div class="form-group">
+                <label>Stat 3 - Número</label>
+                <input type="text" id="heroStat3Number">
+              </div>
+              <div class="form-group">
+                <label>Stat 3 - Etiqueta</label>
+                <input type="text" id="heroStat3Label">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== ABOUT ==================== -->
+      <div class="tab-panel" id="about-edit">
+        <div class="admin-card">
+          <div class="admin-card-header"><h3><i class="fas fa-info-circle"></i> Sección Nosotros</h3></div>
+          <div class="admin-card-body">
+            <div class="form-grid form-grid-1">
+              <div class="form-group">
+                <label>Subtítulo</label>
+                <input type="text" id="aboutSubtitle">
+              </div>
+              <div class="form-group">
+                <label>Título</label>
+                <input type="text" id="aboutTitle">
+              </div>
+              <div class="form-group">
+                <label>Párrafo 1 <span class="label-hint">(acepta HTML básico: &lt;strong&gt;, &lt;em&gt;)</span></label>
+                <textarea id="aboutParagraph1" rows="3"></textarea>
+              </div>
+              <div class="form-group">
+                <label>Párrafo 2</label>
+                <textarea id="aboutParagraph2" rows="3"></textarea>
+              </div>
+            </div>
+            <div class="form-grid" style="margin-top:16px">
+              <div class="form-group">
+                <label>Badge experiencia - Número</label>
+                <input type="text" id="aboutExpNumber">
+              </div>
+              <div class="form-group">
+                <label>Badge experiencia - Texto</label>
+                <input type="text" id="aboutExpText">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== STATS ==================== -->
+      <div class="tab-panel" id="stats-edit">
+        <div class="admin-card">
+          <div class="admin-card-header"><h3><i class="fas fa-chart-bar"></i> Contadores / Estadísticas</h3></div>
+          <div class="admin-card-body">
+            <div class="form-grid">
+              <div class="form-group"><label>Stat 1 - Número</label><input type="number" id="statsNum1"></div>
+              <div class="form-group"><label>Stat 1 - Sufijo</label><input type="text" id="statsSuffix1" placeholder="ej: +, %"></div>
+              <div class="form-group" style="grid-column:1/-1"><label>Stat 1 - Etiqueta</label><input type="text" id="statsLabel1"></div>
+            </div>
+            <hr style="border:none;border-top:1px solid var(--admin-border);margin:20px 0">
+            <div class="form-grid">
+              <div class="form-group"><label>Stat 2 - Número</label><input type="number" id="statsNum2"></div>
+              <div class="form-group"><label>Stat 2 - Sufijo</label><input type="text" id="statsSuffix2"></div>
+              <div class="form-group" style="grid-column:1/-1"><label>Stat 2 - Etiqueta</label><input type="text" id="statsLabel2"></div>
+            </div>
+            <hr style="border:none;border-top:1px solid var(--admin-border);margin:20px 0">
+            <div class="form-grid">
+              <div class="form-group"><label>Stat 3 - Número</label><input type="number" id="statsNum3"></div>
+              <div class="form-group"><label>Stat 3 - Sufijo</label><input type="text" id="statsSuffix3"></div>
+              <div class="form-group" style="grid-column:1/-1"><label>Stat 3 - Etiqueta</label><input type="text" id="statsLabel3"></div>
+            </div>
+            <hr style="border:none;border-top:1px solid var(--admin-border);margin:20px 0">
+            <div class="form-grid">
+              <div class="form-group"><label>Stat 4 - Número</label><input type="number" id="statsNum4"></div>
+              <div class="form-group"><label>Stat 4 - Sufijo</label><input type="text" id="statsSuffix4"></div>
+              <div class="form-group" style="grid-column:1/-1"><label>Stat 4 - Etiqueta</label><input type="text" id="statsLabel4"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== WHY CHOOSE US ==================== -->
+      <div class="tab-panel" id="why-edit">
+        <div class="admin-card">
+          <div class="admin-card-header"><h3><i class="fas fa-star"></i> ¿Por qué elegirnos?</h3></div>
+          <div class="admin-card-body">
+            <div class="form-grid form-grid-1">
+              <div class="form-group"><label>Subtítulo</label><input type="text" id="whySubtitle"></div>
+              <div class="form-group"><label>Título</label><input type="text" id="whyTitle"></div>
+              <div class="form-group"><label>Descripción</label><textarea id="whyDescription" rows="2"></textarea></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="admin-card">
+          <div class="admin-card-header"><h3><i class="fas fa-th-large"></i> Tarjetas de diferenciales</h3></div>
+          <div class="admin-card-body">
+            <div class="testimonial-edit-card">
+              <h4 style="margin-bottom:12px;color:var(--admin-primary)"><i class="fas fa-1" style="color:var(--admin-accent);margin-right:6px"></i> Tarjeta 1</h4>
+              <div class="form-grid">
+                <div class="form-group"><label>Icono <span class="label-hint">(clase FontAwesome)</span></label><input type="text" id="whyIcon0"></div>
+                <div class="form-group"><label>Título</label><input type="text" id="whyCardTitle0"></div>
+              </div>
+              <div class="form-group" style="margin-top:12px"><label>Texto</label><textarea id="whyCardText0" rows="2"></textarea></div>
+            </div>
+            <div class="testimonial-edit-card">
+              <h4 style="margin-bottom:12px;color:var(--admin-primary)"><i class="fas fa-2" style="color:var(--admin-accent);margin-right:6px"></i> Tarjeta 2</h4>
+              <div class="form-grid">
+                <div class="form-group"><label>Icono</label><input type="text" id="whyIcon1"></div>
+                <div class="form-group"><label>Título</label><input type="text" id="whyCardTitle1"></div>
+              </div>
+              <div class="form-group" style="margin-top:12px"><label>Texto</label><textarea id="whyCardText1" rows="2"></textarea></div>
+            </div>
+            <div class="testimonial-edit-card">
+              <h4 style="margin-bottom:12px;color:var(--admin-primary)"><i class="fas fa-3" style="color:var(--admin-accent);margin-right:6px"></i> Tarjeta 3</h4>
+              <div class="form-grid">
+                <div class="form-group"><label>Icono</label><input type="text" id="whyIcon2"></div>
+                <div class="form-group"><label>Título</label><input type="text" id="whyCardTitle2"></div>
+              </div>
+              <div class="form-group" style="margin-top:12px"><label>Texto</label><textarea id="whyCardText2" rows="2"></textarea></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== CTA ==================== -->
+      <div class="tab-panel" id="cta-edit">
+        <div class="admin-card">
+          <div class="admin-card-header"><h3><i class="fas fa-bullhorn"></i> Sección CTA</h3></div>
+          <div class="admin-card-body">
+            <div class="form-grid form-grid-1">
+              <div class="form-group"><label>Título</label><input type="text" id="ctaTitle"></div>
+              <div class="form-group"><label>Descripción</label><textarea id="ctaDescription" rows="2"></textarea></div>
+            </div>
+            <div class="form-grid" style="margin-top:16px">
+              <div class="form-group"><label>Texto botón primario</label><input type="text" id="ctaBtnPrimary"></div>
+              <div class="form-group"><label>Texto botón secundario</label><input type="text" id="ctaBtnSecondary"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== TESTIMONIALS ==================== -->
+      <div class="tab-panel" id="testimonials-edit">
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <h3><i class="fas fa-comments"></i> Testimonios</h3>
+            <button class="btn-admin btn-save btn-sm-admin" onclick="addTestimonial()"><i class="fas fa-plus"></i> Agregar</button>
+          </div>
+          <div class="admin-card-body" id="testimonialsEditor"></div>
+        </div>
+      </div>
+
+      <!-- ==================== MODULES ==================== -->
+      <div class="tab-panel" id="modules">
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <h3><i class="fas fa-puzzle-piece"></i> Módulos del sitio</h3>
+            <span style="font-size:0.78rem;color:var(--admin-text-light)">Activa o desactiva secciones completas</span>
+          </div>
+          <div class="toggle-list" id="modulesToggleList"></div>
+        </div>
+      </div>
+
+      <!-- ==================== INSURANCE TYPES ==================== -->
+      <div class="tab-panel" id="insurance">
+        <div id="insurancePanel"></div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<script src="js/admin.js"></script>
+</body>
+</html>
