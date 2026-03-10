@@ -53,9 +53,9 @@
         <h1 id="pageTitle">Dashboard</h1>
       </div>
       <div class="topbar-actions">
-        <button class="btn-admin btn-reset btn-sm-admin"><i class="fas fa-undo"></i> Restaurar</button>
-        <button class="btn-admin btn-preview btn-sm-admin"><i class="fas fa-eye"></i> Vista previa</button>
-        <button class="btn-admin btn-save"><i class="fas fa-save"></i> Guardar cambios</button>
+        <button class="btn-admin btn-reset btn-sm-admin" id="btnReset"><i class="fas fa-undo"></i> Restaurar</button>
+        <button class="btn-admin btn-preview btn-sm-admin" id="btnPreview"><i class="fas fa-eye"></i> Vista previa</button>
+        <button class="btn-admin btn-save" id="btnSaveMain"><i class="fas fa-save"></i> Guardar cambios</button>
       </div>
     </div>
 
@@ -381,7 +381,7 @@
         <div class="admin-card">
           <div class="admin-card-header">
             <h3><i class="fas fa-comments"></i> Testimonios</h3>
-            <button class="btn-admin btn-save btn-sm-admin" onclick="addTestimonial()"><i class="fas fa-plus"></i> Agregar</button>
+            <button class="btn-admin btn-sm-admin" id="btnAddTestimonial" style="background:var(--admin-accent);color:#fff;border-color:var(--admin-accent)"><i class="fas fa-plus"></i> Agregar</button>
           </div>
           <div class="admin-card-body" id="testimonialsEditor"></div>
         </div>

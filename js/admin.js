@@ -1,12 +1,11 @@
 /* ========================================
-   AsiSeguros - Admin Panel Logic
+   AsiSeguros - Admin Panel Logic (v2)
    ======================================== */
 
-const STORAGE_KEY = 'asiseguros_admin';
+var STORAGE_KEY = 'asiseguros_admin';
 
-// Default configuration
-const DEFAULT_CONFIG = {
-  // -- Site Info --
+/* ---------- Default Config ---------- */
+var DEFAULT_CONFIG = {
   site: {
     name: 'AsiSeguros',
     phone: '+57 317 371 2260',
@@ -20,8 +19,6 @@ const DEFAULT_CONFIG = {
     tiktok: 'https://www.tiktok.com/@asiseguros',
     youtube: 'https://www.youtube.com/@asiseguros'
   },
-
-  // -- Hero --
   hero: {
     badge: 'Agencia de Seguros en Colombia',
     title: 'Protegemos <span class="highlight">lo que más importa</span> para ti',
@@ -35,8 +32,6 @@ const DEFAULT_CONFIG = {
     stat3Number: '10+',
     stat3Label: 'Años'
   },
-
-  // -- About --
   about: {
     subtitle: 'Sobre nosotros',
     title: 'Tu tranquilidad es nuestro compromiso',
@@ -53,16 +48,12 @@ const DEFAULT_CONFIG = {
       'Asesoría sin costo'
     ]
   },
-
-  // -- Stats --
   stats: {
     stat1: { number: 37000, suffix: '+', label: 'Clientes protegidos' },
     stat2: { number: 15, suffix: '+', label: 'Aseguradoras aliadas' },
     stat3: { number: 10, suffix: '+', label: 'Años de experiencia' },
     stat4: { number: 98, suffix: '%', label: 'Satisfacción del cliente' }
   },
-
-  // -- Why Choose Us --
   why: {
     subtitle: 'Nuestros diferenciales',
     title: '¿Por qué elegir AsiSeguros?',
@@ -73,15 +64,11 @@ const DEFAULT_CONFIG = {
       { icon: 'fas fa-handshake-angle', title: 'Acompañamiento Permanente', text: 'No desaparecemos después de la venta. Estamos contigo en cada renovación, ajuste y momento que necesites.' }
     ]
   },
-
-  // -- Testimonials --
   testimonials: [
     { name: 'Carlos Martínez', role: 'Gerente General, LogiTransport S.A.S.', initials: 'CM', text: 'AsiSeguros nos ayudó a encontrar la póliza perfecta para nuestra empresa. Su asesoría fue clave para proteger nuestros activos con la mejor relación costo-beneficio.' },
     { name: 'Laura Rodríguez', role: 'Cliente particular', initials: 'LR', text: 'Excelente acompañamiento en todo el proceso. Cuando tuve un siniestro con mi vehículo, me guiaron paso a paso hasta la resolución. Totalmente recomendados.' },
     { name: 'Andrés Peña', role: 'Director Financiero, Constructora Altus', initials: 'AP', text: 'Llevamos más de 5 años con AsiSeguros y su servicio siempre es impecable. Nos asesoran de manera honesta y transparente, sin presionar ventas innecesarias.' }
   ],
-
-  // -- Modules Toggle --
   modules: {
     topbar: { enabled: true, label: 'Barra superior', description: 'Teléfono, email y redes sociales' },
     hero: { enabled: true, label: 'Hero / Banner principal', description: 'Sección principal con CTA' },
@@ -96,8 +83,6 @@ const DEFAULT_CONFIG = {
     contact: { enabled: true, label: 'Formulario de contacto', description: 'Formulario de cotización' },
     whatsappFloat: { enabled: true, label: 'Botón flotante WhatsApp', description: 'Botón fijo en esquina inferior' }
   },
-
-  // -- Insurance Types --
   insuranceTypes: {
     personas: {
       enabled: true,
@@ -151,8 +136,6 @@ const DEFAULT_CONFIG = {
       }
     }
   },
-
-  // -- CTA --
   ctaSection: {
     title: '¿Listo para proteger lo que más importa?',
     description: 'Cotiza tu seguro en minutos. Nuestro equipo de asesores está listo para ayudarte a encontrar la cobertura ideal.',
@@ -161,121 +144,270 @@ const DEFAULT_CONFIG = {
   }
 };
 
-// ==========================================
-// STORAGE
-// ==========================================
-function loadConfig() {
-  const saved = localStorage.getItem(STORAGE_KEY);
-  if (saved) {
-    try {
-      return deepMerge(JSON.parse(JSON.stringify(DEFAULT_CONFIG)), JSON.parse(saved));
-    } catch {
-      return JSON.parse(JSON.stringify(DEFAULT_CONFIG));
-    }
-  }
-  return JSON.parse(JSON.stringify(DEFAULT_CONFIG));
+/* ==========================================
+   HELPERS
+   ========================================== */
+function escAttr(str) {
+  if (typeof str !== 'string') return '';
+  return str.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
-function saveConfig(config) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(config));
+function escHTML(str) {
+  if (typeof str !== 'string') return '';
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function setVal(id, value) {
+  var el = document.getElementById(id);
+  if (el) el.value = (value !== undefined && value !== null) ? value : '';
+}
+
+function getVal(id) {
+  var el = document.getElementById(id);
+  return el ? el.value : '';
+}
+
+function deepClone(obj) {
+  return JSON.parse(JSON.stringify(obj));
 }
 
 function deepMerge(target, source) {
-  for (const key in source) {
-    if (source[key] && typeof source[key] === 'object' && !Array.isArray(source[key])) {
-      if (!target[key]) target[key] = {};
-      deepMerge(target[key], source[key]);
-    } else {
-      target[key] = source[key];
+  for (var key in source) {
+    if (source.hasOwnProperty(key)) {
+      if (source[key] && typeof source[key] === 'object' && !Array.isArray(source[key])) {
+        if (!target[key] || typeof target[key] !== 'object') target[key] = {};
+        deepMerge(target[key], source[key]);
+      } else {
+        target[key] = source[key];
+      }
     }
   }
   return target;
 }
 
-// ==========================================
-// INIT
-// ==========================================
-let config = loadConfig();
+/* ==========================================
+   STORAGE
+   ========================================== */
+function loadConfig() {
+  try {
+    var saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      var parsed = JSON.parse(saved);
+      return deepMerge(deepClone(DEFAULT_CONFIG), parsed);
+    }
+  } catch (e) {
+    console.warn('Admin: Error loading config from localStorage', e);
+  }
+  return deepClone(DEFAULT_CONFIG);
+}
 
-document.addEventListener('DOMContentLoaded', () => {
-  initSidebar();
-  initTabs();
-  renderDashboard();
-  renderAllForms();
-  initSaveButtons();
-  initMobileMenu();
+function saveConfig(cfg) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(cfg));
+    return true;
+  } catch (e) {
+    console.error('Admin: Error saving config', e);
+    return false;
+  }
+}
+
+/* ==========================================
+   TOAST NOTIFICATIONS
+   ========================================== */
+function showToast(message, type) {
+  type = type || 'success';
+  var container = document.getElementById('toastContainer');
+  if (!container) {
+    container = document.createElement('div');
+    container.id = 'toastContainer';
+    container.className = 'toast-container';
+    document.body.appendChild(container);
+  }
+  var icons = { success: 'fa-check-circle', error: 'fa-times-circle', warning: 'fa-exclamation-triangle' };
+  var toast = document.createElement('div');
+  toast.className = 'toast toast-' + type;
+  toast.innerHTML = '<i class="fas ' + (icons[type] || icons.success) + '"></i> ' + escHTML(message);
+  container.appendChild(toast);
+  setTimeout(function () { if (toast.parentNode) toast.parentNode.removeChild(toast); }, 3200);
+}
+
+/* ==========================================
+   GLOBAL STATE
+   ========================================== */
+var config = loadConfig();
+
+/* ==========================================
+   INIT - DOMContentLoaded
+   ========================================== */
+document.addEventListener('DOMContentLoaded', function () {
+  console.log('Admin: Initializing panel...');
+
+  try { initSidebar(); } catch (e) { console.error('initSidebar failed', e); }
+  try { initTabs(); } catch (e) { console.error('initTabs failed', e); }
+  try { renderDashboard(); } catch (e) { console.error('renderDashboard failed', e); }
+  try { renderAllForms(); } catch (e) { console.error('renderAllForms failed', e); }
+  try { initTopbarButtons(); } catch (e) { console.error('initTopbarButtons failed', e); }
+  try { initMobileMenu(); } catch (e) { console.error('initMobileMenu failed', e); }
+  try { initAddTestimonialBtn(); } catch (e) { console.error('initAddTestimonialBtn failed', e); }
+
+  console.log('Admin: Panel ready.');
 });
 
-// ==========================================
-// SIDEBAR & TABS
-// ==========================================
+/* ==========================================
+   SIDEBAR & TAB NAVIGATION
+   ========================================== */
 function initSidebar() {
-  document.querySelectorAll('.sidebar-nav a[data-tab]').forEach(link => {
-    link.addEventListener('click', (e) => {
-      e.preventDefault();
-      switchTab(link.dataset.tab);
-
-      // Update topbar title
-      document.getElementById('pageTitle').textContent = link.textContent.trim();
-
-      // Close mobile sidebar
-      document.querySelector('.admin-sidebar').classList.remove('open');
-    });
-  });
+  var links = document.querySelectorAll('.sidebar-nav a[data-tab]');
+  for (var i = 0; i < links.length; i++) {
+    (function (link) {
+      link.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var tabId = link.getAttribute('data-tab');
+        switchTab(tabId);
+        var title = link.textContent ? link.textContent.trim() : '';
+        var pageTitle = document.getElementById('pageTitle');
+        if (pageTitle && title) pageTitle.textContent = title;
+        var sidebar = document.querySelector('.admin-sidebar');
+        if (sidebar) sidebar.classList.remove('open');
+      });
+    })(links[i]);
+  }
 }
 
 function initTabs() {
-  const hash = window.location.hash.replace('#', '');
-  if (hash) {
+  var hash = window.location.hash ? window.location.hash.replace('#', '') : '';
+  if (hash && document.getElementById(hash)) {
     switchTab(hash);
   }
 }
 
 function switchTab(tabId) {
   // Hide all panels
-  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  var panels = document.querySelectorAll('.tab-panel');
+  for (var i = 0; i < panels.length; i++) {
+    panels[i].classList.remove('active');
+    panels[i].style.display = 'none';
+  }
   // Deactivate sidebar links
-  document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
-
+  var sideLinks = document.querySelectorAll('.sidebar-nav a');
+  for (var j = 0; j < sideLinks.length; j++) {
+    sideLinks[j].classList.remove('active');
+  }
   // Show target panel
-  const panel = document.getElementById(tabId);
-  if (panel) panel.classList.add('active');
-
+  var panel = document.getElementById(tabId);
+  if (panel) {
+    panel.classList.add('active');
+    panel.style.display = 'block';
+  }
   // Activate sidebar link
-  const link = document.querySelector(`[data-tab="${tabId}"]`);
+  var link = document.querySelector('[data-tab="' + tabId + '"]');
   if (link) link.classList.add('active');
 
-  window.location.hash = tabId;
-}
-
-function initMobileMenu() {
-  const btn = document.querySelector('.mobile-menu-btn');
-  const sidebar = document.querySelector('.admin-sidebar');
-  if (btn) {
-    btn.addEventListener('click', () => sidebar.classList.toggle('open'));
+  // Update hash without scrolling
+  if (history.replaceState) {
+    history.replaceState(null, null, '#' + tabId);
   }
 }
 
-// ==========================================
-// DASHBOARD
-// ==========================================
-function renderDashboard() {
-  const activeModules = Object.values(config.modules).filter(m => m.enabled).length;
-  const totalModules = Object.keys(config.modules).length;
-  const activeInsurance = Object.values(config.insuranceTypes).filter(t => t.enabled).length;
-  const totalSubtypes = Object.values(config.insuranceTypes).reduce((acc, t) => {
-    return acc + Object.values(t.subtypes).filter(s => s.enabled).length;
-  }, 0);
-
-  document.getElementById('dashActiveModules').textContent = `${activeModules}/${totalModules}`;
-  document.getElementById('dashActiveInsurance').textContent = activeInsurance;
-  document.getElementById('dashActiveSubtypes').textContent = totalSubtypes;
-  document.getElementById('dashTestimonials').textContent = config.testimonials.length;
+function initMobileMenu() {
+  var btn = document.querySelector('.mobile-menu-btn');
+  var sidebar = document.querySelector('.admin-sidebar');
+  if (btn && sidebar) {
+    btn.addEventListener('click', function (e) {
+      e.preventDefault();
+      sidebar.classList.toggle('open');
+    });
+  }
 }
 
-// ==========================================
-// RENDER ALL FORMS
-// ==========================================
+function initAddTestimonialBtn() {
+  var btn = document.getElementById('btnAddTestimonial');
+  if (btn) {
+    btn.addEventListener('click', function (e) {
+      e.preventDefault();
+      addTestimonial();
+    });
+  }
+}
+
+/* ==========================================
+   TOPBAR BUTTONS (Save, Preview, Reset)
+   ========================================== */
+function initTopbarButtons() {
+  // SAVE button (only topbar, NOT the "Agregar" btn)
+  var saveBtn = document.getElementById('btnSaveMain');
+  if (saveBtn) {
+    saveBtn.addEventListener('click', function (e) {
+      e.preventDefault();
+      collectAndSave();
+    });
+  }
+
+  // PREVIEW button
+  var previewBtn = document.getElementById('btnPreview');
+  if (previewBtn) {
+    previewBtn.addEventListener('click', function (e) {
+      e.preventDefault();
+      collectAndSave();
+      window.open('index.html', '_blank');
+    });
+  }
+
+  // RESET button
+  var resetBtn = document.getElementById('btnReset');
+  if (resetBtn) {
+    resetBtn.addEventListener('click', function (e) {
+      e.preventDefault();
+      if (confirm('¿Estás seguro de restaurar toda la configuración a valores por defecto? Esta acción no se puede deshacer.')) {
+        try { localStorage.removeItem(STORAGE_KEY); } catch (err) { /* ignore */ }
+        config = deepClone(DEFAULT_CONFIG);
+        renderAllForms();
+        renderDashboard();
+        showToast('Configuración restaurada a valores por defecto', 'warning');
+      }
+    });
+  }
+}
+
+/* ==========================================
+   DASHBOARD
+   ========================================== */
+function renderDashboard() {
+  var activeModules = 0;
+  var totalModules = 0;
+  for (var mk in config.modules) {
+    if (config.modules.hasOwnProperty(mk)) {
+      totalModules++;
+      if (config.modules[mk].enabled) activeModules++;
+    }
+  }
+
+  var activeInsurance = 0;
+  var totalSubtypes = 0;
+  for (var ik in config.insuranceTypes) {
+    if (config.insuranceTypes.hasOwnProperty(ik)) {
+      if (config.insuranceTypes[ik].enabled) activeInsurance++;
+      var subs = config.insuranceTypes[ik].subtypes;
+      for (var sk in subs) {
+        if (subs.hasOwnProperty(sk) && subs[sk].enabled) totalSubtypes++;
+      }
+    }
+  }
+
+  var el1 = document.getElementById('dashActiveModules');
+  var el2 = document.getElementById('dashActiveInsurance');
+  var el3 = document.getElementById('dashActiveSubtypes');
+  var el4 = document.getElementById('dashTestimonials');
+  if (el1) el1.textContent = activeModules + '/' + totalModules;
+  if (el2) el2.textContent = activeInsurance;
+  if (el3) el3.textContent = totalSubtypes;
+  if (el4) el4.textContent = config.testimonials.length;
+}
+
+/* ==========================================
+   RENDER ALL FORMS
+   ========================================== */
 function renderAllForms() {
   renderSiteInfo();
   renderHeroForm();
@@ -288,7 +420,6 @@ function renderAllForms() {
   renderTestimonialsPanel();
 }
 
-// -- Site Info --
 function renderSiteInfo() {
   setVal('sitePhone', config.site.phone);
   setVal('siteEmail', config.site.email);
@@ -302,7 +433,6 @@ function renderSiteInfo() {
   setVal('siteYoutube', config.site.youtube);
 }
 
-// -- Hero --
 function renderHeroForm() {
   setVal('heroBadge', config.hero.badge);
   setVal('heroTitle', config.hero.title);
@@ -317,7 +447,6 @@ function renderHeroForm() {
   setVal('heroStat3Label', config.hero.stat3Label);
 }
 
-// -- About --
 function renderAboutForm() {
   setVal('aboutSubtitle', config.about.subtitle);
   setVal('aboutTitle', config.about.title);
@@ -327,7 +456,6 @@ function renderAboutForm() {
   setVal('aboutExpText', config.about.experienceText);
 }
 
-// -- Stats --
 function renderStatsForm() {
   setVal('statsNum1', config.stats.stat1.number);
   setVal('statsSuffix1', config.stats.stat1.suffix);
@@ -343,19 +471,17 @@ function renderStatsForm() {
   setVal('statsLabel4', config.stats.stat4.label);
 }
 
-// -- Why --
 function renderWhyForm() {
   setVal('whySubtitle', config.why.subtitle);
   setVal('whyTitle', config.why.title);
   setVal('whyDescription', config.why.description);
-  config.why.cards.forEach((card, i) => {
-    setVal(`whyIcon${i}`, card.icon);
-    setVal(`whyCardTitle${i}`, card.title);
-    setVal(`whyCardText${i}`, card.text);
-  });
+  for (var i = 0; i < config.why.cards.length; i++) {
+    setVal('whyIcon' + i, config.why.cards[i].icon);
+    setVal('whyCardTitle' + i, config.why.cards[i].title);
+    setVal('whyCardText' + i, config.why.cards[i].text);
+  }
 }
 
-// -- CTA --
 function renderCtaForm() {
   setVal('ctaTitle', config.ctaSection.title);
   setVal('ctaDescription', config.ctaSection.description);
@@ -363,12 +489,14 @@ function renderCtaForm() {
   setVal('ctaBtnSecondary', config.ctaSection.btnSecondary);
 }
 
-// -- Modules --
+/* ==========================================
+   MODULES PANEL
+   ========================================== */
 function renderModulesPanel() {
-  const container = document.getElementById('modulesToggleList');
+  var container = document.getElementById('modulesToggleList');
   if (!container) return;
 
-  const icons = {
+  var icons = {
     topbar: 'fas fa-bars',
     hero: 'fas fa-image',
     marquee: 'fas fa-images',
@@ -383,135 +511,192 @@ function renderModulesPanel() {
     whatsappFloat: 'fab fa-whatsapp'
   };
 
-  container.innerHTML = Object.entries(config.modules).map(([key, mod]) => `
-    <div class="toggle-item">
-      <div class="toggle-info">
-        <div class="toggle-icon"><i class="${icons[key] || 'fas fa-puzzle-piece'}"></i></div>
-        <div class="toggle-text">
-          <strong>${mod.label}</strong>
-          <span>${mod.description}</span>
-        </div>
-      </div>
-      <label class="toggle-switch">
-        <input type="checkbox" data-module="${key}" ${mod.enabled ? 'checked' : ''}>
-        <span class="toggle-slider"></span>
-      </label>
-    </div>
-  `).join('');
+  var html = '';
+  for (var key in config.modules) {
+    if (!config.modules.hasOwnProperty(key)) continue;
+    var mod = config.modules[key];
+    html += '<div class="toggle-item">' +
+      '<div class="toggle-info">' +
+        '<div class="toggle-icon"><i class="' + (icons[key] || 'fas fa-puzzle-piece') + '"></i></div>' +
+        '<div class="toggle-text">' +
+          '<strong>' + escHTML(mod.label) + '</strong>' +
+          '<span>' + escHTML(mod.description) + '</span>' +
+        '</div>' +
+      '</div>' +
+      '<label class="toggle-switch">' +
+        '<input type="checkbox" data-module="' + key + '"' + (mod.enabled ? ' checked' : '') + '>' +
+        '<span class="toggle-slider"></span>' +
+      '</label>' +
+    '</div>';
+  }
+  container.innerHTML = html;
 
-  // Bind events
-  container.querySelectorAll('input[data-module]').forEach(input => {
-    input.addEventListener('change', () => {
-      config.modules[input.dataset.module].enabled = input.checked;
-    });
-  });
+  // Bind change events
+  var inputs = container.querySelectorAll('input[data-module]');
+  for (var i = 0; i < inputs.length; i++) {
+    (function (input) {
+      input.addEventListener('change', function () {
+        config.modules[input.getAttribute('data-module')].enabled = input.checked;
+      });
+    })(inputs[i]);
+  }
 }
 
-// -- Insurance Types --
+/* ==========================================
+   INSURANCE TYPES PANEL
+   ========================================== */
 function renderInsurancePanel() {
-  const container = document.getElementById('insurancePanel');
+  var container = document.getElementById('insurancePanel');
   if (!container) return;
 
-  container.innerHTML = Object.entries(config.insuranceTypes).map(([catKey, cat]) => `
-    <div class="admin-card">
-      <div class="admin-card-header">
-        <h3><i class="${cat.icon}"></i> ${cat.label}</h3>
-        <label class="toggle-switch">
-          <input type="checkbox" data-insurance-cat="${catKey}" ${cat.enabled ? 'checked' : ''}>
-          <span class="toggle-slider"></span>
-        </label>
-      </div>
-      <div class="admin-card-body">
-        <div class="form-group" style="margin-bottom:16px">
-          <label>Descripción de la categoría</label>
-          <textarea data-insurance-desc="${catKey}" rows="2">${cat.description}</textarea>
-        </div>
-        <label style="font-weight:600;font-size:0.82rem;margin-bottom:8px;display:block">Subtipos de seguros</label>
-        <div class="insurance-types-grid">
-          ${Object.entries(cat.subtypes).map(([subKey, sub]) => `
-            <div class="insurance-type-card ${sub.enabled ? '' : 'disabled'}" id="card-${catKey}-${subKey}">
-              <div class="insurance-type-info">
-                <i class="${cat.icon}"></i>
-                <strong>${sub.label}</strong>
-              </div>
-              <label class="toggle-switch">
-                <input type="checkbox" data-insurance-sub="${catKey}.${subKey}" ${sub.enabled ? 'checked' : ''}>
-                <span class="toggle-slider"></span>
-              </label>
-            </div>
-          `).join('')}
-        </div>
-      </div>
-    </div>
-  `).join('');
+  var html = '';
+  for (var catKey in config.insuranceTypes) {
+    if (!config.insuranceTypes.hasOwnProperty(catKey)) continue;
+    var cat = config.insuranceTypes[catKey];
+
+    html += '<div class="admin-card">' +
+      '<div class="admin-card-header">' +
+        '<h3><i class="' + escAttr(cat.icon) + '"></i> ' + escHTML(cat.label) + '</h3>' +
+        '<label class="toggle-switch">' +
+          '<input type="checkbox" data-insurance-cat="' + catKey + '"' + (cat.enabled ? ' checked' : '') + '>' +
+          '<span class="toggle-slider"></span>' +
+        '</label>' +
+      '</div>' +
+      '<div class="admin-card-body">' +
+        '<div class="form-group" style="margin-bottom:16px">' +
+          '<label>Descripción de la categoría</label>' +
+          '<textarea data-insurance-desc="' + catKey + '" rows="2">' + escHTML(cat.description) + '</textarea>' +
+        '</div>' +
+        '<label style="font-weight:600;font-size:0.82rem;margin-bottom:8px;display:block">Subtipos de seguros</label>' +
+        '<div class="insurance-types-grid">';
+
+    for (var subKey in cat.subtypes) {
+      if (!cat.subtypes.hasOwnProperty(subKey)) continue;
+      var sub = cat.subtypes[subKey];
+      html += '<div class="insurance-type-card' + (sub.enabled ? '' : ' disabled') + '" id="card-' + catKey + '-' + subKey + '">' +
+        '<div class="insurance-type-info">' +
+          '<i class="' + escAttr(cat.icon) + '"></i>' +
+          '<strong>' + escHTML(sub.label) + '</strong>' +
+        '</div>' +
+        '<label class="toggle-switch">' +
+          '<input type="checkbox" data-insurance-sub="' + catKey + '.' + subKey + '"' + (sub.enabled ? ' checked' : '') + '>' +
+          '<span class="toggle-slider"></span>' +
+        '</label>' +
+      '</div>';
+    }
+
+    html += '</div></div></div>';
+  }
+
+  container.innerHTML = html;
 
   // Bind category toggles
-  container.querySelectorAll('input[data-insurance-cat]').forEach(input => {
-    input.addEventListener('change', () => {
-      config.insuranceTypes[input.dataset.insuranceCat].enabled = input.checked;
-    });
-  });
+  var catInputs = container.querySelectorAll('input[data-insurance-cat]');
+  for (var c = 0; c < catInputs.length; c++) {
+    (function (input) {
+      input.addEventListener('change', function () {
+        config.insuranceTypes[input.getAttribute('data-insurance-cat')].enabled = input.checked;
+      });
+    })(catInputs[c]);
+  }
 
   // Bind subtype toggles
-  container.querySelectorAll('input[data-insurance-sub]').forEach(input => {
-    input.addEventListener('change', () => {
-      const [cat, sub] = input.dataset.insuranceSub.split('.');
-      config.insuranceTypes[cat].subtypes[sub].enabled = input.checked;
-      const card = document.getElementById(`card-${cat}-${sub}`);
-      if (card) card.classList.toggle('disabled', !input.checked);
-    });
-  });
+  var subInputs = container.querySelectorAll('input[data-insurance-sub]');
+  for (var s = 0; s < subInputs.length; s++) {
+    (function (input) {
+      input.addEventListener('change', function () {
+        var parts = input.getAttribute('data-insurance-sub').split('.');
+        var catK = parts[0];
+        var subK = parts[1];
+        config.insuranceTypes[catK].subtypes[subK].enabled = input.checked;
+        var card = document.getElementById('card-' + catK + '-' + subK);
+        if (card) {
+          if (input.checked) {
+            card.classList.remove('disabled');
+          } else {
+            card.classList.add('disabled');
+          }
+        }
+      });
+    })(subInputs[s]);
+  }
 
   // Bind description textareas
-  container.querySelectorAll('textarea[data-insurance-desc]').forEach(ta => {
-    ta.addEventListener('input', () => {
-      config.insuranceTypes[ta.dataset.insuranceDesc].description = ta.value;
-    });
-  });
+  var descTAs = container.querySelectorAll('textarea[data-insurance-desc]');
+  for (var d = 0; d < descTAs.length; d++) {
+    (function (ta) {
+      ta.addEventListener('input', function () {
+        config.insuranceTypes[ta.getAttribute('data-insurance-desc')].description = ta.value;
+      });
+    })(descTAs[d]);
+  }
 }
 
-// -- Testimonials --
+/* ==========================================
+   TESTIMONIALS PANEL
+   ========================================== */
 function renderTestimonialsPanel() {
-  const container = document.getElementById('testimonialsEditor');
+  var container = document.getElementById('testimonialsEditor');
   if (!container) return;
 
-  container.innerHTML = config.testimonials.map((t, i) => `
-    <div class="testimonial-edit-card">
-      <div class="testimonial-edit-header">
-        <h4><i class="fas fa-quote-left" style="color:var(--admin-accent);margin-right:6px"></i> Testimonio ${i + 1}</h4>
-        <button class="btn-remove" onclick="removeTestimonial(${i})" ${config.testimonials.length <= 1 ? 'disabled' : ''}>
-          <i class="fas fa-trash"></i> Eliminar
-        </button>
-      </div>
-      <div class="form-grid">
-        <div class="form-group">
-          <label>Nombre</label>
-          <input type="text" value="${t.name}" data-testimonial="${i}" data-field="name">
-        </div>
-        <div class="form-group">
-          <label>Cargo / Empresa</label>
-          <input type="text" value="${t.role}" data-testimonial="${i}" data-field="role">
-        </div>
-      </div>
-      <div class="form-group" style="margin-top:12px">
-        <label>Testimonio</label>
-        <textarea data-testimonial="${i}" data-field="text" rows="3">${t.text}</textarea>
-      </div>
-      <div class="form-group" style="margin-top:12px">
-        <label>Iniciales (para avatar)</label>
-        <input type="text" value="${t.initials}" data-testimonial="${i}" data-field="initials" maxlength="3" style="width:80px">
-      </div>
-    </div>
-  `).join('');
+  var html = '';
+  for (var i = 0; i < config.testimonials.length; i++) {
+    var t = config.testimonials[i];
+    var disabledAttr = config.testimonials.length <= 1 ? ' disabled' : '';
+    html += '<div class="testimonial-edit-card">' +
+      '<div class="testimonial-edit-header">' +
+        '<h4><i class="fas fa-quote-left" style="color:var(--admin-accent);margin-right:6px"></i> Testimonio ' + (i + 1) + '</h4>' +
+        '<button class="btn-remove" data-remove-testimonial="' + i + '"' + disabledAttr + '>' +
+          '<i class="fas fa-trash"></i> Eliminar' +
+        '</button>' +
+      '</div>' +
+      '<div class="form-grid">' +
+        '<div class="form-group">' +
+          '<label>Nombre</label>' +
+          '<input type="text" value="' + escAttr(t.name) + '" data-testimonial="' + i + '" data-field="name">' +
+        '</div>' +
+        '<div class="form-group">' +
+          '<label>Cargo / Empresa</label>' +
+          '<input type="text" value="' + escAttr(t.role) + '" data-testimonial="' + i + '" data-field="role">' +
+        '</div>' +
+      '</div>' +
+      '<div class="form-group" style="margin-top:12px">' +
+        '<label>Testimonio</label>' +
+        '<textarea data-testimonial="' + i + '" data-field="text" rows="3">' + escHTML(t.text) + '</textarea>' +
+      '</div>' +
+      '<div class="form-group" style="margin-top:12px">' +
+        '<label>Iniciales (para avatar)</label>' +
+        '<input type="text" value="' + escAttr(t.initials) + '" data-testimonial="' + i + '" data-field="initials" maxlength="3" style="width:80px">' +
+      '</div>' +
+    '</div>';
+  }
+  container.innerHTML = html;
 
-  // Bind inputs
-  container.querySelectorAll('[data-testimonial]').forEach(el => {
-    el.addEventListener('input', () => {
-      const idx = parseInt(el.dataset.testimonial);
-      const field = el.dataset.field;
-      config.testimonials[idx][field] = el.value;
-    });
-  });
+  // Bind input changes
+  var fields = container.querySelectorAll('[data-testimonial][data-field]');
+  for (var f = 0; f < fields.length; f++) {
+    (function (el) {
+      el.addEventListener('input', function () {
+        var idx = parseInt(el.getAttribute('data-testimonial'), 10);
+        var field = el.getAttribute('data-field');
+        if (config.testimonials[idx]) {
+          config.testimonials[idx][field] = el.value;
+        }
+      });
+    })(fields[f]);
+  }
+
+  // Bind remove buttons
+  var removeBtns = container.querySelectorAll('[data-remove-testimonial]');
+  for (var r = 0; r < removeBtns.length; r++) {
+    (function (btn) {
+      btn.addEventListener('click', function (e) {
+        e.preventDefault();
+        var idx = parseInt(btn.getAttribute('data-remove-testimonial'), 10);
+        removeTestimonial(idx);
+      });
+    })(removeBtns[r]);
+  }
 }
 
 function addTestimonial() {
@@ -523,43 +708,23 @@ function addTestimonial() {
   });
   renderTestimonialsPanel();
   renderDashboard();
+  showToast('Testimonio agregado', 'success');
 }
 
 function removeTestimonial(index) {
-  if (config.testimonials.length <= 1) return;
+  if (config.testimonials.length <= 1) {
+    showToast('Debe haber al menos un testimonio', 'warning');
+    return;
+  }
   config.testimonials.splice(index, 1);
   renderTestimonialsPanel();
   renderDashboard();
+  showToast('Testimonio eliminado', 'warning');
 }
 
-// ==========================================
-// SAVE & COLLECT
-// ==========================================
-function initSaveButtons() {
-  document.querySelectorAll('.btn-save').forEach(btn => {
-    btn.addEventListener('click', collectAndSave);
-  });
-
-  document.querySelectorAll('.btn-reset').forEach(btn => {
-    btn.addEventListener('click', () => {
-      if (confirm('¿Estás seguro de restaurar toda la configuración a valores por defecto? Esta acción no se puede deshacer.')) {
-        localStorage.removeItem(STORAGE_KEY);
-        config = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
-        renderAllForms();
-        renderDashboard();
-        showToast('Configuración restaurada a valores por defecto', 'warning');
-      }
-    });
-  });
-
-  document.querySelectorAll('.btn-preview').forEach(btn => {
-    btn.addEventListener('click', () => {
-      collectAndSave();
-      window.open('index.html', '_blank');
-    });
-  });
-}
-
+/* ==========================================
+   COLLECT & SAVE
+   ========================================== */
 function collectAndSave() {
   // Site info
   config.site.phone = getVal('sitePhone');
@@ -595,20 +760,23 @@ function collectAndSave() {
   config.about.experienceText = getVal('aboutExpText');
 
   // Stats
-  config.stats.stat1 = { number: parseInt(getVal('statsNum1')) || 0, suffix: getVal('statsSuffix1'), label: getVal('statsLabel1') };
-  config.stats.stat2 = { number: parseInt(getVal('statsNum2')) || 0, suffix: getVal('statsSuffix2'), label: getVal('statsLabel2') };
-  config.stats.stat3 = { number: parseInt(getVal('statsNum3')) || 0, suffix: getVal('statsSuffix3'), label: getVal('statsLabel3') };
-  config.stats.stat4 = { number: parseInt(getVal('statsNum4')) || 0, suffix: getVal('statsSuffix4'), label: getVal('statsLabel4') };
+  config.stats.stat1 = { number: parseInt(getVal('statsNum1'), 10) || 0, suffix: getVal('statsSuffix1'), label: getVal('statsLabel1') };
+  config.stats.stat2 = { number: parseInt(getVal('statsNum2'), 10) || 0, suffix: getVal('statsSuffix2'), label: getVal('statsLabel2') };
+  config.stats.stat3 = { number: parseInt(getVal('statsNum3'), 10) || 0, suffix: getVal('statsSuffix3'), label: getVal('statsLabel3') };
+  config.stats.stat4 = { number: parseInt(getVal('statsNum4'), 10) || 0, suffix: getVal('statsSuffix4'), label: getVal('statsLabel4') };
 
   // Why
   config.why.subtitle = getVal('whySubtitle');
   config.why.title = getVal('whyTitle');
   config.why.description = getVal('whyDescription');
-  config.why.cards.forEach((card, i) => {
-    card.icon = getVal(`whyIcon${i}`);
-    card.title = getVal(`whyCardTitle${i}`);
-    card.text = getVal(`whyCardText${i}`);
-  });
+  for (var i = 0; i < config.why.cards.length; i++) {
+    var iconVal = getVal('whyIcon' + i);
+    var titleVal = getVal('whyCardTitle' + i);
+    var textVal = getVal('whyCardText' + i);
+    if (iconVal) config.why.cards[i].icon = iconVal;
+    if (titleVal) config.why.cards[i].title = titleVal;
+    if (textVal) config.why.cards[i].text = textVal;
+  }
 
   // CTA
   config.ctaSection.title = getVal('ctaTitle');
@@ -616,37 +784,14 @@ function collectAndSave() {
   config.ctaSection.btnPrimary = getVal('ctaBtnPrimary');
   config.ctaSection.btnSecondary = getVal('ctaBtnSecondary');
 
-  saveConfig(config);
+  // Modules and Insurance are already updated in real-time via change listeners
+
+  var ok = saveConfig(config);
   renderDashboard();
-  showToast('Cambios guardados correctamente', 'success');
-}
 
-// ==========================================
-// HELPERS
-// ==========================================
-function setVal(id, value) {
-  const el = document.getElementById(id);
-  if (el) el.value = value;
-}
-
-function getVal(id) {
-  const el = document.getElementById(id);
-  return el ? el.value : '';
-}
-
-function showToast(message, type = 'success') {
-  const container = document.querySelector('.toast-container') || createToastContainer();
-  const toast = document.createElement('div');
-  toast.className = `toast toast-${type}`;
-  const icons = { success: 'fa-check-circle', error: 'fa-times-circle', warning: 'fa-exclamation-triangle' };
-  toast.innerHTML = `<i class="fas ${icons[type]}"></i> ${message}`;
-  container.appendChild(toast);
-  setTimeout(() => toast.remove(), 3000);
-}
-
-function createToastContainer() {
-  const container = document.createElement('div');
-  container.className = 'toast-container';
-  document.body.appendChild(container);
-  return container;
+  if (ok) {
+    showToast('Cambios guardados correctamente', 'success');
+  } else {
+    showToast('Error al guardar los cambios', 'error');
+  }
 }
