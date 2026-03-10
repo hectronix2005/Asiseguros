@@ -244,7 +244,7 @@ function adminInit() {
   if (_adminInitDone) return;
   _adminInitDone = true;
 
-  console.log('Admin v4: Initializing...');
+  console.log('Admin v5: Initializing...');
 
   var steps = [
     ['initSidebar', initSidebar],
@@ -276,7 +276,7 @@ function adminInit() {
 
   var versionEl = document.getElementById('adminVersion');
   if (versionEl) {
-    versionEl.textContent = errors.length === 0 ? 'v4 - OK' : 'v4 - ' + errors.length + ' errors';
+    versionEl.textContent = errors.length === 0 ? 'v5 - OK' : 'v5 - ' + errors.length + ' errors';
     versionEl.style.color = errors.length === 0 ? 'rgba(125,248,154,0.6)' : 'rgba(239,68,68,0.8)';
   }
 
@@ -289,7 +289,7 @@ function adminInit() {
     document.body.appendChild(errDiv);
   }
 
-  console.log('Admin v4: Ready. Errors: ' + errors.length);
+  console.log('Admin v5: Ready. Errors: ' + errors.length);
 }
 
 // Robust init: handle both cases - DOM ready or not yet

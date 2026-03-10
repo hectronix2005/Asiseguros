@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link rel="stylesheet" href="css/admin.css">
+  <link rel="stylesheet" href="css/admin.css?v=5">
 </head>
 <body>
 
@@ -24,20 +24,20 @@
 
     <nav class="sidebar-nav">
       <div class="sidebar-section-label">General</div>
-      <a href="#dashboard" data-tab="dashboard" class="active"><i class="fas fa-gauge-high"></i> Dashboard</a>
-      <a href="#site-info" data-tab="site-info"><i class="fas fa-globe"></i> Info del sitio</a>
+      <a href="javascript:void(0)" onclick="switchTab('dashboard');return false;" data-tab="dashboard" class="active"><i class="fas fa-gauge-high"></i> Dashboard</a>
+      <a href="javascript:void(0)" onclick="switchTab('site-info');return false;" data-tab="site-info"><i class="fas fa-globe"></i> Info del sitio</a>
 
       <div class="sidebar-section-label">Contenido</div>
-      <a href="#hero-edit" data-tab="hero-edit"><i class="fas fa-image"></i> Hero / Banner</a>
-      <a href="#about-edit" data-tab="about-edit"><i class="fas fa-info-circle"></i> Nosotros</a>
-      <a href="#stats-edit" data-tab="stats-edit"><i class="fas fa-chart-bar"></i> Estadísticas</a>
-      <a href="#why-edit" data-tab="why-edit"><i class="fas fa-star"></i> ¿Por qué elegirnos?</a>
-      <a href="#cta-edit" data-tab="cta-edit"><i class="fas fa-bullhorn"></i> CTA</a>
-      <a href="#testimonials-edit" data-tab="testimonials-edit"><i class="fas fa-comments"></i> Testimonios</a>
+      <a href="javascript:void(0)" onclick="switchTab('hero-edit');return false;" data-tab="hero-edit"><i class="fas fa-image"></i> Hero / Banner</a>
+      <a href="javascript:void(0)" onclick="switchTab('about-edit');return false;" data-tab="about-edit"><i class="fas fa-info-circle"></i> Nosotros</a>
+      <a href="javascript:void(0)" onclick="switchTab('stats-edit');return false;" data-tab="stats-edit"><i class="fas fa-chart-bar"></i> Estadísticas</a>
+      <a href="javascript:void(0)" onclick="switchTab('why-edit');return false;" data-tab="why-edit"><i class="fas fa-star"></i> ¿Por qué elegirnos?</a>
+      <a href="javascript:void(0)" onclick="switchTab('cta-edit');return false;" data-tab="cta-edit"><i class="fas fa-bullhorn"></i> CTA</a>
+      <a href="javascript:void(0)" onclick="switchTab('testimonials-edit');return false;" data-tab="testimonials-edit"><i class="fas fa-comments"></i> Testimonios</a>
 
       <div class="sidebar-section-label">Configuración</div>
-      <a href="#modules" data-tab="modules"><i class="fas fa-puzzle-piece"></i> Módulos</a>
-      <a href="#insurance" data-tab="insurance"><i class="fas fa-shield-halved"></i> Tipos de seguro</a>
+      <a href="javascript:void(0)" onclick="switchTab('modules');return false;" data-tab="modules"><i class="fas fa-puzzle-piece"></i> Módulos</a>
+      <a href="javascript:void(0)" onclick="switchTab('insurance');return false;" data-tab="insurance"><i class="fas fa-shield-halved"></i> Tipos de seguro</a>
     </nav>
 
     <div class="sidebar-footer">
@@ -408,6 +408,41 @@
   </main>
 </div>
 
-<script src="js/admin.js?v=4"></script>
+<script>
+/* Fallback switchTab in case admin.js fails to define it */
+if (typeof switchTab === 'undefined') {
+  window.switchTab = function(tabId) {
+    var panels = document.querySelectorAll('.tab-panel');
+    for (var i = 0; i < panels.length; i++) {
+      panels[i].style.display = 'none';
+      panels[i].className = 'tab-panel';
+    }
+    var links = document.querySelectorAll('.sidebar-nav a[data-tab]');
+    for (var j = 0; j < links.length; j++) {
+      links[j].className = links[j].className.replace(' active', '').replace('active', '');
+    }
+    var target = document.getElementById(tabId);
+    if (target) {
+      target.style.display = 'block';
+      target.className = 'tab-panel active';
+    }
+    var link = document.querySelector('[data-tab="' + tabId + '"]');
+    if (link) link.className = (link.className || '') + ' active';
+    var title = document.getElementById('pageTitle');
+    if (title && link) title.textContent = link.textContent.trim();
+  };
+}
+</script>
+<script src="js/admin.js?v=5"></script>
+<script>
+/* Post-load diagnostic */
+(function() {
+  var el = document.getElementById('adminVersion');
+  if (el && el.textContent === 'cargando...') {
+    el.textContent = 'JS NO CARGÓ';
+    el.style.color = '#ef4444';
+  }
+})();
+</script>
 </body>
 </html>
