@@ -250,7 +250,11 @@ document.addEventListener('DOMContentLoaded', function () {
   try { initMobileMenu(); } catch (e) { console.error('initMobileMenu failed', e); }
   try { initAddTestimonialBtn(); } catch (e) { console.error('initAddTestimonialBtn failed', e); }
 
-  console.log('Admin: Panel ready.');
+  // Version indicator
+  var versionEl = document.getElementById('adminVersion');
+  if (versionEl) versionEl.textContent = 'v3 - OK';
+
+  console.log('Admin: Panel v3 ready.');
 });
 
 /* ==========================================
