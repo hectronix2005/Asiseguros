@@ -235,27 +235,71 @@ function showToast(message, type) {
    GLOBAL STATE
    ========================================== */
 var config = loadConfig();
+var _adminInitDone = false;
 
 /* ==========================================
-   INIT - DOMContentLoaded
+   INIT
    ========================================== */
-document.addEventListener('DOMContentLoaded', function () {
-  console.log('Admin: Initializing panel...');
+function adminInit() {
+  if (_adminInitDone) return;
+  _adminInitDone = true;
 
-  try { initSidebar(); } catch (e) { console.error('initSidebar failed', e); }
-  try { initTabs(); } catch (e) { console.error('initTabs failed', e); }
-  try { renderDashboard(); } catch (e) { console.error('renderDashboard failed', e); }
-  try { renderAllForms(); } catch (e) { console.error('renderAllForms failed', e); }
-  try { initTopbarButtons(); } catch (e) { console.error('initTopbarButtons failed', e); }
-  try { initMobileMenu(); } catch (e) { console.error('initMobileMenu failed', e); }
-  try { initAddTestimonialBtn(); } catch (e) { console.error('initAddTestimonialBtn failed', e); }
+  console.log('Admin v4: Initializing...');
 
-  // Version indicator
+  var steps = [
+    ['initSidebar', initSidebar],
+    ['initTabs', initTabs],
+    ['renderDashboard', renderDashboard],
+    ['renderSiteInfo', renderSiteInfo],
+    ['renderHeroForm', renderHeroForm],
+    ['renderAboutForm', renderAboutForm],
+    ['renderStatsForm', renderStatsForm],
+    ['renderWhyForm', renderWhyForm],
+    ['renderCtaForm', renderCtaForm],
+    ['renderModulesPanel', renderModulesPanel],
+    ['renderInsurancePanel', renderInsurancePanel],
+    ['renderTestimonialsPanel', renderTestimonialsPanel],
+    ['initTopbarButtons', initTopbarButtons],
+    ['initMobileMenu', initMobileMenu],
+    ['initAddTestimonialBtn', initAddTestimonialBtn]
+  ];
+
+  var errors = [];
+  for (var i = 0; i < steps.length; i++) {
+    try {
+      steps[i][1]();
+    } catch (e) {
+      errors.push(steps[i][0] + ': ' + e.message);
+      console.error('Admin FAIL: ' + steps[i][0], e);
+    }
+  }
+
   var versionEl = document.getElementById('adminVersion');
-  if (versionEl) versionEl.textContent = 'v3 - OK';
+  if (versionEl) {
+    versionEl.textContent = errors.length === 0 ? 'v4 - OK' : 'v4 - ' + errors.length + ' errors';
+    versionEl.style.color = errors.length === 0 ? 'rgba(125,248,154,0.6)' : 'rgba(239,68,68,0.8)';
+  }
 
-  console.log('Admin: Panel v3 ready.');
-});
+  if (errors.length > 0) {
+    console.error('Admin errors:', errors);
+    // Show errors visually
+    var errDiv = document.createElement('div');
+    errDiv.style.cssText = 'position:fixed;bottom:10px;left:10px;background:#ef4444;color:#fff;padding:12px 20px;border-radius:8px;font-family:monospace;font-size:12px;z-index:99999;max-width:400px;';
+    errDiv.innerHTML = '<b>Admin Errors:</b><br>' + errors.join('<br>');
+    document.body.appendChild(errDiv);
+  }
+
+  console.log('Admin v4: Ready. Errors: ' + errors.length);
+}
+
+// Robust init: handle both cases - DOM ready or not yet
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', adminInit);
+} else {
+  adminInit();
+}
+// Extra fallback
+window.addEventListener('load', adminInit);
 
 /* ==========================================
    SIDEBAR & TAB NAVIGATION
