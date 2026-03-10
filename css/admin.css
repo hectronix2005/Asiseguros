@@ -32,8 +32,6 @@ body {
 
 /* ---------- Layout ---------- */
 .admin-layout {
-  display: grid;
-  grid-template-columns: 260px 1fr;
   min-height: 100vh;
 }
 
@@ -678,10 +676,6 @@ body {
 }
 
 @media (max-width: 768px) {
-  .admin-layout {
-    grid-template-columns: 1fr;
-  }
-
   .admin-sidebar {
     transform: translateX(-100%);
   }
