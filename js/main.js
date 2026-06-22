@@ -166,6 +166,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  /* ---------- Cart ---------- */
+  initCart();
+
   /* ---------- Contact Form ---------- */
   const contactForm = document.querySelector('#contactForm');
   if (contactForm) {
@@ -189,12 +192,13 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!isValid) return;
 
       // Build WhatsApp message
+      const tipoAsistencia = data.tipo_asistencia || data.tipo_seguro || '';
       const message = encodeURIComponent(
-        `Hola, quiero cotizar un seguro.\n\n` +
+        `Hola, quiero información sobre ASI.\n\n` +
         `*Nombre:* ${data.nombre}\n` +
         `*Email:* ${data.email}\n` +
         `*Teléfono:* ${data.telefono}\n` +
-        `*Tipo de seguro:* ${data.tipo_seguro}\n` +
+        `*Interés:* ${tipoAsistencia}\n` +
         `*Mensaje:* ${data.mensaje || 'Sin mensaje adicional'}`
       );
 
@@ -229,6 +233,176 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
 });
+
+/* ========================================
+   CART
+   ======================================== */
+function initCart() {
+  let cart = loadCart();
+
+  const cartBtn     = document.getElementById('cartBtn');
+  const cartClose   = document.getElementById('cartClose');
+  const cartOverlay = document.getElementById('cartOverlay');
+  const cartDrawer  = document.getElementById('cartDrawer');
+  const cartBadge   = document.getElementById('cartBadge');
+  const cartItems   = document.getElementById('cartItems');
+  const cartEmpty   = document.getElementById('cartEmpty');
+  const cartFooter  = document.getElementById('cartFooter');
+  const cartTotal   = document.getElementById('cartTotal');
+  const cartCheckout = document.getElementById('cartCheckout');
+  const cartClear   = document.getElementById('cartClear');
+
+  function openCart() {
+    cartDrawer.classList.add('active');
+    cartOverlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeCart() {
+    cartDrawer.classList.remove('active');
+    cartOverlay.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  if (cartBtn)     cartBtn.addEventListener('click', openCart);
+  if (cartClose)   cartClose.addEventListener('click', closeCart);
+  if (cartOverlay) cartOverlay.addEventListener('click', closeCart);
+
+  // Add-to-cart buttons
+  document.querySelectorAll('.add-to-cart').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id     = btn.dataset.id;
+      const name   = btn.dataset.name;
+      const price  = parseInt(btn.dataset.price);
+      const period = btn.dataset.period || '';
+
+      const existing = cart.find(i => i.id === id);
+      if (existing) {
+        existing.qty += 1;
+      } else {
+        cart.push({ id, name, price, period, qty: 1 });
+      }
+
+      saveCart(cart);
+      renderCart();
+
+      // Visual feedback on button
+      const orig = btn.innerHTML;
+      btn.innerHTML = '<i class="fas fa-check"></i> Agregado';
+      btn.classList.add('added');
+      setTimeout(() => {
+        btn.innerHTML = orig;
+        btn.classList.remove('added');
+      }, 1600);
+
+      openCart();
+    });
+  });
+
+  if (cartClear) {
+    cartClear.addEventListener('click', () => {
+      cart = [];
+      saveCart(cart);
+      renderCart();
+    });
+  }
+
+  if (cartCheckout) {
+    cartCheckout.addEventListener('click', () => {
+      if (!cart.length) return;
+      const lines = cart.map(i =>
+        `• ${i.name} x${i.qty} = ${fmt(i.price * i.qty)}`
+      ).join('\n');
+      const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
+      const msg = encodeURIComponent(
+        `Hola, quiero adquirir los siguientes planes ASI:\n\n${lines}\n\n*Total: ${fmt(total)}*`
+      );
+      window.open(`https://wa.me/573173712260?text=${msg}`, '_blank');
+    });
+  }
+
+  function renderCart() {
+    updateBadge();
+    if (!cartItems) return;
+
+    if (!cart.length) {
+      if (cartEmpty)  cartEmpty.style.display = 'flex';
+      if (cartFooter) cartFooter.style.display = 'none';
+      // clear item rows
+      cartItems.querySelectorAll('.cart-item').forEach(el => el.remove());
+      return;
+    }
+
+    if (cartEmpty)  cartEmpty.style.display = 'none';
+    if (cartFooter) cartFooter.style.display = 'block';
+
+    // Rebuild item list
+    cartItems.querySelectorAll('.cart-item').forEach(el => el.remove());
+    cart.forEach(item => {
+      const el = document.createElement('div');
+      el.className = 'cart-item';
+      el.dataset.id = item.id;
+      el.innerHTML = `
+        <div class="cart-item-info">
+          <div class="cart-item-name">${escapeHTML(item.name)}</div>
+          <div class="cart-item-price">${fmt(item.price)}${item.period}</div>
+        </div>
+        <div class="cart-item-qty">
+          <button class="cart-qty-btn" data-action="dec">−</button>
+          <span class="cart-qty-num">${item.qty}</span>
+          <button class="cart-qty-btn" data-action="inc">+</button>
+        </div>
+        <button class="cart-item-remove" title="Eliminar"><i class="fas fa-trash-can"></i></button>
+      `;
+
+      el.querySelector('[data-action="inc"]').addEventListener('click', () => {
+        item.qty += 1;
+        saveCart(cart);
+        renderCart();
+      });
+
+      el.querySelector('[data-action="dec"]').addEventListener('click', () => {
+        item.qty -= 1;
+        if (item.qty <= 0) cart = cart.filter(i => i.id !== item.id);
+        saveCart(cart);
+        renderCart();
+      });
+
+      el.querySelector('.cart-item-remove').addEventListener('click', () => {
+        cart = cart.filter(i => i.id !== item.id);
+        saveCart(cart);
+        renderCart();
+      });
+
+      cartItems.appendChild(el);
+    });
+
+    const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
+    if (cartTotal) cartTotal.textContent = fmt(total);
+  }
+
+  function updateBadge() {
+    const count = cart.reduce((s, i) => s + i.qty, 0);
+    if (!cartBadge) return;
+    cartBadge.textContent = count;
+    cartBadge.style.display = count > 0 ? 'flex' : 'none';
+  }
+
+  function loadCart() {
+    try { return JSON.parse(localStorage.getItem('asi_cart') || '[]'); } catch { return []; }
+  }
+
+  function saveCart(c) {
+    localStorage.setItem('asi_cart', JSON.stringify(c));
+  }
+
+  function fmt(n) {
+    return '$' + n.toLocaleString('es-CO');
+  }
+
+  // Init render
+  renderCart();
+}
 
 /* ========================================
    APPLY ADMIN CONFIG TO FRONTEND
