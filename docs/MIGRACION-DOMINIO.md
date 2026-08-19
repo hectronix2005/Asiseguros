@@ -1,5 +1,14 @@
 # Mover asiseguros.com al sitio nuevo
 
+> **Decisión tomada: no se mueve el DNS.** En vez de traer el dominio a GitHub
+> Pages, se sube el sitio al hosting donde ya vive el dominio (Colombia Hosting).
+> Así el correo, los MX y el SPF no se tocan y no hay ventana de caída.
+> El procedimiento vigente es el `COMO-SUBIRLO.md` que acompaña al paquete
+> `asiseguros-public_html.zip`.
+>
+> Lo que sigue se conserva como referencia por si en el futuro se decide mover
+> el dominio a GitHub Pages.
+
 Procedimiento para que `asiseguros.com` deje de servir el WordPress de Colombia
 Hosting y pase a servir este repositorio desde GitHub Pages.
 

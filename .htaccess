@@ -1,0 +1,68 @@
+# AsiSeguros — configuración para el hosting (Apache / LiteSpeed).
+# GitHub Pages ignora este archivo; solo actúa en el servidor de Colombia Hosting.
+
+# ---------- Forzar HTTPS y www ----------
+RewriteEngine On
+RewriteCond %{HTTPS} !=on
+RewriteRule ^(.*)$ https://www.asiseguros.com/$1 [R=301,L]
+RewriteCond %{HTTP_HOST} ^asiseguros\.com$ [NC]
+RewriteRule ^(.*)$ https://www.asiseguros.com/$1 [R=301,L]
+
+# ---------- Redirecciones de las URLs del sitio anterior ----------
+# Estaban indexadas en Google. Sin esto darían 404 y se perdería el posicionamiento.
+
+Redirect 301 /quienes-somos/              /#nosotros
+Redirect 301 /contactanos/                /#contacto
+Redirect 301 /explora-nuestras-soluciones/ /#portafolio
+Redirect 301 /privacy-policy/             /politica-tratamiento-datos.html
+
+# Asistencias: van al sitio de asistencias
+Redirect 301 /conoce-nuestros-planes-asi/ /asistencias/
+Redirect 301 /asistencia-legal/           /asistencias/
+Redirect 301 /asistencia-medica/          /asistencias/
+Redirect 301 /asistencia-odontologica/    /asistencias/
+Redirect 301 /asistencia-vial/            /asistencias/
+
+# Tienda y productos de WooCommerce
+Redirect 301 /shop/                       /asistencias/
+Redirect 301 /cart/                       /asistencias/
+Redirect 301 /checkout/                   /asistencias/
+Redirect 301 /my-account/                 /asistencias/
+Redirect 301 /product/plan-asi-x-mes/     /asistencias/
+Redirect 301 /product/plan-asi-x-3-meses/ /asistencias/
+Redirect 301 /product/plan-asi-x-ano/     /asistencias/
+RedirectMatch 301 ^/product-category/.*$  /asistencias/
+
+# Blog y taxonomías
+Redirect 301 /blog/                       /
+RedirectMatch 301 ^/category/.*$          /
+RedirectMatch 301 ^/author/.*$            /
+RedirectMatch 301 ^/[0-9]{4}/[0-9]{2}/.*$ /
+
+# Restos de WordPress: cualquier /wp-* vuelve a la portada
+RedirectMatch 301 ^/wp-(admin|login|json|content|includes).*$ /
+
+# ---------- Página de error ----------
+ErrorDocument 404 /404.html
+
+# ---------- Caché del navegador ----------
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/css            "access plus 1 month"
+  ExpiresByType application/javascript "access plus 1 month"
+  ExpiresByType image/jpeg          "access plus 1 year"
+  ExpiresByType image/png           "access plus 1 year"
+  ExpiresByType image/svg+xml       "access plus 1 year"
+  ExpiresByType text/html           "access plus 1 hour"
+</IfModule>
+
+# ---------- Compresión ----------
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css text/plain application/javascript application/json image/svg+xml
+</IfModule>
+
+# ---------- Seguridad básica ----------
+Options -Indexes
+<FilesMatch "^\.">
+  Require all denied
+</FilesMatch>
