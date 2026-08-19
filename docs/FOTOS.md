@@ -23,6 +23,38 @@ Para quitar una foto, basta con borrar el archivo.
 | `nosotros.jpg` | Sección «Nosotros» | 1200×900 | 250 KB | Asesoría uno a uno o equipo de la agencia. Mientras no exista, se muestra la ilustración actual. |
 | `proceso.jpg` | Fondo de «Cómo trabajamos» | 1920×1080 | 300 KB | Escena de asesoría, sin mucho detalle: va cubierta por una capa oscura al 90 %. |
 
+## Fotos actualmente publicadas
+
+Son provisionales, de banco gratuito. Todas provienen de **StockSnap.io** y están
+bajo **licencia CC0 1.0** (dominio público): uso comercial permitido, sin
+atribución obligatoria y sin costo. Se listan aquí para dejar registro.
+
+| Archivo | Origen |
+|---|---|
+| `autos.jpg` | https://stocksnap.io/photo/people-man-B6JKY2BT1U |
+| `proceso.jpg` | https://stocksnap.io/photo/writing-papers-Y01VDYAX63 |
+| `nosotros.jpg` | https://stocksnap.io/photo/typing-working-T1NUHZ0SU7 |
+| `card-personas.jpg` | https://stocksnap.io/photo/happy-family-99FGTTMHTI |
+| `card-automoviles.jpg` | https://stocksnap.io/photo/highway-road-AOEI2XN99G |
+| `card-generales.jpg` | https://stocksnap.io/photo/construction-blueprint-BZ4FJO6KZE |
+| `card-empresariales.jpg` | https://stocksnap.io/photo/work-business-J5LXKNDREC |
+
+`autos.jpg` va espejada respecto al original, para que el conductor quede en el
+lado opuesto al texto.
+
+Dos límites que conviene tener presentes:
+
+- **Resolución de origen.** El banco solo expone estas fotos a 960 px de ancho.
+  Se reescalaron al tamaño de la tabla de arriba. En las tarjetas y en `nosotros`
+  no se nota; en los dos fondos a ancho completo el detalle es blando, aunque
+  queda disimulado por la capa oscura. Fotos propias en alta resolución darían
+  mejor resultado.
+- **Derechos de imagen.** La licencia CC0 cubre los derechos de autor del
+  fotógrafo, pero **no acredita autorización de las personas que aparecen**.
+  Varias de estas fotos muestran personas identificables en una pieza comercial.
+  Conviene que legal lo valide, o sustituirlas por fotos propias con
+  autorización firmada.
+
 ## Recomendaciones
 
 - **Formato**: JPG para fotografía. Si la foto lleva transparencia, PNG.
