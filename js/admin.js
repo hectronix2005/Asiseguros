@@ -2,7 +2,9 @@
    AsiSeguros - Admin Panel Logic (v2)
    ======================================== */
 
-var STORAGE_KEY = 'asiseguros_admin';
+/* Clave versionada: al cambiar el portafolio (salida de ARL) se descarta la config
+   guardada del navegador, que de otro modo reintroduciría las categorías viejas. */
+var STORAGE_KEY = 'asiseguros_admin_v2';
 
 /* ---------- Default Config ---------- */
 var DEFAULT_CONFIG = {
@@ -22,26 +24,26 @@ var DEFAULT_CONFIG = {
   hero: {
     badge: 'Agencia de Seguros en Colombia',
     title: 'Protegemos <span class="highlight">lo que más importa</span> para ti',
-    subtitle: 'Soluciones de seguros diseñadas para tu tranquilidad, tu empresa y tu futuro. Te acompañamos con asesoría experta y el respaldo de las mejores aseguradoras del país.',
+    subtitle: 'Soluciones de seguros diseñadas para tu tranquilidad, tu empresa y tu futuro. Te acompañamos con asesoría experta y el respaldo de Seguros del Estado.',
     ctaPrimary: 'Cotiza tu seguro ahora',
     ctaSecondary: 'Ver portafolio',
-    stat1Number: '15+',
-    stat1Label: 'Aseguradoras',
-    stat2Number: '37K+',
-    stat2Label: 'Clientes',
-    stat3Number: '10+',
+    stat1Number: '20',
+    stat1Label: 'Productos',
+    stat2Number: '32',
+    stat2Label: 'Departamentos',
+    stat3Number: '5+',
     stat3Label: 'Años'
   },
   about: {
     subtitle: 'Sobre nosotros',
     title: 'Tu tranquilidad es nuestro compromiso',
     paragraph1: 'En <strong>AsiSeguros</strong> somos una agencia de seguros comprometida con la protección integral de personas, familias y empresas en Colombia. Nos especializamos en la intermediación de seguros con un enfoque estratégico, humano y profesional.',
-    paragraph2: 'Trabajamos con las aseguradoras más reconocidas del país para ofrecerte soluciones personalizadas que se ajusten a tus necesidades reales, con asesoría experta en cada paso.',
-    experienceNumber: '10+',
+    paragraph2: 'Trabajamos con el respaldo de Seguros del Estado S.A., una de las compañías con mayor trayectoria en pólizas de cumplimiento y contratación estatal del país.',
+    experienceNumber: '5+',
     experienceText: 'Años de experiencia',
     features: [
       'Asesoría personalizada',
-      '+15 aseguradoras aliadas',
+      'Especialistas en cumplimiento',
       'Cobertura nacional',
       'Acompañamiento permanente',
       'Gestión de siniestros',
@@ -49,10 +51,10 @@ var DEFAULT_CONFIG = {
     ]
   },
   stats: {
-    stat1: { number: 37000, suffix: '+', label: 'Clientes protegidos' },
-    stat2: { number: 15, suffix: '+', label: 'Aseguradoras aliadas' },
-    stat3: { number: 10, suffix: '+', label: 'Años de experiencia' },
-    stat4: { number: 98, suffix: '%', label: 'Satisfacción del cliente' }
+    stat1: { number: 20, suffix: '', label: 'Productos en portafolio' },
+    stat2: { number: 4, suffix: '', label: 'Ramos que intermediamos' },
+    stat3: { number: 32, suffix: '', label: 'Departamentos con cobertura' },
+    stat4: { number: 5, suffix: '+', label: 'Años de experiencia' }
   },
   why: {
     subtitle: 'Nuestros diferenciales',
@@ -64,75 +66,74 @@ var DEFAULT_CONFIG = {
       { icon: 'fas fa-handshake-angle', title: 'Acompañamiento Permanente', text: 'No desaparecemos después de la venta. Estamos contigo en cada renovación, ajuste y momento que necesites.' }
     ]
   },
-  testimonials: [
-    { name: 'Carlos Martínez', role: 'Gerente General, LogiTransport S.A.S.', initials: 'CM', text: 'AsiSeguros nos ayudó a encontrar la póliza perfecta para nuestra empresa. Su asesoría fue clave para proteger nuestros activos con la mejor relación costo-beneficio.' },
-    { name: 'Laura Rodríguez', role: 'Cliente particular', initials: 'LR', text: 'Excelente acompañamiento en todo el proceso. Cuando tuve un siniestro con mi vehículo, me guiaron paso a paso hasta la resolución. Totalmente recomendados.' },
-    { name: 'Andrés Peña', role: 'Director Financiero, Constructora Altus', initials: 'AP', text: 'Llevamos más de 5 años con AsiSeguros y su servicio siempre es impecable. Nos asesoran de manera honesta y transparente, sin presionar ventas innecesarias.' }
-  ],
+  /* Vacío a propósito: solo se cargan testimonios reales con autorización escrita del cliente. */
+  testimonials: [],
   modules: {
     topbar: { enabled: true, label: 'Barra superior', description: 'Teléfono, email y redes sociales' },
     hero: { enabled: true, label: 'Hero / Banner principal', description: 'Sección principal con CTA' },
-    marquee: { enabled: true, label: 'Marquee de aseguradoras', description: 'Carrusel de logos de aseguradoras' },
+    marquee: { enabled: true, label: 'Franja de respaldo', description: 'Aseguradora que respalda las pólizas' },
     about: { enabled: true, label: 'Nosotros', description: 'Información sobre la empresa' },
     services: { enabled: true, label: 'Portafolio de seguros', description: 'Tarjetas de categorías de seguros' },
     why: { enabled: true, label: '¿Por qué elegirnos?', description: 'Diferenciales y propuesta de valor' },
     stats: { enabled: true, label: 'Estadísticas', description: 'Contadores animados' },
     productHighlight: { enabled: true, label: 'Seguro de autos (destacado)', description: 'Landing del producto estrella' },
-    testimonials: { enabled: true, label: 'Testimonios', description: 'Opiniones de clientes' },
+    testimonials: { enabled: true, label: 'Cómo trabajamos', description: 'Proceso de asesoría en cuatro pasos' },
     cta: { enabled: true, label: 'CTA de conversión', description: 'Llamado a la acción principal' },
     contact: { enabled: true, label: 'Formulario de contacto', description: 'Formulario de cotización' },
     whatsappFloat: { enabled: true, label: 'Botón flotante WhatsApp', description: 'Botón fijo en esquina inferior' }
   },
+  /* Portafolio real de Seguros del Estado. ARL no se intermedia: no debe volver a aparecer. */
   insuranceTypes: {
     personas: {
       enabled: true,
       label: 'Seguros de Personas',
       icon: 'fas fa-heart-pulse',
-      description: 'Protege a los tuyos con seguros de vida, salud, accidentes personales, educación, viajes y exequias.',
+      description: 'Protege a los tuyos y a tu equipo con vida grupo, salud, accidentes personales y cobertura estudiantil.',
       subtypes: {
-        vida: { enabled: true, label: 'Seguro de Vida' },
-        salud: { enabled: true, label: 'Seguro de Salud' },
+        vidaGrupo: { enabled: true, label: 'Vida Grupo' },
+        salud: { enabled: true, label: 'Salud' },
         accidentes: { enabled: true, label: 'Accidentes Personales' },
-        viajes: { enabled: true, label: 'Seguro de Viajes' },
-        educacion: { enabled: true, label: 'Seguro Educativo' },
-        exequias: { enabled: true, label: 'Exequias' },
-        mascotas: { enabled: false, label: 'Mascotas' }
+        estudiantil: { enabled: true, label: 'Póliza Integral Estudiantil' },
+        vidaFacil: { enabled: true, label: 'Vida Fácil' },
+        vidaDeudores: { enabled: true, label: 'Vida Deudores' }
+      }
+    },
+    automoviles: {
+      enabled: true,
+      label: 'Automóviles',
+      icon: 'fas fa-car-side',
+      description: 'Desde tu vehículo particular hasta la flota de carga por carretera, con la cobertura ajustada al uso real del vehículo.',
+      subtypes: {
+        livianos: { enabled: true, label: 'Livianos' },
+        carga: { enabled: true, label: 'Transporte de Carga por Carretera' },
+        rcCarga: { enabled: true, label: 'RC para Vehículos de Carga' }
       }
     },
     generales: {
       enabled: true,
       label: 'Seguros Generales',
-      icon: 'fas fa-car-side',
-      description: 'Vehículos, hogar, comercio, maquinaria, equipos electrónicos y arrendamiento con coberturas a tu medida.',
+      icon: 'fas fa-warehouse',
+      description: 'Protege los bienes, la obra y el patrimonio de tu empresa frente a incendio, hurto y riesgos de operación.',
       subtypes: {
-        autos: { enabled: true, label: 'Seguro de Autos' },
-        hogar: { enabled: true, label: 'Seguro de Hogar' },
-        maquinaria: { enabled: true, label: 'Maquinaria / Equipos' },
-        arrendamiento: { enabled: true, label: 'Arrendamiento' },
-        comercio: { enabled: false, label: 'Comercio / Pyme' }
+        incendio: { enabled: true, label: 'Incendio' },
+        sustraccion: { enabled: true, label: 'Sustracción' },
+        trContratista: { enabled: true, label: 'Todo Riesgo Contratista' },
+        trMaquinaria: { enabled: true, label: 'Todo Riesgo Maquinaria' },
+        manejo: { enabled: true, label: 'Manejo' },
+        irf: { enabled: true, label: 'Infidelidad y Riesgos Financieros (IRF)' }
       }
     },
     empresariales: {
       enabled: true,
       label: 'Seguros Empresariales',
       icon: 'fas fa-building-shield',
-      description: 'Responsabilidad civil, cumplimiento, transporte de mercancías y pólizas corporativas para tu empresa.',
+      description: 'Las garantías que exige la contratación estatal y privada: cumplimiento, responsabilidad civil y transporte.',
       subtypes: {
-        rc: { enabled: true, label: 'Responsabilidad Civil' },
-        cumplimiento: { enabled: true, label: 'Cumplimiento' },
-        transporte: { enabled: true, label: 'Transporte de Mercancías' },
-        pyme: { enabled: true, label: 'Pyme / Comercio' },
-        rcProfesional: { enabled: false, label: 'RC Profesional' }
-      }
-    },
-    arl: {
-      enabled: true,
-      label: 'ARL',
-      icon: 'fas fa-hard-hat',
-      description: 'Gestión integral de riesgos laborales, afiliación ARL y asesoría en seguridad y salud en el trabajo.',
-      subtypes: {
-        afiliacion: { enabled: true, label: 'ARL' },
-        sst: { enabled: true, label: 'Seguridad y Salud en el Trabajo' }
+        cumplimiento: { enabled: true, label: 'Cumplimiento Estatal y Particular' },
+        disposiciones: { enabled: true, label: 'Disposiciones Legales' },
+        rcCumplimiento: { enabled: true, label: 'RC derivada de Cumplimiento' },
+        transportes: { enabled: true, label: 'Transportes' },
+        rcExtracontractual: { enabled: true, label: 'Responsabilidad Civil Extracontractual' }
       }
     }
   },

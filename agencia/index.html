@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="AsiSeguros - Agencia de seguros en Colombia. Cotiza seguros de vida, salud, autos, hogar y empresariales con las mejores aseguradoras del país.">
-  <meta name="keywords" content="seguros colombia, agencia de seguros, seguro de vida, seguro de auto, seguro de salud, seguros empresariales, cotizar seguros, AsiSeguros">
+  <meta name="description" content="AsiSeguros - Agencia de seguros en Colombia. Cumplimiento estatal y particular, todo riesgo contratista, automóviles y carga, vida y salud. Con el respaldo de Seguros del Estado.">
+  <meta name="keywords" content="seguro de cumplimiento colombia, póliza de cumplimiento estatal, todo riesgo contratista, seguro de manejo, seguro de transporte de carga, responsabilidad civil extracontractual, agencia de seguros, AsiSeguros">
   <meta name="author" content="AsiSeguros">
   <meta name="robots" content="index, follow">
   <meta property="og:title" content="AsiSeguros – Protegemos lo que más importa">
-  <meta property="og:description" content="Agencia de seguros en Colombia. Soluciones de seguros personalizadas para personas y empresas con más de 15 aseguradoras aliadas.">
+  <meta property="og:description" content="Agencia de seguros en Colombia. Soluciones de seguros para personas, contratistas y empresas, con el respaldo de Seguros del Estado.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.asiseguros.com/">
   <meta property="og:locale" content="es_CO">
@@ -21,11 +21,32 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="../css/styles.css?v=4">
   <style>
-    /* Override marquee for logo images in this version */
-    .marquee-section { background: var(--gray-50) !important; border-bottom: 1px solid var(--gray-200); padding: 8px 0 16px; }
-    .marquee-item { min-width: 150px; height: 50px; }
-    .marquee-item img { max-height: 40px; max-width: 120px; object-fit: contain; filter: grayscale(100%); opacity: 0.5; transition: all 0.3s; display: inline-block; }
-    .marquee-item img:hover { filter: grayscale(0%); opacity: 1; }
+    /* Franja de respaldo (reemplaza el carrusel de logos) */
+    .backing-strip { background: var(--gray-50) !important; border-bottom: 1px solid var(--gray-200); padding: 28px 0; overflow: visible; }
+    .backing-strip .container { display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; }
+    .backing-eyebrow { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; color: var(--gray-400); font-weight: 600; }
+    .backing-name { font-size: 1.35rem; font-weight: 700; color: var(--primary, #0f2f5e); }
+    .backing-note { font-size: 0.8rem; color: var(--gray-500, #6b7280); }
+    /* Casilla de autorización de datos personales (Ley 1581 de 2012) */
+    .form-consent { margin-bottom: 20px; }
+    .consent-label { display: flex; align-items: flex-start; gap: 10px; font-size: 0.8rem; line-height: 1.5; color: var(--gray-500, #6b7280); font-weight: 400; cursor: pointer; }
+    .consent-label input[type="checkbox"] { flex: 0 0 auto; width: 16px; height: 16px; margin-top: 2px; accent-color: var(--accent, #c8a04a); cursor: pointer; }
+    .consent-label a { color: var(--primary, #0f2f5e); text-decoration: underline; }
+    .form-consent.consent-error .consent-label { color: #ef4444; }
+    .form-consent.consent-error input[type="checkbox"] { outline: 2px solid #ef4444; outline-offset: 2px; }
+
+    /* Cómo trabajamos (reemplaza testimonios) */
+    .process-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-top: 48px; text-align: left; }
+    @media (max-width: 900px) { .process-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 520px) { .process-grid { grid-template-columns: 1fr; } }
+    .process-card { background: #fff; border: 1px solid var(--gray-200, #e5e7eb); border-radius: 12px; padding: 28px 24px; }
+    .process-step { display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px; border-radius: 50%; background: var(--primary, #0f2f5e); color: #fff; font-weight: 700; margin-bottom: 16px; }
+    .process-card h3 { font-size: 1.05rem; margin-bottom: 8px; }
+    .process-card p { font-size: 0.9rem; color: var(--gray-500, #6b7280); margin: 0; }
+
+    /* Aviso legal del intermediario */
+    .footer-legal-note { font-size: 0.72rem; line-height: 1.6; color: rgba(255,255,255,0.45); margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.08); }
+
     /* Stats grid layout for 4 counters */
     .stats-section .stats-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 32px; }
     @media (max-width:768px) { .stats-section .stats-grid { grid-template-columns: repeat(2,1fr); } }
@@ -36,8 +57,10 @@
     "@context": "https://schema.org",
     "@type": "InsuranceAgency",
     "name": "AsiSeguros",
+    "legalName": "ASISEGUROS SAS",
+    "taxID": "901483323-4",
     "url": "https://www.asiseguros.com",
-    "description": "Agencia de seguros en Colombia. Soluciones personalizadas en seguros de vida, salud, autos, hogar y empresariales.",
+    "description": "Agencia de seguros en Colombia. Cumplimiento estatal y particular, todo riesgo contratista, automóviles y carga, vida y salud. Con el respaldo de Seguros del Estado S.A.",
     "telephone": "+573173712260",
     "email": "contacto@asiseguros.com",
     "address": { "@type": "PostalAddress", "addressCountry": "CO" }
@@ -82,12 +105,12 @@
             <a href="#portafolio">Portafolio <i class="fas fa-chevron-down" style="font-size:0.65rem"></i></a>
             <ul class="dropdown-menu">
               <li><a href="#portafolio"><i class="fas fa-heart-pulse"></i> Seguros de Personas</a></li>
-              <li><a href="#portafolio"><i class="fas fa-car"></i> Seguros Generales</a></li>
+              <li><a href="#portafolio"><i class="fas fa-car"></i> Automóviles</a></li>
+              <li><a href="#portafolio"><i class="fas fa-warehouse"></i> Seguros Generales</a></li>
               <li><a href="#portafolio"><i class="fas fa-building"></i> Seguros Empresariales</a></li>
-              <li><a href="#portafolio"><i class="fas fa-hard-hat"></i> ARL</a></li>
             </ul>
           </li>
-          <li><a href="#testimonios">Testimonios</a></li>
+          <li><a href="#como-trabajamos">Cómo trabajamos</a></li>
           <li><a href="#contacto">Contacto</a></li>
           <li class="nav-cta">
             <a href="#contacto" class="btn btn-primary btn-sm">
@@ -115,7 +138,7 @@
         </h1>
         <p class="hero-text">
           Soluciones de seguros diseñadas para tu tranquilidad, tu empresa y tu futuro.
-          Te acompañamos con asesoría experta y el respaldo de las mejores aseguradoras del país.
+          Te acompañamos con asesoría experta y el respaldo de Seguros del Estado.
         </p>
         <div class="hero-buttons">
           <a href="#contacto" class="btn btn-primary">
@@ -127,15 +150,15 @@
         </div>
         <div class="hero-stats">
           <div class="hero-stat">
-            <div class="hero-stat-number">15+</div>
-            <div class="hero-stat-label">Aseguradoras</div>
+            <div class="hero-stat-number">20</div>
+            <div class="hero-stat-label">Productos</div>
           </div>
           <div class="hero-stat">
-            <div class="hero-stat-number">37K+</div>
-            <div class="hero-stat-label">Clientes</div>
+            <div class="hero-stat-number">32</div>
+            <div class="hero-stat-label">Departamentos</div>
           </div>
           <div class="hero-stat">
-            <div class="hero-stat-number">10+</div>
+            <div class="hero-stat-number">5+</div>
             <div class="hero-stat-label">Años</div>
           </div>
         </div>
@@ -158,7 +181,7 @@
             <i class="fas fa-handshake"></i>
             <div class="card-info">
               <strong>Asesoría Experta</strong>
-              <span>Acompañamiento 24/7</span>
+              <span>Acompañamiento en cada paso</span>
             </div>
           </div>
         </div>
@@ -166,29 +189,12 @@
     </div>
   </section>
 
-  <!-- ========== MARQUEE ASEGURADORAS ========== -->
-  <section class="marquee-section" style="background:var(--gray-50); border-bottom:1px solid var(--gray-200);">
-    <div style="text-align:center; font-size:0.8rem; text-transform:uppercase; letter-spacing:2px; color:var(--gray-400); font-weight:600; margin-bottom:16px; padding-top:8px;">
-      Respaldados por las mejores aseguradoras del país
-    </div>
-    <div class="marquee-track">
-      <div class="marquee-item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/Logo_Sura.svg/200px-Logo_Sura.svg.png" alt="Sura" loading="lazy"></div>
-      <div class="marquee-item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/MAPFRE_Logo.svg/200px-MAPFRE_Logo.svg.png" alt="Mapfre" loading="lazy"></div>
-      <div class="marquee-item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Allianz_logo.svg/200px-Allianz_logo.svg.png" alt="Allianz" loading="lazy"></div>
-      <div class="marquee-item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Zurich_Logo_new.svg/200px-Zurich_Logo_new.svg.png" alt="Zurich" loading="lazy"></div>
-      <div class="marquee-item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Logo_Bol%C3%ADvar.png/200px-Logo_Bol%C3%ADvar.png" alt="Bolívar" loading="lazy"></div>
-      <div class="marquee-item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Liberty_Mutual_logo.svg/200px-Liberty_Mutual_logo.svg.png" alt="Liberty" loading="lazy"></div>
-      <div class="marquee-item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Chubb_logo_2018.svg/200px-Chubb_logo_2018.svg.png" alt="Chubb" loading="lazy"></div>
-      <div class="marquee-item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/HDI_logo.svg/200px-HDI_logo.svg.png" alt="HDI" loading="lazy"></div>
-      <!-- duplicate for seamless loop -->
-      <div class="marquee-item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/Logo_Sura.svg/200px-Logo_Sura.svg.png" alt="Sura" loading="lazy"></div>
-      <div class="marquee-item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/MAPFRE_Logo.svg/200px-MAPFRE_Logo.svg.png" alt="Mapfre" loading="lazy"></div>
-      <div class="marquee-item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Allianz_logo.svg/200px-Allianz_logo.svg.png" alt="Allianz" loading="lazy"></div>
-      <div class="marquee-item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Zurich_Logo_new.svg/200px-Zurich_Logo_new.svg.png" alt="Zurich" loading="lazy"></div>
-      <div class="marquee-item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Logo_Bol%C3%ADvar.png/200px-Logo_Bol%C3%ADvar.png" alt="Bolívar" loading="lazy"></div>
-      <div class="marquee-item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Liberty_Mutual_logo.svg/200px-Liberty_Mutual_logo.svg.png" alt="Liberty" loading="lazy"></div>
-      <div class="marquee-item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Chubb_logo_2018.svg/200px-Chubb_logo_2018.svg.png" alt="Chubb" loading="lazy"></div>
-      <div class="marquee-item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/HDI_logo.svg/200px-HDI_logo.svg.png" alt="HDI" loading="lazy"></div>
+  <!-- ========== FRANJA DE RESPALDO ========== -->
+  <section class="marquee-section backing-strip">
+    <div class="container">
+      <span class="backing-eyebrow">Con el respaldo de</span>
+      <strong class="backing-name">Seguros del Estado S.A.</strong>
+      <span class="backing-note">Compañía vigilada por la Superintendencia Financiera de Colombia</span>
     </div>
   </section>
 
@@ -201,7 +207,7 @@
              width="600" height="450"
              loading="lazy">
         <div class="about-experience-badge">
-          <div class="number">10+</div>
+          <div class="number">5+</div>
           <div class="text">Años de experiencia</div>
         </div>
       </div>
@@ -215,13 +221,13 @@
           intermediación de seguros con un enfoque estratégico, humano y profesional.
         </p>
         <p>
-          Trabajamos con las aseguradoras más reconocidas del país para ofrecerte soluciones
-          personalizadas que se ajusten a tus necesidades reales, con asesoría experta en cada paso.
+          Trabajamos con el respaldo de Seguros del Estado S.A., una de las compañías con mayor
+          trayectoria en pólizas de cumplimiento y contratación estatal del país.
         </p>
 
         <div class="about-features">
           <div class="about-feature"><i class="fas fa-circle-check"></i> Asesoría personalizada</div>
-          <div class="about-feature"><i class="fas fa-circle-check"></i> +15 aseguradoras aliadas</div>
+          <div class="about-feature"><i class="fas fa-circle-check"></i> Especialistas en cumplimiento</div>
           <div class="about-feature"><i class="fas fa-circle-check"></i> Cobertura nacional</div>
           <div class="about-feature"><i class="fas fa-circle-check"></i> Acompañamiento permanente</div>
           <div class="about-feature"><i class="fas fa-circle-check"></i> Gestión de siniestros</div>
@@ -248,28 +254,28 @@
         <div class="service-card reveal">
           <div class="service-icon"><i class="fas fa-heart-pulse"></i></div>
           <h3>Seguros de Personas</h3>
-          <p>Protege a los tuyos con seguros de vida, salud, accidentes personales, educación, viajes y exequias.</p>
+          <p>Protege a los tuyos y a tu equipo con vida grupo, salud, accidentes personales y cobertura estudiantil.</p>
           <a href="#contacto" class="btn btn-accent btn-sm">Cotizar <i class="fas fa-arrow-right"></i></a>
         </div>
 
         <div class="service-card reveal">
           <div class="service-icon"><i class="fas fa-car-side"></i></div>
+          <h3>Automóviles</h3>
+          <p>Desde tu vehículo particular hasta la flota de carga por carretera, con la cobertura ajustada al uso real del vehículo.</p>
+          <a href="#contacto" class="btn btn-accent btn-sm">Cotizar <i class="fas fa-arrow-right"></i></a>
+        </div>
+
+        <div class="service-card reveal">
+          <div class="service-icon"><i class="fas fa-warehouse"></i></div>
           <h3>Seguros Generales</h3>
-          <p>Vehículos, hogar, comercio, maquinaria, equipos electrónicos y arrendamiento con coberturas a tu medida.</p>
+          <p>Protege los bienes, la obra y el patrimonio de tu empresa frente a incendio, hurto y riesgos de operación.</p>
           <a href="#contacto" class="btn btn-accent btn-sm">Cotizar <i class="fas fa-arrow-right"></i></a>
         </div>
 
         <div class="service-card reveal">
           <div class="service-icon"><i class="fas fa-building-shield"></i></div>
           <h3>Seguros Empresariales</h3>
-          <p>Responsabilidad civil, cumplimiento, transporte de mercancías y pólizas corporativas para tu empresa.</p>
-          <a href="#contacto" class="btn btn-accent btn-sm">Cotizar <i class="fas fa-arrow-right"></i></a>
-        </div>
-
-        <div class="service-card reveal">
-          <div class="service-icon"><i class="fas fa-hard-hat"></i></div>
-          <h3>ARL</h3>
-          <p>Gestión integral de riesgos laborales, afiliación ARL y asesoría en seguridad y salud en el trabajo.</p>
+          <p>Las garantías que exige la contratación estatal y privada: cumplimiento, responsabilidad civil y transporte.</p>
           <a href="#contacto" class="btn btn-accent btn-sm">Cotizar <i class="fas fa-arrow-right"></i></a>
         </div>
       </div>
@@ -310,20 +316,20 @@
     <div class="container">
       <div class="stats-grid">
         <div class="stat-item reveal">
-          <div class="stat-number" data-target="37000" data-suffix="+">0</div>
-          <div class="stat-label">Clientes protegidos</div>
+          <div class="stat-number" data-target="20" data-suffix="">20</div>
+          <div class="stat-label">Productos en portafolio</div>
         </div>
         <div class="stat-item reveal">
-          <div class="stat-number" data-target="15" data-suffix="+">0</div>
-          <div class="stat-label">Aseguradoras aliadas</div>
+          <div class="stat-number" data-target="4" data-suffix="">4</div>
+          <div class="stat-label">Ramos que intermediamos</div>
         </div>
         <div class="stat-item reveal">
-          <div class="stat-number" data-target="10" data-suffix="+">0</div>
+          <div class="stat-number" data-target="32" data-suffix="">32</div>
+          <div class="stat-label">Departamentos con cobertura</div>
+        </div>
+        <div class="stat-item reveal">
+          <div class="stat-number" data-target="5" data-suffix="+">5+</div>
           <div class="stat-label">Años de experiencia</div>
-        </div>
-        <div class="stat-item reveal">
-          <div class="stat-number" data-target="98" data-suffix="%">0</div>
-          <div class="stat-label">Satisfacción del cliente</div>
         </div>
       </div>
     </div>
@@ -336,8 +342,8 @@
         <span class="section-subtitle">Producto destacado</span>
         <h2 class="section-title">Seguro de Autos</h2>
         <p>
-          Protege tu vehículo con las coberturas más completas del mercado. Comparamos opciones entre
-          múltiples aseguradoras para que obtengas el mejor precio y la mejor protección.
+          Protege tu vehículo con las coberturas más completas del mercado. Estructuramos la cobertura
+          según el uso real del vehículo, desde el particular hasta la flota de carga.
         </p>
 
         <div class="product-benefits">
@@ -351,8 +357,8 @@
           <div class="product-benefit">
             <div class="product-benefit-icon"><i class="fas fa-check"></i></div>
             <div class="product-benefit-text">
-              <strong>Cotización comparativa</strong>
-              <span>Comparamos las mejores opciones entre nuestras aseguradoras aliadas.</span>
+              <strong>Transporte de carga por carretera</strong>
+              <span>Cobertura para vehículos de carga y responsabilidad civil frente a terceros.</span>
             </div>
           </div>
           <div class="product-benefit">
@@ -366,7 +372,7 @@
             <div class="product-benefit-icon"><i class="fas fa-check"></i></div>
             <div class="product-benefit-text">
               <strong>Planes flexibles</strong>
-              <span>Seguros para vehículos particulares, comerciales y motos.</span>
+              <span>Seguros para vehículos particulares, comerciales y de carga.</span>
             </div>
           </div>
         </div>
@@ -385,66 +391,33 @@
     </div>
   </section>
 
-  <!-- ========== TESTIMONIOS ========== -->
-  <section class="testimonials-section" id="testimonios">
+  <!-- ========== CÓMO TRABAJAMOS ========== -->
+  <section class="testimonials-section" id="como-trabajamos">
     <div class="container text-center">
-      <span class="section-subtitle reveal">Testimonios</span>
-      <h2 class="section-title reveal">Lo que dicen nuestros clientes</h2>
-      <p class="section-description reveal">La confianza de nuestros clientes es nuestro mayor respaldo.</p>
+      <span class="section-subtitle reveal">Cómo trabajamos</span>
+      <h2 class="section-title reveal">De la necesidad a la póliza en cuatro pasos</h2>
+      <p class="section-description reveal">Un proceso claro, sin letra menuda y con un asesor asignado de principio a fin.</p>
 
-      <div class="testimonials-grid">
-        <div class="testimonial-card reveal">
-          <i class="fas fa-quote-right testimonial-quote-icon"></i>
-          <div class="testimonial-stars">
-            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-          </div>
-          <p class="testimonial-text">
-            "AsiSeguros nos ayudó a encontrar la póliza perfecta para nuestra empresa. Su asesoría fue
-            clave para proteger nuestros activos con la mejor relación costo-beneficio."
-          </p>
-          <div class="testimonial-author">
-            <div class="testimonial-avatar">CM</div>
-            <div class="testimonial-info">
-              <strong>Carlos Martínez</strong>
-              <span>Gerente General, LogiTransport S.A.S.</span>
-            </div>
-          </div>
+      <div class="process-grid">
+        <div class="process-card reveal">
+          <span class="process-step">1</span>
+          <h3>Diagnóstico</h3>
+          <p>Revisamos tu operación, el contrato o el bien que necesitas asegurar y definimos el riesgo real a cubrir.</p>
         </div>
-
-        <div class="testimonial-card reveal">
-          <i class="fas fa-quote-right testimonial-quote-icon"></i>
-          <div class="testimonial-stars">
-            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-          </div>
-          <p class="testimonial-text">
-            "Excelente acompañamiento en todo el proceso. Cuando tuve un siniestro con mi vehículo,
-            me guiaron paso a paso hasta la resolución. Totalmente recomendados."
-          </p>
-          <div class="testimonial-author">
-            <div class="testimonial-avatar">LR</div>
-            <div class="testimonial-info">
-              <strong>Laura Rodríguez</strong>
-              <span>Cliente particular</span>
-            </div>
-          </div>
+        <div class="process-card reveal">
+          <span class="process-step">2</span>
+          <h3>Cotización</h3>
+          <p>Estructuramos la cobertura con Seguros del Estado y te explicamos amparos, exclusiones y deducibles.</p>
         </div>
-
-        <div class="testimonial-card reveal">
-          <i class="fas fa-quote-right testimonial-quote-icon"></i>
-          <div class="testimonial-stars">
-            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-          </div>
-          <p class="testimonial-text">
-            "Llevamos más de 5 años con AsiSeguros y su servicio siempre es impecable.
-            Nos asesoran de manera honesta y transparente, sin presionar ventas innecesarias."
-          </p>
-          <div class="testimonial-author">
-            <div class="testimonial-avatar">AP</div>
-            <div class="testimonial-info">
-              <strong>Andrés Peña</strong>
-              <span>Director Financiero, Constructora Altus</span>
-            </div>
-          </div>
+        <div class="process-card reveal">
+          <span class="process-step">3</span>
+          <h3>Expedición</h3>
+          <p>Gestionamos la documentación y el trámite ante la aseguradora hasta que la póliza queda expedida.</p>
+        </div>
+        <div class="process-card reveal">
+          <span class="process-step">4</span>
+          <h3>Acompañamiento</h3>
+          <p>Te acompañamos en renovaciones, modificaciones y en todo el proceso de reclamación de un siniestro.</p>
         </div>
       </div>
     </div>
@@ -532,29 +505,34 @@
               <select id="tipo_seguro" name="tipo_seguro" required>
                 <option value="" disabled selected>Selecciona una opción</option>
                 <optgroup label="Seguros de Personas">
-                  <option value="Vida">Seguro de Vida</option>
-                  <option value="Salud">Seguro de Salud</option>
-                  <option value="Accidentes">Accidentes Personales</option>
-                  <option value="Viajes">Seguro de Viajes</option>
-                  <option value="Educacion">Seguro Educativo</option>
-                  <option value="Exequias">Exequias</option>
+                  <option value="Vida Grupo">Vida Grupo</option>
+                  <option value="Salud">Salud</option>
+                  <option value="Accidentes Personales">Accidentes Personales</option>
+                  <option value="Póliza Integral Estudiantil">Póliza Integral Estudiantil</option>
+                  <option value="Vida Fácil">Vida Fácil</option>
+                  <option value="Vida Deudores">Vida Deudores</option>
+                </optgroup>
+                <optgroup label="Automóviles">
+                  <option value="Livianos">Livianos</option>
+                  <option value="Transporte de Carga por Carretera">Transporte de Carga por Carretera</option>
+                  <option value="RC para Vehículos de Carga">RC para Vehículos de Carga</option>
                 </optgroup>
                 <optgroup label="Seguros Generales">
-                  <option value="Autos">Seguro de Autos</option>
-                  <option value="Hogar">Seguro de Hogar</option>
-                  <option value="Maquinaria">Maquinaria / Equipos</option>
-                  <option value="Arrendamiento">Arrendamiento</option>
+                  <option value="Incendio">Incendio</option>
+                  <option value="Sustracción">Sustracción</option>
+                  <option value="Todo Riesgo Contratista">Todo Riesgo Contratista</option>
+                  <option value="Todo Riesgo Maquinaria">Todo Riesgo Maquinaria</option>
+                  <option value="Manejo">Manejo</option>
+                  <option value="Infidelidad y Riesgos Financieros (IRF)">Infidelidad y Riesgos Financieros (IRF)</option>
                 </optgroup>
                 <optgroup label="Seguros Empresariales">
-                  <option value="RC">Responsabilidad Civil</option>
-                  <option value="Cumplimiento">Cumplimiento</option>
-                  <option value="Transporte">Transporte de Mercancías</option>
-                  <option value="Pyme">Pyme / Comercio</option>
+                  <option value="Cumplimiento Estatal y Particular">Cumplimiento Estatal y Particular</option>
+                  <option value="Disposiciones Legales">Disposiciones Legales</option>
+                  <option value="RC derivada de Cumplimiento">RC derivada de Cumplimiento</option>
+                  <option value="Transportes">Transportes</option>
+                  <option value="Responsabilidad Civil Extracontractual">Responsabilidad Civil Extracontractual</option>
                 </optgroup>
-                <optgroup label="ARL">
-                  <option value="ARL">ARL</option>
-                  <option value="SST">Seguridad y Salud en el Trabajo</option>
-                </optgroup>
+                <option value="Asistencias">Asistencias</option>
                 <option value="Otro">Otro</option>
               </select>
             </div>
@@ -563,6 +541,17 @@
           <div class="form-group">
             <label for="mensaje">Mensaje (opcional)</label>
             <textarea id="mensaje" name="mensaje" placeholder="Cuéntanos qué necesitas proteger..." rows="4"></textarea>
+          </div>
+
+          <div class="form-group form-consent">
+            <label for="autorizacion_datos" class="consent-label">
+              <input type="checkbox" id="autorizacion_datos" name="autorizacion_datos" required>
+              <span>
+                Autorizo a AsiSeguros el tratamiento de mis datos personales para ser contactado con
+                fines de cotización y asesoría en seguros, conforme a la Ley 1581 de 2012 y a la
+                <a href="politica-tratamiento-datos.html" target="_blank" rel="noopener">Política de Tratamiento de Datos</a>. *
+              </span>
+            </label>
           </div>
 
           <button type="submit" class="btn btn-primary">
@@ -598,7 +587,7 @@
             <li><a href="#inicio"><i class="fas fa-chevron-right"></i> Inicio</a></li>
             <li><a href="#nosotros"><i class="fas fa-chevron-right"></i> Nosotros</a></li>
             <li><a href="#portafolio"><i class="fas fa-chevron-right"></i> Portafolio</a></li>
-            <li><a href="#testimonios"><i class="fas fa-chevron-right"></i> Testimonios</a></li>
+            <li><a href="#como-trabajamos"><i class="fas fa-chevron-right"></i> Cómo trabajamos</a></li>
             <li><a href="#contacto"><i class="fas fa-chevron-right"></i> Contacto</a></li>
           </ul>
         </div>
@@ -607,9 +596,9 @@
           <h4>Nuestros Seguros</h4>
           <ul>
             <li><a href="#portafolio"><i class="fas fa-chevron-right"></i> Seguros de Personas</a></li>
+            <li><a href="#portafolio"><i class="fas fa-chevron-right"></i> Automóviles</a></li>
             <li><a href="#portafolio"><i class="fas fa-chevron-right"></i> Seguros Generales</a></li>
             <li><a href="#portafolio"><i class="fas fa-chevron-right"></i> Seguros Empresariales</a></li>
-            <li><a href="#portafolio"><i class="fas fa-chevron-right"></i> ARL</a></li>
             <li><a href="#seguro-autos"><i class="fas fa-chevron-right"></i> Seguro de Autos</a></li>
           </ul>
         </div>
@@ -638,10 +627,18 @@
       <div class="footer-bottom">
         <span>&copy; 2026 AsiSeguros. Todos los derechos reservados.</span>
         <div class="footer-bottom-links">
-          <a href="#">Política de Privacidad</a>
-          <a href="#">Términos y Condiciones</a>
+          <a href="politica-tratamiento-datos.html">Política de Privacidad</a>
+          <a href="terminos-y-condiciones.html">Términos y Condiciones</a>
         </div>
       </div>
+
+      <p class="footer-legal-note">
+        AsiSeguros es el nombre comercial de ASISEGUROS SAS, NIT 901.483.323-4, agencia de seguros
+        que actúa como intermediario y no asume la calidad de aseguradora. Las pólizas son expedidas
+        por Seguros del Estado S.A., vigilada por la Superintendencia Financiera de Colombia. La
+        información de este sitio es comercial e informativa y no constituye oferta; las coberturas,
+        exclusiones y deducibles aplicables son únicamente los señalados en la póliza.
+      </p>
     </div>
   </footer>
 

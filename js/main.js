@@ -181,7 +181,16 @@ document.addEventListener('DOMContentLoaded', () => {
       // Validate required fields
       let isValid = true;
       contactForm.querySelectorAll('[required]').forEach(field => {
-        if (!field.value.trim()) {
+        if (field.type === 'checkbox') {
+          // Ley 1581/2012: sin autorización marcada el formulario no envía
+          const wrapper = field.closest('.form-consent');
+          if (!field.checked) {
+            if (wrapper) wrapper.classList.add('consent-error');
+            isValid = false;
+          } else if (wrapper) {
+            wrapper.classList.remove('consent-error');
+          }
+        } else if (!field.value.trim()) {
           field.style.borderColor = '#ef4444';
           isValid = false;
         } else {
@@ -199,7 +208,8 @@ document.addEventListener('DOMContentLoaded', () => {
         `*Email:* ${data.email}\n` +
         `*Teléfono:* ${data.telefono}\n` +
         `*Interés:* ${tipoAsistencia}\n` +
-        `*Mensaje:* ${data.mensaje || 'Sin mensaje adicional'}`
+        `*Mensaje:* ${data.mensaje || 'Sin mensaje adicional'}\n` +
+        `*Autoriza tratamiento de datos:* ${data.autorizacion_datos ? 'Sí' : 'No'}`
       );
 
       const waNumber = contactForm.getAttribute('data-whatsapp') || '573173712260';
@@ -408,7 +418,7 @@ function initCart() {
    APPLY ADMIN CONFIG TO FRONTEND
    ======================================== */
 function applyAdminConfig() {
-  const saved = localStorage.getItem('asiseguros_admin');
+  const saved = localStorage.getItem('asiseguros_admin_v2');
   if (!saved) return;
 
   let cfg;
@@ -544,7 +554,8 @@ function applyAdminConfig() {
         if (numEl) {
           numEl.setAttribute('data-target', s.number);
           numEl.setAttribute('data-suffix', s.suffix);
-          numEl.textContent = '0';
+          // Valor final por defecto: si el visitante nunca llega a la franja, no queda en 0
+          numEl.textContent = Number(s.number).toLocaleString('es-CO') + (s.suffix || '');
         }
         if (labelEl) labelEl.textContent = s.label;
       }
@@ -584,7 +595,7 @@ function applyAdminConfig() {
   // -- Insurance Types (services cards + form select) --
   if (cfg.insuranceTypes) {
     const serviceCards = document.querySelectorAll('.service-card');
-    const catKeys = ['personas', 'generales', 'empresariales', 'arl'];
+    const catKeys = ['personas', 'automoviles', 'generales', 'empresariales'];
 
     catKeys.forEach((key, i) => {
       const cat = cfg.insuranceTypes[key];
@@ -603,7 +614,7 @@ function applyAdminConfig() {
     if (select) {
       // Keep the first placeholder option
       const placeholder = select.querySelector('option[disabled]');
-      const otroOption = '<option value="Otro">Otro</option>';
+      const otroOption = '<option value="Asistencias">Asistencias</option><option value="Otro">Otro</option>';
       let optionsHTML = placeholder ? placeholder.outerHTML : '';
 
       Object.entries(cfg.insuranceTypes).forEach(([catKey, cat]) => {
