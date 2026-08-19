@@ -1,4 +1,4 @@
-# Fotografías de la página /agencia
+# Fotografías del sitio
 
 La página está preparada para recibir fotos sin tocar código. Basta con dejar el
 archivo en `assets/img/` **con el nombre exacto** de la tabla y hacer commit.
@@ -72,5 +72,5 @@ Levantar el sitio en local y revisar la página:
 
 ```bash
 python3 -m http.server 8000
-# abrir http://localhost:8000/agencia/
+# abrir http://localhost:8000/
 ```

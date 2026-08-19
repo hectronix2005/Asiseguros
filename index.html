@@ -3,39 +3,108 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="ASI – Asistencias confiables en Colombia. Legal, vial, odontológica y médica cuando más lo necesitas.">
-  <meta name="keywords" content="asistencia legal, asistencia vial, asistencia medica, asistencia odontologica, ASI, asiseguros colombia">
+  <meta name="description" content="AsiSeguros - Agencia de seguros en Colombia. Cumplimiento estatal y particular, todo riesgo contratista, automóviles y carga, vida y salud. Con el respaldo de Seguros del Estado.">
+  <meta name="keywords" content="seguro de cumplimiento colombia, póliza de cumplimiento estatal, todo riesgo contratista, seguro de manejo, seguro de transporte de carga, responsabilidad civil extracontractual, agencia de seguros, AsiSeguros">
   <meta name="author" content="AsiSeguros">
   <meta name="robots" content="index, follow">
-  <meta property="og:title" content="ASI – Asistencias confiables cuando más las necesitas">
-  <meta property="og:description" content="Legal, vial, odontológica y médica. Elige tu plan ASI y solicita asistencia cuando y donde lo requieras.">
+  <meta property="og:title" content="AsiSeguros – Protegemos lo que más importa">
+  <meta property="og:description" content="Agencia de seguros en Colombia. Soluciones de seguros para personas, contratistas y empresas, con el respaldo de Seguros del Estado.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.asiseguros.com/">
   <meta property="og:locale" content="es_CO">
   <link rel="canonical" href="https://www.asiseguros.com/">
-  <title>ASI – Asistencias confiables cuando más las necesitas</title>
+  <title>AsiSeguros – Protegemos lo que más importa | Agencia de Seguros en Colombia</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="css/styles.css?v=4">
+  <style>
+    /* Franja de respaldo (reemplaza el carrusel de logos) */
+    .backing-strip { background: var(--gray-50) !important; border-bottom: 1px solid var(--gray-200); padding: 28px 0; overflow: visible; }
+    .backing-strip .container { display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; }
+    .backing-eyebrow { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; color: var(--gray-400); font-weight: 600; }
+    .backing-name { font-size: 1.35rem; font-weight: 700; color: var(--primary, #0f2f5e); }
+    .backing-note { font-size: 0.8rem; color: var(--gray-500, #6b7280); }
+    /* Casilla de autorización de datos personales (Ley 1581 de 2012) */
+    .form-consent { margin-bottom: 20px; }
+    .consent-label { display: flex; align-items: flex-start; gap: 10px; font-size: 0.8rem; line-height: 1.5; color: var(--gray-500, #6b7280); font-weight: 400; cursor: pointer; }
+    .consent-label input[type="checkbox"] { flex: 0 0 auto; width: 16px; height: 16px; margin-top: 2px; accent-color: var(--accent, #c8a04a); cursor: pointer; }
+    .consent-label a { color: var(--primary, #0f2f5e); text-decoration: underline; }
+    .form-consent.consent-error .consent-label { color: #ef4444; }
+    .form-consent.consent-error input[type="checkbox"] { outline: 2px solid #ef4444; outline-offset: 2px; }
+
+    /* Cómo trabajamos (reemplaza testimonios) */
+    .process-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-top: 48px; text-align: left; }
+    @media (max-width: 900px) { .process-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 520px) { .process-grid { grid-template-columns: 1fr; } }
+    .process-card { background: #fff; border: 1px solid var(--gray-200, #e5e7eb); border-radius: 12px; padding: 28px 24px; }
+    .process-step { display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px; border-radius: 50%; background: var(--primary, #0f2f5e); color: #fff; font-weight: 700; margin-bottom: 16px; }
+    .process-card h3 { font-size: 1.05rem; margin-bottom: 8px; }
+    .process-card p { font-size: 0.9rem; color: var(--gray-500, #6b7280); margin: 0; }
+
+    /* ---- Fotografías de fondo ----
+       Cada bloque apunta a un archivo de assets/img que puede no existir todavía.
+       Si falta, el navegador simplemente usa el color de respaldo y la sección se
+       ve como hoy; al subir la foto con ese nombre aparece sola. Ver docs/FOTOS.md */
+
+    /* Seguro de Autos: una columna sobre foto de fondo */
+    .product-highlight { position: relative; background-color: var(--gray-50); background-size: cover; background-position: center 35%; background-repeat: no-repeat; }
+    .product-highlight .container { grid-template-columns: 1fr; gap: 0; position: relative; z-index: 1; }
+    .product-highlight .product-content { max-width: 940px; margin: 0 auto; text-align: center; }
+    .product-highlight .product-benefits { display: grid; grid-template-columns: 1fr 1fr; gap: 0 44px; margin: 36px 0 32px; }
+    .product-highlight .product-benefit { text-align: left; }
+    /* La capa oscura y el texto en blanco solo se activan cuando hay foto */
+    .product-highlight.has-photo::before { content: ""; position: absolute; inset: 0; background: linear-gradient(100deg, rgba(10,26,48,.93) 0%, rgba(10,26,48,.84) 50%, rgba(10,26,48,.6) 100%); }
+    .product-highlight.has-photo .product-content { text-align: left; max-width: 640px; margin: 0; }
+    .product-highlight.has-photo .product-benefits { grid-template-columns: 1fr; gap: 0; }
+    .product-highlight.has-photo .section-title,
+    .product-highlight.has-photo .product-benefit strong { color: #fff; }
+    .product-highlight.has-photo .product-content > p,
+    .product-highlight.has-photo .product-benefit span { color: rgba(255,255,255,.75); }
+    .product-highlight.has-photo .product-benefit-icon { background: rgba(125,248,154,.15); }
+    @media (max-width: 700px) { .product-highlight.has-photo .product-content { max-width: none; } }
+
+    /* Tarjetas del portafolio: franja de foto sobre el ícono */
+    .service-card { padding-top: 0; }
+    .service-media { height: 0; margin: 0 -28px 0; background-color: var(--gray-100); background-size: cover; background-position: center; transition: height var(--transition); }
+    .service-card.has-photo .service-media { height: 150px; }
+    .service-card.has-photo .service-icon { margin-top: -35px; position: relative; z-index: 1; background: #fff; box-shadow: var(--shadow-md); }
+    .service-card:not(.has-photo) { padding-top: 36px; }
+
+    /* Cómo trabajamos: foto de fondo opcional */
+    .testimonials-section { position: relative; background-size: cover; background-position: center; background-repeat: no-repeat; }
+    .testimonials-section .container { position: relative; z-index: 1; }
+    .testimonials-section.has-photo::before { content: ""; position: absolute; inset: 0; background: rgba(10,26,48,.9); }
+    .testimonials-section.has-photo .section-title { color: #fff; }
+    .testimonials-section.has-photo .section-description { color: rgba(255,255,255,.72); }
+    .testimonials-section.has-photo .process-card { background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.14); }
+    .testimonials-section.has-photo .process-step { background: var(--secondary); color: var(--primary); }
+    .testimonials-section.has-photo .process-card h3 { color: #fff; }
+    .testimonials-section.has-photo .process-card p { color: rgba(255,255,255,.7); }
+    @media (max-width: 700px) { .product-highlight .product-benefits { grid-template-columns: 1fr; } }
+
+    /* Aviso legal del intermediario */
+    .footer-legal-note { font-size: 0.72rem; line-height: 1.6; color: rgba(255,255,255,0.45); margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.08); }
+
+    /* Stats grid layout for 4 counters */
+    .stats-section .stats-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 32px; }
+    @media (max-width:768px) { .stats-section .stats-grid { grid-template-columns: repeat(2,1fr); } }
+  </style>
 
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "Organization",
+    "@type": "InsuranceAgency",
     "name": "AsiSeguros",
+    "legalName": "ASISEGUROS SAS",
+    "taxID": "901483323-4",
     "url": "https://www.asiseguros.com",
-    "description": "Asistencias legales, viales, odontológicas y médicas en Colombia.",
+    "description": "Agencia de seguros en Colombia. Cumplimiento estatal y particular, todo riesgo contratista, automóviles y carga, vida y salud. Con el respaldo de Seguros del Estado S.A.",
     "telephone": "+573173712260",
-    "email": "asistencias@asiseguros.com",
-    "sameAs": [
-      "https://www.facebook.com/profile.php?id=61556481256358",
-      "https://www.instagram.com/asisegurosasiste/",
-      "https://www.tiktok.com/@asiseguros",
-      "https://www.linkedin.com/company/asi-seguros/"
-    ]
+    "email": "contacto@asiseguros.com",
+    "address": { "@type": "PostalAddress", "addressCountry": "CO" }
   }
   </script>
 </head>
@@ -48,8 +117,8 @@
         <a href="tel:+573173712260">
           <i class="fas fa-phone-alt"></i> +57 317 371 2260
         </a>
-        <a href="mailto:asistencias@asiseguros.com">
-          <i class="fas fa-envelope"></i> asistencias@asiseguros.com
+        <a href="mailto:contacto@asiseguros.com">
+          <i class="fas fa-envelope"></i> contacto@asiseguros.com
         </a>
         <span><i class="fas fa-clock"></i> Lun - Vie: 8:00 AM - 6:00 PM</span>
       </div>
@@ -72,37 +141,28 @@
       <nav>
         <ul class="nav-menu" id="navMenu">
           <li><a href="#inicio">Inicio</a></li>
-          <li><a href="#como-funciona">¿Cómo funciona?</a></li>
+          <li class="active"><a href="#nosotros">Nosotros</a></li>
           <li>
-            <a href="#asistencias">Asistencias <i class="fas fa-chevron-down" style="font-size:0.65rem"></i></a>
+            <a href="#portafolio">Portafolio <i class="fas fa-chevron-down" style="font-size:0.65rem"></i></a>
             <ul class="dropdown-menu">
-              <li><a href="#asistencias"><i class="fas fa-scale-balanced"></i> Asistencia Legal</a></li>
-              <li><a href="#asistencias"><i class="fas fa-car-burst"></i> Asistencia Vial</a></li>
-              <li><a href="#asistencias"><i class="fas fa-tooth"></i> Asistencia Odontológica</a></li>
-              <li><a href="#asistencias"><i class="fas fa-stethoscope"></i> Asistencia Médica</a></li>
+              <li><a href="#portafolio"><i class="fas fa-heart-pulse"></i> Seguros de Personas</a></li>
+              <li><a href="#portafolio"><i class="fas fa-car"></i> Automóviles</a></li>
+              <li><a href="#portafolio"><i class="fas fa-warehouse"></i> Seguros Generales</a></li>
+              <li><a href="#portafolio"><i class="fas fa-building"></i> Seguros Empresariales</a></li>
             </ul>
           </li>
-          <li><a href="#planes">Planes</a></li>
-          <li><a href="#nosotros">Nosotros</a></li>
+          <li><a href="#como-trabajamos">Cómo trabajamos</a></li>
           <li><a href="#contacto">Contacto</a></li>
-          <li class="nav-cart-item">
-            <button class="cart-btn" id="cartBtn" aria-label="Ver carrito">
-              <i class="fas fa-shopping-cart"></i>
-              <span class="cart-badge" id="cartBadge" style="display:none">0</span>
-            </button>
-          </li>
           <li class="nav-cta">
-            <a href="#planes" class="btn btn-primary btn-sm">
-              <i class="fas fa-shield-halved"></i> Ver planes
+            <a href="#contacto" class="btn btn-primary btn-sm">
+              <i class="fas fa-file-signature"></i> Cotiza ahora
             </a>
           </li>
         </ul>
       </nav>
 
       <div class="menu-toggle" id="menuToggle" aria-label="Abrir menú">
-        <span></span>
-        <span></span>
-        <span></span>
+        <span></span><span></span><span></span>
       </div>
     </div>
   </header>
@@ -112,59 +172,57 @@
     <div class="container">
       <div class="hero-content">
         <div class="hero-badge">
-          <i class="fas fa-shield-halved"></i> Asistencias en Colombia
+          <i class="fas fa-shield-halved"></i> Agencia de Seguros en Colombia
         </div>
         <h1>
-          Sabemos lo importante que es contar con asistencias <span class="highlight">confiables en esos momentos inesperados</span>
+          Protegemos <span class="highlight">lo que más importa</span> para ti
         </h1>
         <p class="hero-text">
-          Somos ASI, tu aliado en cada momento. Asistencia legal, vial, odontológica y médica
-          cuando y donde más lo necesites.
+          Soluciones de seguros diseñadas para tu tranquilidad, tu empresa y tu futuro.
+          Te acompañamos con asesoría experta y el respaldo de Seguros del Estado.
         </p>
         <div class="hero-buttons">
-          <a href="#planes" class="btn btn-primary">
-            <i class="fas fa-shield-halved"></i> Ver planes ASI
+          <a href="#contacto" class="btn btn-primary">
+            <i class="fas fa-file-signature"></i> Cotiza tu seguro ahora
           </a>
-          <a href="#asistencias" class="btn btn-secondary">
-            <i class="fas fa-th-large"></i> Conoce más
+          <a href="#portafolio" class="btn btn-secondary">
+            <i class="fas fa-th-large"></i> Ver portafolio
           </a>
         </div>
         <div class="hero-stats">
           <div class="hero-stat">
-            <div class="hero-stat-number" id="heroAfiliados">0</div>
-            <div class="hero-stat-label">Afiliados</div>
+            <div class="hero-stat-number">20</div>
+            <div class="hero-stat-label">Productos</div>
           </div>
           <div class="hero-stat">
-            <div class="hero-stat-number">4</div>
-            <div class="hero-stat-label">Asistencias</div>
+            <div class="hero-stat-number">32</div>
+            <div class="hero-stat-label">Departamentos</div>
           </div>
           <div class="hero-stat">
-            <div class="hero-stat-number">24/7</div>
-            <div class="hero-stat-label">Disponible</div>
+            <div class="hero-stat-number">5+</div>
+            <div class="hero-stat-label">Años</div>
           </div>
         </div>
       </div>
 
       <div class="hero-image">
         <div class="hero-image-wrapper">
-          <img src="assets/img/banner1.png"
-               alt="ASI Asistencias confiables"
+          <img src="assets/img/banner2.png"
+               alt="Familia protegida con seguros AsiSeguros"
                width="600" height="500"
                loading="eager">
-
           <div class="hero-float-card card-1">
-            <i class="fas fa-scale-balanced"></i>
+            <i class="fas fa-shield-check"></i>
             <div class="card-info">
-              <strong>Asistencia Legal</strong>
-              <span>Siempre a tu lado</span>
+              <strong>Protección Total</strong>
+              <span>Vida, salud y patrimonio</span>
             </div>
           </div>
-
           <div class="hero-float-card card-2">
-            <i class="fas fa-car-burst"></i>
+            <i class="fas fa-handshake"></i>
             <div class="card-info">
-              <strong>Asistencia Vial</strong>
-              <span>En carretera o ciudad</span>
+              <strong>Asesoría Experta</strong>
+              <span>Acompañamiento en cada paso</span>
             </div>
           </div>
         </div>
@@ -172,324 +230,233 @@
     </div>
   </section>
 
-  <!-- ========== MARQUEE "ASÍ DE..." ========== -->
-  <section class="marquee-section tagline-marquee">
-    <div class="marquee-track">
-      <div class="marquee-item tagline-item"><i class="fas fa-circle-check"></i> Así de fáciles</div>
-      <div class="marquee-item tagline-item"><i class="fas fa-circle-check"></i> Así de confiables</div>
-      <div class="marquee-item tagline-item"><i class="fas fa-circle-check"></i> Así de efectivos</div>
-      <div class="marquee-item tagline-item"><i class="fas fa-circle-check"></i> Así de fluidos</div>
-      <div class="marquee-item tagline-item"><i class="fas fa-circle-check"></i> Así de simples</div>
-      <div class="marquee-item tagline-item"><i class="fas fa-circle-check"></i> Así de versátiles</div>
-      <div class="marquee-item tagline-item"><i class="fas fa-circle-check"></i> Así de inmediatos</div>
-      <div class="marquee-item tagline-item"><i class="fas fa-circle-check"></i> Así de seguros</div>
-    </div>
-  </section>
-
-  <!-- ========== ¿CÓMO FUNCIONA? ========== -->
-  <section class="how-section" id="como-funciona">
-    <div class="container text-center">
-      <span class="section-subtitle reveal">Simple y rápido</span>
-      <h2 class="section-title reveal">¿Cómo Funciona?</h2>
-      <p class="section-description reveal">
-        En tres pasos accedes a todas las asistencias que necesitas.
-      </p>
-
-      <div class="steps-grid">
-        <div class="step-card reveal">
-          <div class="step-number">1</div>
-          <div class="step-icon">
-            <i class="fas fa-user-plus"></i>
-          </div>
-          <h3>Regístrate</h3>
-          <p>Regístrate o inicia sesión si ya tienes una cuenta.</p>
-        </div>
-
-        <div class="step-card reveal">
-          <div class="step-number">2</div>
-          <div class="step-icon">
-            <i class="fas fa-list-check"></i>
-          </div>
-          <h3>Elige tu plan</h3>
-          <p>Elige un plan de soluciones a tu medida.</p>
-        </div>
-
-        <div class="step-card reveal">
-          <div class="step-number">3</div>
-          <div class="step-icon">
-            <i class="fas fa-headset"></i>
-          </div>
-          <h3>Solicita asistencia</h3>
-          <p>Solicita asistencia cuando y dónde lo requieras.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ========== ASISTENCIAS ========== -->
-  <section class="services-section" id="asistencias">
-    <div class="container text-center">
-      <span class="section-subtitle reveal">Nuestros servicios</span>
-      <h2 class="section-title reveal">Asistencias que te acompañan</h2>
-      <p class="section-description reveal">
-        Una amplia gama de servicios diseñados para estar a tu lado en cada momento inesperado.
-      </p>
-
-      <div class="services-grid">
-        <div class="service-card reveal">
-          <div class="service-icon">
-            <i class="fas fa-scale-balanced"></i>
-          </div>
-          <h3>Asistencia Legal</h3>
-          <p>Asesoría jurídica especializada para que nunca enfrentes un problema legal sin respaldo. Rápida y accesible.</p>
-          <a href="#planes" class="btn btn-accent btn-sm">
-            Ver planes <i class="fas fa-arrow-right"></i>
-          </a>
-        </div>
-
-        <div class="service-card reveal">
-          <div class="service-icon">
-            <i class="fas fa-car-burst"></i>
-          </div>
-          <h3>Asistencia Vial</h3>
-          <p>Asistencia en carretera 24/7: grúa, cambio de llanta, gasolina y más para que nunca te quedes varado.</p>
-          <a href="#planes" class="btn btn-accent btn-sm">
-            Ver planes <i class="fas fa-arrow-right"></i>
-          </a>
-        </div>
-
-        <div class="service-card reveal">
-          <div class="service-icon">
-            <i class="fas fa-tooth"></i>
-          </div>
-          <h3>Asistencia Odontológica</h3>
-          <p>Urgencias dentales y revisiones preventivas para que cuides tu salud bucal sin complicaciones.</p>
-          <a href="#planes" class="btn btn-accent btn-sm">
-            Ver planes <i class="fas fa-arrow-right"></i>
-          </a>
-        </div>
-
-        <div class="service-card reveal">
-          <div class="service-icon">
-            <i class="fas fa-stethoscope"></i>
-          </div>
-          <h3>Asistencia Médica</h3>
-          <p>Orientación médica y atención de urgencias para ti y tu familia cuando más lo necesitas.</p>
-          <a href="#planes" class="btn btn-accent btn-sm">
-            Ver planes <i class="fas fa-arrow-right"></i>
-          </a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ========== PLANES / SHOP ========== -->
-  <section class="plans-section" id="planes">
-    <div class="container text-center">
-      <span class="section-subtitle reveal">Planes ASI</span>
-      <h2 class="section-title reveal">Elige el plan que más te convenga</h2>
-      <p class="section-description reveal">
-        Todos los planes incluyen acceso a nuestras cuatro asistencias. Personaliza según tu ritmo de vida.
-      </p>
-
-      <div class="plans-grid">
-
-        <!-- Plan 1 Mes -->
-        <div class="plan-card reveal">
-          <div class="plan-offer-badge">¡Oferta!</div>
-          <div class="plan-img-wrap">
-            <img src="assets/img/1mes.jpg" alt="Plan ASI 1 Mes" loading="lazy">
-          </div>
-          <div class="plan-body">
-            <h3>Plan ASI X 1 Mes</h3>
-            <p>Perfecto para quienes desean flexibilidad y adaptabilidad con acceso a todas las asistencias.</p>
-            <ul class="plan-features">
-              <li><i class="fas fa-check"></i> Asistencia Legal</li>
-              <li><i class="fas fa-check"></i> Asistencia Vial</li>
-              <li><i class="fas fa-check"></i> Asistencia Odontológica</li>
-              <li><i class="fas fa-check"></i> Asistencia Médica</li>
-            </ul>
-            <div class="plan-price">
-              <span class="plan-price-old">$35.000</span>
-              <div class="plan-price-current">$25.000 <span class="plan-price-period">/mes</span></div>
-            </div>
-            <button class="btn btn-primary add-to-cart"
-                    data-id="plan-1mes"
-                    data-name="Plan ASI X 1 Mes"
-                    data-price="25000"
-                    data-period="/mes">
-              <i class="fas fa-shopping-cart"></i> Agregar al carrito
-            </button>
-          </div>
-        </div>
-
-        <!-- Plan 3 Meses (featured) -->
-        <div class="plan-card plan-featured reveal">
-          <div class="plan-popular-badge">Más popular</div>
-          <div class="plan-offer-badge">¡Oferta!</div>
-          <div class="plan-img-wrap">
-            <img src="assets/img/3meses.jpg" alt="Plan ASI 3 Meses" loading="lazy">
-          </div>
-          <div class="plan-body">
-            <h3>Plan ASI X 3 Meses</h3>
-            <p>Ideal para quienes desean flexibilidad y adaptabilidad por un periodo más extenso.</p>
-            <ul class="plan-features">
-              <li><i class="fas fa-check"></i> Asistencia Legal</li>
-              <li><i class="fas fa-check"></i> Asistencia Vial</li>
-              <li><i class="fas fa-check"></i> Asistencia Odontológica</li>
-              <li><i class="fas fa-check"></i> Asistencia Médica</li>
-            </ul>
-            <div class="plan-price">
-              <span class="plan-price-old">$105.000</span>
-              <div class="plan-price-current">$74.000 <span class="plan-price-period">/3 meses</span></div>
-            </div>
-            <button class="btn btn-primary add-to-cart"
-                    data-id="plan-3meses"
-                    data-name="Plan ASI X 3 Meses"
-                    data-price="74000"
-                    data-period="/3 meses">
-              <i class="fas fa-shopping-cart"></i> Agregar al carrito
-            </button>
-          </div>
-        </div>
-
-        <!-- Plan 1 Año -->
-        <div class="plan-card reveal">
-          <div class="plan-offer-badge">¡Oferta!</div>
-          <div class="plan-img-wrap">
-            <img src="assets/img/unano.jpg" alt="Plan ASI 1 Año" loading="lazy">
-          </div>
-          <div class="plan-body">
-            <h3>Plan ASI X 1 Año</h3>
-            <p>Para quienes buscan una solución completa y duradera con acceso total al portafolio sin restricciones.</p>
-            <ul class="plan-features">
-              <li><i class="fas fa-check"></i> Asistencia Legal</li>
-              <li><i class="fas fa-check"></i> Asistencia Vial</li>
-              <li><i class="fas fa-check"></i> Asistencia Odontológica</li>
-              <li><i class="fas fa-check"></i> Asistencia Médica</li>
-            </ul>
-            <div class="plan-price">
-              <span class="plan-price-old">$420.000</span>
-              <div class="plan-price-current">$290.000 <span class="plan-price-period">/año</span></div>
-            </div>
-            <button class="btn btn-primary add-to-cart"
-                    data-id="plan-anual"
-                    data-name="Plan ASI X 1 Año"
-                    data-price="290000"
-                    data-period="/año">
-              <i class="fas fa-shopping-cart"></i> Agregar al carrito
-            </button>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- ========== COMMUNITY / STATS ========== -->
-  <section class="stats-section" id="comunidad">
+  <!-- ========== FRANJA DE RESPALDO ========== -->
+  <section class="marquee-section backing-strip">
     <div class="container">
-      <div class="community-banner reveal">
-        <h2>¡Únete a una comunidad así de protegida!</h2>
-        <div class="community-counter-wrap">
-          <span class="community-number stat-number" data-target="0" data-suffix="">0</span>
-          <span class="community-label">Afiliados hoy</span>
-        </div>
-        <a href="#planes" class="btn btn-secondary">
-          <i class="fas fa-shield-halved"></i> Únete ahora
-        </a>
-      </div>
+      <span class="backing-eyebrow">Con el respaldo de</span>
+      <strong class="backing-name">Seguros del Estado S.A.</strong>
+      <span class="backing-note">Compañía vigilada por la Superintendencia Financiera de Colombia</span>
     </div>
   </section>
 
-  <!-- ========== QUIÉNES SOMOS ========== -->
+  <!-- ========== NOSOTROS ========== -->
   <section class="about-section" id="nosotros">
     <div class="container">
       <div class="about-image reveal">
-        <img src="assets/img/site-11.png"
-             alt="Equipo ASI asistencias"
+        <img src="assets/img/nosotros.jpg"
+             onerror="this.onerror=null; this.src='assets/img/site-11.png';"
+             alt="Equipo AsiSeguros asesoría en seguros"
              width="600" height="450"
              loading="lazy">
         <div class="about-experience-badge">
-          <div class="number">ASI</div>
-          <div class="text">Tu aliado siempre</div>
+          <div class="number">5+</div>
+          <div class="text">Años de experiencia</div>
         </div>
       </div>
 
       <div class="about-content reveal">
         <span class="section-subtitle">Sobre nosotros</span>
-        <h2 class="section-title">¿Quiénes Somos?</h2>
+        <h2 class="section-title">Tu tranquilidad es nuestro compromiso</h2>
         <p>
-          Somos <strong>ASI</strong>, una empresa dedicada a tu tranquilidad y comodidad en cada paso de tu vida.
-          Con una amplia gama de servicios que abarcan desde asistencia legal y vial hasta cuidados
-          odontológicos y médicos, nuestra misión es estar a tu lado cuando más lo necesites.
+          En <strong>AsiSeguros</strong> somos una agencia de seguros comprometida con la protección
+          integral de personas, familias y empresas en Colombia. Nos especializamos en la
+          intermediación de seguros con un enfoque estratégico, humano y profesional.
         </p>
         <p>
-          Nuestro compromiso es ofrecerte soluciones rápidas, eficientes y personalizadas, asegurando que
-          en cada situación, siempre tengas un aliado en quien confiar. En ASI, no solo prestamos servicios;
-          construimos relaciones de confianza, garantizando tu bienestar en todo momento.
+          Trabajamos con el respaldo de Seguros del Estado S.A., una de las compañías con mayor
+          trayectoria en pólizas de cumplimiento y contratación estatal del país.
         </p>
 
         <div class="about-features">
-          <div class="about-feature">
-            <i class="fas fa-circle-check"></i> Asistencia Legal
-          </div>
-          <div class="about-feature">
-            <i class="fas fa-circle-check"></i> Asistencia Vial
-          </div>
-          <div class="about-feature">
-            <i class="fas fa-circle-check"></i> Asistencia Odontológica
-          </div>
-          <div class="about-feature">
-            <i class="fas fa-circle-check"></i> Asistencia Médica
-          </div>
-          <div class="about-feature">
-            <i class="fas fa-circle-check"></i> Soluciones a tu medida
-          </div>
-          <div class="about-feature">
-            <i class="fas fa-circle-check"></i> Disponible 24/7
-          </div>
+          <div class="about-feature"><i class="fas fa-circle-check"></i> Asesoría personalizada</div>
+          <div class="about-feature"><i class="fas fa-circle-check"></i> Especialistas en cumplimiento</div>
+          <div class="about-feature"><i class="fas fa-circle-check"></i> Cobertura nacional</div>
+          <div class="about-feature"><i class="fas fa-circle-check"></i> Acompañamiento permanente</div>
+          <div class="about-feature"><i class="fas fa-circle-check"></i> Gestión de siniestros</div>
+          <div class="about-feature"><i class="fas fa-circle-check"></i> Asesoría sin costo</div>
         </div>
 
-        <a href="#planes" class="btn btn-outline">
-          <i class="fas fa-arrow-right"></i> Conoce nuestros planes
+        <a href="#contacto" class="btn btn-outline">
+          <i class="fas fa-arrow-right"></i> Conócenos más
         </a>
       </div>
     </div>
   </section>
 
-  <!-- ========== POR QUÉ ASI ========== -->
+  <!-- ========== PORTAFOLIO ========== -->
+  <section class="services-section" id="portafolio">
+    <div class="container text-center">
+      <span class="section-subtitle reveal">Nuestro portafolio</span>
+      <h2 class="section-title reveal">Soluciones de seguros para cada necesidad</h2>
+      <p class="section-description reveal">
+        Te acompañamos en la elección de seguros que realmente se ajusten a tu vida, tu negocio o tu familia.
+      </p>
+
+      <div class="services-grid">
+        <div class="service-card reveal">
+          <div class="service-media" data-photo="assets/img/card-personas.jpg"></div>
+          <div class="service-icon"><i class="fas fa-heart-pulse"></i></div>
+          <h3>Seguros de Personas</h3>
+          <p>Protege a los tuyos y a tu equipo con vida grupo, salud, accidentes personales y cobertura estudiantil.</p>
+          <a href="#contacto" class="btn btn-accent btn-sm">Cotizar <i class="fas fa-arrow-right"></i></a>
+        </div>
+
+        <div class="service-card reveal">
+          <div class="service-media" data-photo="assets/img/card-automoviles.jpg"></div>
+          <div class="service-icon"><i class="fas fa-car-side"></i></div>
+          <h3>Automóviles</h3>
+          <p>Desde tu vehículo particular hasta la flota de carga por carretera, con la cobertura ajustada al uso real del vehículo.</p>
+          <a href="#contacto" class="btn btn-accent btn-sm">Cotizar <i class="fas fa-arrow-right"></i></a>
+        </div>
+
+        <div class="service-card reveal">
+          <div class="service-media" data-photo="assets/img/card-generales.jpg"></div>
+          <div class="service-icon"><i class="fas fa-warehouse"></i></div>
+          <h3>Seguros Generales</h3>
+          <p>Protege los bienes, la obra y el patrimonio de tu empresa frente a incendio, hurto y riesgos de operación.</p>
+          <a href="#contacto" class="btn btn-accent btn-sm">Cotizar <i class="fas fa-arrow-right"></i></a>
+        </div>
+
+        <div class="service-card reveal">
+          <div class="service-media" data-photo="assets/img/card-empresariales.jpg"></div>
+          <div class="service-icon"><i class="fas fa-building-shield"></i></div>
+          <h3>Seguros Empresariales</h3>
+          <p>Las garantías que exige la contratación estatal y privada: cumplimiento, responsabilidad civil y transporte.</p>
+          <a href="#contacto" class="btn btn-accent btn-sm">Cotizar <i class="fas fa-arrow-right"></i></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== POR QUÉ ELEGIRNOS ========== -->
   <section class="why-section">
     <div class="container text-center">
       <span class="section-subtitle reveal">Nuestros diferenciales</span>
-      <h2 class="section-title reveal">¿Por qué elegir ASI?</h2>
+      <h2 class="section-title reveal">¿Por qué elegir AsiSeguros?</h2>
       <p class="section-description reveal">
-        No solo prestamos servicios; construimos relaciones de confianza con cada afiliado.
+        No solo vendemos seguros, construimos relaciones de confianza con cada cliente.
       </p>
 
       <div class="why-grid">
         <div class="why-card reveal">
-          <div class="why-icon">
-            <i class="fas fa-bolt"></i>
+          <div class="why-icon"><i class="fas fa-user-tie"></i></div>
+          <h3>Asesoría Personalizada</h3>
+          <p>Analizamos tu perfil de riesgo y diseñamos la solución de seguros ideal para ti, tu familia o tu empresa.</p>
+        </div>
+        <div class="why-card reveal">
+          <div class="why-icon"><i class="fas fa-scale-balanced"></i></div>
+          <h3>Asesoría Jurídica Sin Costo</h3>
+          <p>Te acompañamos en procesos de reclamación y siniestros con soporte legal incluido en nuestro servicio.</p>
+        </div>
+        <div class="why-card reveal">
+          <div class="why-icon"><i class="fas fa-handshake-angle"></i></div>
+          <h3>Acompañamiento Permanente</h3>
+          <p>No desaparecemos después de la venta. Estamos contigo en cada renovación, ajuste y momento que necesites.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== STATS ========== -->
+  <section class="stats-section">
+    <div class="container">
+      <div class="stats-grid">
+        <div class="stat-item reveal">
+          <div class="stat-number" data-target="20" data-suffix="">20</div>
+          <div class="stat-label">Productos en portafolio</div>
+        </div>
+        <div class="stat-item reveal">
+          <div class="stat-number" data-target="4" data-suffix="">4</div>
+          <div class="stat-label">Ramos que intermediamos</div>
+        </div>
+        <div class="stat-item reveal">
+          <div class="stat-number" data-target="32" data-suffix="">32</div>
+          <div class="stat-label">Departamentos con cobertura</div>
+        </div>
+        <div class="stat-item reveal">
+          <div class="stat-number" data-target="5" data-suffix="+">5+</div>
+          <div class="stat-label">Años de experiencia</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== PRODUCTO DESTACADO: AUTOS ========== -->
+  <section class="product-highlight" id="seguro-autos" data-photo="assets/img/autos.jpg">
+    <div class="container">
+      <div class="product-content reveal">
+        <span class="section-subtitle">Producto destacado</span>
+        <h2 class="section-title">Seguro de Autos</h2>
+        <p>
+          Protege tu vehículo con las coberturas más completas del mercado. Estructuramos la cobertura
+          según el uso real del vehículo, desde el particular hasta la flota de carga.
+        </p>
+
+        <div class="product-benefits">
+          <div class="product-benefit">
+            <div class="product-benefit-icon"><i class="fas fa-check"></i></div>
+            <div class="product-benefit-text">
+              <strong>Cobertura todo riesgo</strong>
+              <span>Daños propios, terceros, hurto y asistencia vial incluida.</span>
+            </div>
           </div>
-          <h3>Respuesta Inmediata</h3>
-          <p>Cuando lo necesitas, estamos ahí. Nuestras asistencias se activan de forma rápida y sin trámites complicados.</p>
+          <div class="product-benefit">
+            <div class="product-benefit-icon"><i class="fas fa-check"></i></div>
+            <div class="product-benefit-text">
+              <strong>Transporte de carga por carretera</strong>
+              <span>Cobertura para vehículos de carga y responsabilidad civil frente a terceros.</span>
+            </div>
+          </div>
+          <div class="product-benefit">
+            <div class="product-benefit-icon"><i class="fas fa-check"></i></div>
+            <div class="product-benefit-text">
+              <strong>Asistencia en siniestros</strong>
+              <span>Te acompañamos en todo el proceso de reclamación sin costo adicional.</span>
+            </div>
+          </div>
+          <div class="product-benefit">
+            <div class="product-benefit-icon"><i class="fas fa-check"></i></div>
+            <div class="product-benefit-text">
+              <strong>Planes flexibles</strong>
+              <span>Seguros para vehículos particulares, comerciales y de carga.</span>
+            </div>
+          </div>
         </div>
 
-        <div class="why-card reveal">
-          <div class="why-icon">
-            <i class="fas fa-sliders"></i>
-          </div>
-          <h3>Planes Flexibles</h3>
-          <p>Elige el plan que se adapte a tu vida y presupuesto. Sin permanencia forzada, sin letra pequeña.</p>
-        </div>
+        <a href="#contacto" class="btn btn-primary">
+          <i class="fas fa-car"></i> Cotiza tu seguro de auto
+        </a>
+      </div>
+    </div>
+  </section>
 
-        <div class="why-card reveal">
-          <div class="why-icon">
-            <i class="fas fa-handshake-angle"></i>
-          </div>
-          <h3>Aliado de Confianza</h3>
-          <p>No desaparecemos después de la afiliación. Estamos contigo en cada momento que nos necesites.</p>
+  <!-- ========== CÓMO TRABAJAMOS ========== -->
+  <section class="testimonials-section" id="como-trabajamos" data-photo="assets/img/proceso.jpg">
+    <div class="container text-center">
+      <span class="section-subtitle reveal">Cómo trabajamos</span>
+      <h2 class="section-title reveal">De la necesidad a la póliza en cuatro pasos</h2>
+      <p class="section-description reveal">Un proceso claro, sin letra menuda y con un asesor asignado de principio a fin.</p>
+
+      <div class="process-grid">
+        <div class="process-card reveal">
+          <span class="process-step">1</span>
+          <h3>Diagnóstico</h3>
+          <p>Revisamos tu operación, el contrato o el bien que necesitas asegurar y definimos el riesgo real a cubrir.</p>
+        </div>
+        <div class="process-card reveal">
+          <span class="process-step">2</span>
+          <h3>Cotización</h3>
+          <p>Estructuramos la cobertura con Seguros del Estado y te explicamos amparos, exclusiones y deducibles.</p>
+        </div>
+        <div class="process-card reveal">
+          <span class="process-step">3</span>
+          <h3>Expedición</h3>
+          <p>Gestionamos la documentación y el trámite ante la aseguradora hasta que la póliza queda expedida.</p>
+        </div>
+        <div class="process-card reveal">
+          <span class="process-step">4</span>
+          <h3>Acompañamiento</h3>
+          <p>Te acompañamos en renovaciones, modificaciones y en todo el proceso de reclamación de un siniestro.</p>
         </div>
       </div>
     </div>
@@ -499,13 +466,13 @@
   <section class="cta-section">
     <div class="container">
       <div class="cta-content reveal">
-        <h2>¿Listo para protegerte con ASI?</h2>
-        <p>Elige tu plan en minutos y empieza a disfrutar de asistencias confiables cuando y donde las necesites.</p>
+        <h2>¿Listo para proteger lo que más importa?</h2>
+        <p>Cotiza tu seguro en minutos. Nuestro equipo de asesores está listo para ayudarte a encontrar la cobertura ideal.</p>
         <div class="cta-buttons">
-          <a href="#planes" class="btn btn-primary">
-            <i class="fas fa-shield-halved"></i> Ver planes ASI
+          <a href="#contacto" class="btn btn-primary">
+            <i class="fas fa-file-signature"></i> Cotiza tu seguro ahora
           </a>
-          <a href="https://wa.me/573173712260?text=Hola%2C%20quiero%20información%20sobre%20los%20planes%20ASI" target="_blank" class="btn btn-secondary">
+          <a href="https://wa.me/573173712260?text=Hola%2C%20quiero%20cotizar%20un%20seguro" target="_blank" class="btn btn-secondary">
             <i class="fab fa-whatsapp"></i> Escríbenos por WhatsApp
           </a>
         </div>
@@ -518,44 +485,33 @@
     <div class="container">
       <div class="contact-info reveal">
         <span class="section-subtitle">Contáctanos</span>
-        <h2 class="section-title">Estamos aquí para ayudarte</h2>
-        <p>Cuéntanos qué necesitas y un asesor ASI se pondrá en contacto contigo en menos de 24 horas.</p>
+        <h2 class="section-title">Estamos aquí para asesorarte</h2>
+        <p>Cuéntanos qué necesitas y un asesor experto se pondrá en contacto contigo en menos de 24 horas.</p>
 
         <div class="contact-details">
           <div class="contact-detail">
-            <div class="contact-detail-icon">
-              <i class="fab fa-whatsapp"></i>
-            </div>
+            <div class="contact-detail-icon"><i class="fab fa-whatsapp"></i></div>
             <div class="contact-detail-text">
               <strong>WhatsApp</strong>
               <a href="https://wa.me/573173712260">+57 317 371 2260</a>
             </div>
           </div>
-
           <div class="contact-detail">
-            <div class="contact-detail-icon">
-              <i class="fas fa-envelope"></i>
-            </div>
+            <div class="contact-detail-icon"><i class="fas fa-envelope"></i></div>
             <div class="contact-detail-text">
               <strong>Correo electrónico</strong>
-              <a href="mailto:asistencias@asiseguros.com">asistencias@asiseguros.com</a>
+              <a href="mailto:contacto@asiseguros.com">contacto@asiseguros.com</a>
             </div>
           </div>
-
           <div class="contact-detail">
-            <div class="contact-detail-icon">
-              <i class="fas fa-clock"></i>
-            </div>
+            <div class="contact-detail-icon"><i class="fas fa-clock"></i></div>
             <div class="contact-detail-text">
               <strong>Horario de atención</strong>
               <span>Lunes a Viernes: 8:00 AM - 6:00 PM</span>
             </div>
           </div>
-
           <div class="contact-detail">
-            <div class="contact-detail-icon">
-              <i class="fas fa-location-dot"></i>
-            </div>
+            <div class="contact-detail-icon"><i class="fas fa-location-dot"></i></div>
             <div class="contact-detail-text">
               <strong>Cobertura</strong>
               <span>Cobertura a nivel nacional - Colombia</span>
@@ -565,7 +521,7 @@
       </div>
 
       <div class="contact-form-wrapper reveal">
-        <h3><i class="fas fa-headset" style="color: var(--accent); margin-right: 8px;"></i>Solicita información</h3>
+        <h3><i class="fas fa-file-signature" style="color: var(--accent); margin-right: 8px;"></i>Cotiza tu seguro ahora</h3>
         <form id="contactForm" data-whatsapp="573173712260">
           <div class="form-row">
             <div class="form-group">
@@ -584,20 +540,38 @@
               <input type="email" id="email" name="email" placeholder="tu@email.com" required>
             </div>
             <div class="form-group">
-              <label for="tipo_asistencia">Tipo de asistencia *</label>
-              <select id="tipo_asistencia" name="tipo_asistencia" required>
+              <label for="tipo_seguro">Tipo de seguro *</label>
+              <select id="tipo_seguro" name="tipo_seguro" required>
                 <option value="" disabled selected>Selecciona una opción</option>
-                <optgroup label="Asistencias">
-                  <option value="Legal">Asistencia Legal</option>
-                  <option value="Vial">Asistencia Vial</option>
-                  <option value="Odontológica">Asistencia Odontológica</option>
-                  <option value="Médica">Asistencia Médica</option>
+                <optgroup label="Seguros de Personas">
+                  <option value="Vida Grupo">Vida Grupo</option>
+                  <option value="Salud">Salud</option>
+                  <option value="Accidentes Personales">Accidentes Personales</option>
+                  <option value="Póliza Integral Estudiantil">Póliza Integral Estudiantil</option>
+                  <option value="Vida Fácil">Vida Fácil</option>
+                  <option value="Vida Deudores">Vida Deudores</option>
                 </optgroup>
-                <optgroup label="Planes">
-                  <option value="Plan 1 Mes">Plan ASI X 1 Mes</option>
-                  <option value="Plan 3 Meses">Plan ASI X 3 Meses</option>
-                  <option value="Plan 1 Año">Plan ASI X 1 Año</option>
+                <optgroup label="Automóviles">
+                  <option value="Livianos">Livianos</option>
+                  <option value="Transporte de Carga por Carretera">Transporte de Carga por Carretera</option>
+                  <option value="RC para Vehículos de Carga">RC para Vehículos de Carga</option>
                 </optgroup>
+                <optgroup label="Seguros Generales">
+                  <option value="Incendio">Incendio</option>
+                  <option value="Sustracción">Sustracción</option>
+                  <option value="Todo Riesgo Contratista">Todo Riesgo Contratista</option>
+                  <option value="Todo Riesgo Maquinaria">Todo Riesgo Maquinaria</option>
+                  <option value="Manejo">Manejo</option>
+                  <option value="Infidelidad y Riesgos Financieros (IRF)">Infidelidad y Riesgos Financieros (IRF)</option>
+                </optgroup>
+                <optgroup label="Seguros Empresariales">
+                  <option value="Cumplimiento Estatal y Particular">Cumplimiento Estatal y Particular</option>
+                  <option value="Disposiciones Legales">Disposiciones Legales</option>
+                  <option value="RC derivada de Cumplimiento">RC derivada de Cumplimiento</option>
+                  <option value="Transportes">Transportes</option>
+                  <option value="Responsabilidad Civil Extracontractual">Responsabilidad Civil Extracontractual</option>
+                </optgroup>
+                <option value="Asistencias">Asistencias</option>
                 <option value="Otro">Otro</option>
               </select>
             </div>
@@ -605,11 +579,22 @@
 
           <div class="form-group">
             <label for="mensaje">Mensaje (opcional)</label>
-            <textarea id="mensaje" name="mensaje" placeholder="Cuéntanos qué necesitas..." rows="4"></textarea>
+            <textarea id="mensaje" name="mensaje" placeholder="Cuéntanos qué necesitas proteger..." rows="4"></textarea>
+          </div>
+
+          <div class="form-group form-consent">
+            <label for="autorizacion_datos" class="consent-label">
+              <input type="checkbox" id="autorizacion_datos" name="autorizacion_datos" required>
+              <span>
+                Autorizo a AsiSeguros el tratamiento de mis datos personales para ser contactado con
+                fines de cotización y asesoría en seguros, conforme a la Ley 1581 de 2012 y a la
+                <a href="politica-tratamiento-datos.html" target="_blank" rel="noopener">Política de Tratamiento de Datos</a>. *
+              </span>
+            </label>
           </div>
 
           <button type="submit" class="btn btn-primary">
-            <i class="fas fa-paper-plane"></i> Enviar mensaje
+            <i class="fas fa-paper-plane"></i> Enviar cotización
           </button>
         </form>
       </div>
@@ -623,8 +608,8 @@
         <div class="footer-brand">
           <img src="assets/img/logo.png" alt="AsiSeguros" class="footer-logo">
           <p>
-            Asistencias legales, viales, odontológicas y médicas para tu tranquilidad
-            y comodidad en cada paso de tu vida. En ASI, tu bienestar es nuestra misión.
+            Agencia de seguros comprometida con la protección integral de personas, familias
+            y empresas en Colombia. Tu tranquilidad es nuestro compromiso.
           </p>
           <div class="footer-social">
             <a href="https://www.facebook.com/profile.php?id=61556481256358" target="_blank" rel="noopener" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
@@ -638,22 +623,21 @@
           <h4>Navegación</h4>
           <ul>
             <li><a href="#inicio"><i class="fas fa-chevron-right"></i> Inicio</a></li>
-            <li><a href="#como-funciona"><i class="fas fa-chevron-right"></i> ¿Cómo funciona?</a></li>
-            <li><a href="#asistencias"><i class="fas fa-chevron-right"></i> Asistencias</a></li>
-            <li><a href="#planes"><i class="fas fa-chevron-right"></i> Planes</a></li>
             <li><a href="#nosotros"><i class="fas fa-chevron-right"></i> Nosotros</a></li>
+            <li><a href="#portafolio"><i class="fas fa-chevron-right"></i> Portafolio</a></li>
+            <li><a href="#como-trabajamos"><i class="fas fa-chevron-right"></i> Cómo trabajamos</a></li>
             <li><a href="#contacto"><i class="fas fa-chevron-right"></i> Contacto</a></li>
           </ul>
         </div>
 
         <div class="footer-column">
-          <h4>Asistencias</h4>
+          <h4>Nuestros Seguros</h4>
           <ul>
-            <li><a href="#asistencias"><i class="fas fa-chevron-right"></i> Asistencia Legal</a></li>
-            <li><a href="#asistencias"><i class="fas fa-chevron-right"></i> Asistencia Vial</a></li>
-            <li><a href="#asistencias"><i class="fas fa-chevron-right"></i> Asistencia Odontológica</a></li>
-            <li><a href="#asistencias"><i class="fas fa-chevron-right"></i> Asistencia Médica</a></li>
-            <li><a href="#planes"><i class="fas fa-chevron-right"></i> Ver planes</a></li>
+            <li><a href="#portafolio"><i class="fas fa-chevron-right"></i> Seguros de Personas</a></li>
+            <li><a href="#portafolio"><i class="fas fa-chevron-right"></i> Automóviles</a></li>
+            <li><a href="#portafolio"><i class="fas fa-chevron-right"></i> Seguros Generales</a></li>
+            <li><a href="#portafolio"><i class="fas fa-chevron-right"></i> Seguros Empresariales</a></li>
+            <li><a href="#seguro-autos"><i class="fas fa-chevron-right"></i> Seguro de Autos</a></li>
           </ul>
         </div>
 
@@ -665,11 +649,15 @@
           </div>
           <div class="footer-contact-item">
             <i class="fas fa-envelope"></i>
-            <a href="mailto:asistencias@asiseguros.com">asistencias@asiseguros.com</a>
+            <a href="mailto:contacto@asiseguros.com">contacto@asiseguros.com</a>
           </div>
           <div class="footer-contact-item">
             <i class="fas fa-clock"></i>
             <span>Lun - Vie: 8:00 AM - 6:00 PM</span>
+          </div>
+          <div class="footer-contact-item">
+            <i class="fas fa-map-marker-alt"></i>
+            <span>Cobertura nacional - Colombia</span>
           </div>
         </div>
       </div>
@@ -677,55 +665,27 @@
       <div class="footer-bottom">
         <span>&copy; 2026 AsiSeguros. Todos los derechos reservados.</span>
         <div class="footer-bottom-links">
-          <a href="#">Política de Privacidad</a>
-          <a href="#">Términos y Condiciones</a>
+          <a href="politica-tratamiento-datos.html">Política de Privacidad</a>
+          <a href="terminos-y-condiciones.html">Términos y Condiciones</a>
         </div>
       </div>
+
+      <p class="footer-legal-note">
+        AsiSeguros es el nombre comercial de ASISEGUROS SAS, NIT 901.483.323-4, agencia de seguros
+        que actúa como intermediario y no asume la calidad de aseguradora. Las pólizas son expedidas
+        por Seguros del Estado S.A., vigilada por la Superintendencia Financiera de Colombia. La
+        información de este sitio es comercial e informativa y no constituye oferta; las coberturas,
+        exclusiones y deducibles aplicables son únicamente los señalados en la póliza.
+      </p>
     </div>
   </footer>
 
-  <!-- ========== CART DRAWER ========== -->
-  <div class="cart-overlay" id="cartOverlay"></div>
-  <aside class="cart-drawer" id="cartDrawer" aria-label="Carrito de compras">
-    <div class="cart-drawer-header">
-      <h3><i class="fas fa-shopping-cart"></i> Mi carrito</h3>
-      <button class="cart-close" id="cartClose" aria-label="Cerrar carrito">
-        <i class="fas fa-times"></i>
-      </button>
-    </div>
-
-    <div class="cart-items" id="cartItems">
-      <div class="cart-empty" id="cartEmpty">
-        <i class="fas fa-cart-shopping"></i>
-        <p>Tu carrito está vacío</p>
-        <a href="#planes" class="btn btn-primary btn-sm">Ver planes</a>
-      </div>
-    </div>
-
-    <div class="cart-footer" id="cartFooter" style="display:none">
-      <div class="cart-total-row">
-        <span>Total</span>
-        <strong id="cartTotal">$0</strong>
-      </div>
-      <button class="btn btn-primary" id="cartCheckout" style="width:100%; justify-content:center; margin-bottom:10px">
-        <i class="fab fa-whatsapp"></i> Solicitar por WhatsApp
-      </button>
-      <button class="btn btn-outline btn-sm" id="cartClear" style="width:100%; justify-content:center">
-        <i class="fas fa-trash"></i> Vaciar carrito
-      </button>
-    </div>
-  </aside>
-
   <!-- ========== WHATSAPP FLOAT ========== -->
-  <a href="https://wa.me/573173712260?text=Hola%2C%20quiero%20información%20sobre%20los%20planes%20ASI"
-     class="whatsapp-float"
-     target="_blank"
-     rel="noopener"
-     aria-label="Contactar por WhatsApp">
+  <a href="https://wa.me/573173712260?text=Hola%2C%20quiero%20información%20sobre%20seguros"
+     class="whatsapp-float" target="_blank" rel="noopener" aria-label="Contactar por WhatsApp">
     <i class="fab fa-whatsapp"></i>
   </a>
 
-  <!-- ========== SCROLL TO TOP ========== -->
   <button class="scroll-top" aria-label="Volver arriba">
     <i class="fas fa-chevron-up"></i>
   </button>
