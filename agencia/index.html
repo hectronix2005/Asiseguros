@@ -44,6 +44,13 @@
     .process-card h3 { font-size: 1.05rem; margin-bottom: 8px; }
     .process-card p { font-size: 0.9rem; color: var(--gray-500, #6b7280); margin: 0; }
 
+    /* Seguro de Autos sin imagen: una sola columna, beneficios en dos */
+    .product-highlight .container { grid-template-columns: 1fr; gap: 0; }
+    .product-highlight .product-content { max-width: 940px; margin: 0 auto; text-align: center; }
+    .product-highlight .product-benefits { display: grid; grid-template-columns: 1fr 1fr; gap: 0 44px; margin: 36px 0 32px; }
+    .product-highlight .product-benefit { text-align: left; }
+    @media (max-width: 700px) { .product-highlight .product-benefits { grid-template-columns: 1fr; } }
+
     /* Aviso legal del intermediario */
     .footer-legal-note { font-size: 0.72rem; line-height: 1.6; color: rgba(255,255,255,0.45); margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.08); }
 
@@ -380,13 +387,6 @@
         <a href="#contacto" class="btn btn-primary">
           <i class="fas fa-car"></i> Cotiza tu seguro de auto
         </a>
-      </div>
-
-      <div class="product-image reveal">
-        <img src="../assets/img/vaas.png"
-             alt="Seguro de autos AsiSeguros"
-             width="600" height="450"
-             loading="lazy">
       </div>
     </div>
   </section>
