@@ -44,11 +44,45 @@
     .process-card h3 { font-size: 1.05rem; margin-bottom: 8px; }
     .process-card p { font-size: 0.9rem; color: var(--gray-500, #6b7280); margin: 0; }
 
-    /* Seguro de Autos sin imagen: una sola columna, beneficios en dos */
-    .product-highlight .container { grid-template-columns: 1fr; gap: 0; }
+    /* ---- Fotografías de fondo ----
+       Cada bloque apunta a un archivo de assets/img que puede no existir todavía.
+       Si falta, el navegador simplemente usa el color de respaldo y la sección se
+       ve como hoy; al subir la foto con ese nombre aparece sola. Ver docs/FOTOS.md */
+
+    /* Seguro de Autos: una columna sobre foto de fondo */
+    .product-highlight { position: relative; background-color: var(--gray-50); background-size: cover; background-position: center 35%; background-repeat: no-repeat; }
+    .product-highlight .container { grid-template-columns: 1fr; gap: 0; position: relative; z-index: 1; }
     .product-highlight .product-content { max-width: 940px; margin: 0 auto; text-align: center; }
     .product-highlight .product-benefits { display: grid; grid-template-columns: 1fr 1fr; gap: 0 44px; margin: 36px 0 32px; }
     .product-highlight .product-benefit { text-align: left; }
+    /* La capa oscura y el texto en blanco solo se activan cuando hay foto */
+    .product-highlight.has-photo::before { content: ""; position: absolute; inset: 0; background: linear-gradient(100deg, rgba(10,26,48,.93) 0%, rgba(10,26,48,.84) 50%, rgba(10,26,48,.6) 100%); }
+    .product-highlight.has-photo .product-content { text-align: left; max-width: 640px; margin: 0; }
+    .product-highlight.has-photo .product-benefits { grid-template-columns: 1fr; gap: 0; }
+    .product-highlight.has-photo .section-title,
+    .product-highlight.has-photo .product-benefit strong { color: #fff; }
+    .product-highlight.has-photo .product-content > p,
+    .product-highlight.has-photo .product-benefit span { color: rgba(255,255,255,.75); }
+    .product-highlight.has-photo .product-benefit-icon { background: rgba(125,248,154,.15); }
+    @media (max-width: 700px) { .product-highlight.has-photo .product-content { max-width: none; } }
+
+    /* Tarjetas del portafolio: franja de foto sobre el ícono */
+    .service-card { padding-top: 0; }
+    .service-media { height: 0; margin: 0 -28px 0; background-color: var(--gray-100); background-size: cover; background-position: center; transition: height var(--transition); }
+    .service-card.has-photo .service-media { height: 150px; }
+    .service-card.has-photo .service-icon { margin-top: -35px; position: relative; z-index: 1; background: #fff; box-shadow: var(--shadow-md); }
+    .service-card:not(.has-photo) { padding-top: 36px; }
+
+    /* Cómo trabajamos: foto de fondo opcional */
+    .testimonials-section { position: relative; background-size: cover; background-position: center; background-repeat: no-repeat; }
+    .testimonials-section .container { position: relative; z-index: 1; }
+    .testimonials-section.has-photo::before { content: ""; position: absolute; inset: 0; background: rgba(10,26,48,.9); }
+    .testimonials-section.has-photo .section-title { color: #fff; }
+    .testimonials-section.has-photo .section-description { color: rgba(255,255,255,.72); }
+    .testimonials-section.has-photo .process-card { background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.14); }
+    .testimonials-section.has-photo .process-step { background: var(--secondary); color: var(--primary); }
+    .testimonials-section.has-photo .process-card h3 { color: #fff; }
+    .testimonials-section.has-photo .process-card p { color: rgba(255,255,255,.7); }
     @media (max-width: 700px) { .product-highlight .product-benefits { grid-template-columns: 1fr; } }
 
     /* Aviso legal del intermediario */
@@ -209,7 +243,8 @@
   <section class="about-section" id="nosotros">
     <div class="container">
       <div class="about-image reveal">
-        <img src="../assets/img/site-11.png"
+        <img src="../assets/img/nosotros.jpg"
+             onerror="this.onerror=null; this.src='../assets/img/site-11.png';"
              alt="Equipo AsiSeguros asesoría en seguros"
              width="600" height="450"
              loading="lazy">
@@ -259,6 +294,7 @@
 
       <div class="services-grid">
         <div class="service-card reveal">
+          <div class="service-media" data-photo="../assets/img/card-personas.jpg"></div>
           <div class="service-icon"><i class="fas fa-heart-pulse"></i></div>
           <h3>Seguros de Personas</h3>
           <p>Protege a los tuyos y a tu equipo con vida grupo, salud, accidentes personales y cobertura estudiantil.</p>
@@ -266,6 +302,7 @@
         </div>
 
         <div class="service-card reveal">
+          <div class="service-media" data-photo="../assets/img/card-automoviles.jpg"></div>
           <div class="service-icon"><i class="fas fa-car-side"></i></div>
           <h3>Automóviles</h3>
           <p>Desde tu vehículo particular hasta la flota de carga por carretera, con la cobertura ajustada al uso real del vehículo.</p>
@@ -273,6 +310,7 @@
         </div>
 
         <div class="service-card reveal">
+          <div class="service-media" data-photo="../assets/img/card-generales.jpg"></div>
           <div class="service-icon"><i class="fas fa-warehouse"></i></div>
           <h3>Seguros Generales</h3>
           <p>Protege los bienes, la obra y el patrimonio de tu empresa frente a incendio, hurto y riesgos de operación.</p>
@@ -280,6 +318,7 @@
         </div>
 
         <div class="service-card reveal">
+          <div class="service-media" data-photo="../assets/img/card-empresariales.jpg"></div>
           <div class="service-icon"><i class="fas fa-building-shield"></i></div>
           <h3>Seguros Empresariales</h3>
           <p>Las garantías que exige la contratación estatal y privada: cumplimiento, responsabilidad civil y transporte.</p>
@@ -343,7 +382,7 @@
   </section>
 
   <!-- ========== PRODUCTO DESTACADO: AUTOS ========== -->
-  <section class="product-highlight" id="seguro-autos">
+  <section class="product-highlight" id="seguro-autos" data-photo="../assets/img/autos.jpg">
     <div class="container">
       <div class="product-content reveal">
         <span class="section-subtitle">Producto destacado</span>
@@ -392,7 +431,7 @@
   </section>
 
   <!-- ========== CÓMO TRABAJAMOS ========== -->
-  <section class="testimonials-section" id="como-trabajamos">
+  <section class="testimonials-section" id="como-trabajamos" data-photo="../assets/img/proceso.jpg">
     <div class="container text-center">
       <span class="section-subtitle reveal">Cómo trabajamos</span>
       <h2 class="section-title reveal">De la necesidad a la póliza en cuatro pasos</h2>

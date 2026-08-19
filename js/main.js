@@ -139,6 +139,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
   counters.forEach(counter => counterObserver.observe(counter));
 
+  /* ---------- Fotografías opcionales de fondo ----------
+     Un elemento con data-photo declara la foto que le corresponde. Si el archivo
+     existe se aplica como fondo y se marca .has-photo (que activa la capa oscura y
+     el texto en blanco). Si no existe, no pasa nada: la sección se ve con su color
+     de respaldo. Así se pueden subir las fotos sin tocar el código. */
+  document.querySelectorAll('[data-photo]').forEach(el => {
+    const src = el.getAttribute('data-photo');
+    if (!src) return;
+    const probe = new Image();
+    probe.onload = () => {
+      el.style.backgroundImage = `url("${src}")`;
+      (el.classList.contains('service-media') ? el.closest('.service-card') : el)
+        .classList.add('has-photo');
+    };
+    probe.src = src;
+  });
+
   /* ---------- Marquee Duplication ---------- */
   const marqueeTrack = document.querySelector('.marquee-track');
   if (marqueeTrack) {
