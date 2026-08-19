@@ -53,8 +53,7 @@ public_html/
 ├── .htaccess
 ├── assets/
 ├── css/
-├── js/
-└── asistencias/
+└── js/
 ```
 
 5. Borrar el zip del servidor.
@@ -67,7 +66,6 @@ public_html/
 
 - `https://www.asiseguros.com` muestra el sitio nuevo.
 - `https://asiseguros.com` redirige a `www`.
-- `https://www.asiseguros.com/asistencias/` carga el sitio de asistencias.
 - `https://www.asiseguros.com/quienes-somos/` redirige al inicio
   (igual con `/asistencia-legal/`, `/shop/`, `/privacy-policy/`…).
 - Una dirección inventada muestra la página 404 con el logo.
@@ -87,10 +85,23 @@ WordPress vuelve a funcionar tal como estaba. Por eso no se borra nada.
 - **`admin.html`** y sus archivos. Es el panel de configuración del sitio y no
   tiene contraseña. Si se quiere publicar, conviene protegerlo antes con
   **Privacidad del directorio** de cPanel.
-- **`clon/`** y **`agencia/`**: versiones de trabajo.
+- **`clon/`**, **`agencia/`** y **`asistencias/`**: versiones de trabajo. El
+  dominio muestra únicamente el sitio de la agencia; las direcciones antiguas de
+  asistencias redirigen al inicio.
 - **`vaas.png`**: la promoción de «Vacaciones así de seguras» a $25.000, que se
   retiró del sitio por anunciar un precio de un producto que no está en el
   portafolio.
+
+## Si algo sale mal
+
+Si tras subir aparece un **error 500**, la causa casi segura es que el hosting
+no permite alguna directiva del `.htaccess`. Renombrar el archivo a
+`.htaccess-desactivado` desde el Administrador de archivos devuelve el sitio al
+aire en segundos; luego se ajusta.
+
+El archivo se probó sobre Apache 2.4 real: sintaxis correcta, las once
+redirecciones responden 301 al destino previsto, la página 404 funciona y no se
+producen bucles de redirección.
 
 ## Después
 

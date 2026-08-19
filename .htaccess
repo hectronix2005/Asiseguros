@@ -2,11 +2,20 @@
 # GitHub Pages ignora este archivo; solo actúa en el servidor de Colombia Hosting.
 
 # ---------- Forzar HTTPS y www ----------
-RewriteEngine On
-RewriteCond %{HTTPS} !=on
-RewriteRule ^(.*)$ https://www.asiseguros.com/$1 [R=301,L]
-RewriteCond %{HTTP_HOST} ^asiseguros\.com$ [NC]
-RewriteRule ^(.*)$ https://www.asiseguros.com/$1 [R=301,L]
+# Las tres condiciones de HTTPS son deliberadas: en hostings con proxy o balanceador
+# %{HTTPS} puede no llegar como "on" aunque la petición sí sea segura. Comprobando
+# también las cabeceras X-Forwarded se evita un bucle de redirección infinito.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  RewriteCond %{HTTPS} !=on
+  RewriteCond %{HTTP:X-Forwarded-Proto} !=https
+  RewriteCond %{HTTP:X-Forwarded-SSL} !=on
+  RewriteRule ^(.*)$ https://www.asiseguros.com/$1 [R=301,L]
+
+  RewriteCond %{HTTP_HOST} ^asiseguros\.com$ [NC]
+  RewriteRule ^(.*)$ https://www.asiseguros.com/$1 [R=301,L]
+</IfModule>
 
 # ---------- Redirecciones de las URLs del sitio anterior ----------
 # Estaban indexadas en Google. Sin esto darían 404 y se perdería el posicionamiento.
@@ -16,22 +25,22 @@ Redirect 301 /contactanos/                /#contacto
 Redirect 301 /explora-nuestras-soluciones/ /#portafolio
 Redirect 301 /privacy-policy/             /politica-tratamiento-datos.html
 
-# Asistencias: van al sitio de asistencias
-Redirect 301 /conoce-nuestros-planes-asi/ /asistencias/
-Redirect 301 /asistencia-legal/           /asistencias/
-Redirect 301 /asistencia-medica/          /asistencias/
-Redirect 301 /asistencia-odontologica/    /asistencias/
-Redirect 301 /asistencia-vial/            /asistencias/
+# Asistencias: ese producto no está en el sitio nuevo, van al inicio
+Redirect 301 /conoce-nuestros-planes-asi/ /
+Redirect 301 /asistencia-legal/           /
+Redirect 301 /asistencia-medica/          /
+Redirect 301 /asistencia-odontologica/    /
+Redirect 301 /asistencia-vial/            /
 
 # Tienda y productos de WooCommerce
-Redirect 301 /shop/                       /asistencias/
-Redirect 301 /cart/                       /asistencias/
-Redirect 301 /checkout/                   /asistencias/
-Redirect 301 /my-account/                 /asistencias/
-Redirect 301 /product/plan-asi-x-mes/     /asistencias/
-Redirect 301 /product/plan-asi-x-3-meses/ /asistencias/
-Redirect 301 /product/plan-asi-x-ano/     /asistencias/
-RedirectMatch 301 ^/product-category/.*$  /asistencias/
+Redirect 301 /shop/                       /
+Redirect 301 /cart/                       /
+Redirect 301 /checkout/                   /
+Redirect 301 /my-account/                 /
+Redirect 301 /product/plan-asi-x-mes/     /
+Redirect 301 /product/plan-asi-x-3-meses/ /
+Redirect 301 /product/plan-asi-x-ano/     /
+RedirectMatch 301 ^/product-category/.*$  /
 
 # Blog y taxonomías
 Redirect 301 /blog/                       /
