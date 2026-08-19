@@ -15,11 +15,10 @@ var DEFAULT_CONFIG = {
     whatsapp: '573173712260',
     schedule: 'Lun - Vie: 8:00 AM - 6:00 PM',
     location: 'Cobertura nacional - Colombia',
-    facebook: 'https://www.facebook.com/asiseguros',
-    instagram: 'https://www.instagram.com/asiseguros',
-    linkedin: 'https://www.linkedin.com/company/asiseguros',
-    tiktok: 'https://www.tiktok.com/@asiseguros',
-    youtube: 'https://www.youtube.com/@asiseguros'
+    facebook: 'https://www.facebook.com/profile.php?id=61556481256358',
+    instagram: 'https://www.instagram.com/asisegurosasiste/',
+    linkedin: 'https://www.linkedin.com/company/asi-seguros/',
+    tiktok: 'https://www.tiktok.com/@asiseguros'
   },
   hero: {
     badge: 'Agencia de Seguros en Colombia',
