@@ -1,0 +1,3 @@
+# Los registros de autorización contienen datos personales.
+# Ninguno de estos archivos debe ser accesible por web.
+Require all denied

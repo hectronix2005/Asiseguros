@@ -85,6 +85,24 @@
     .testimonials-section.has-photo .process-card p { color: rgba(255,255,255,.7); }
     @media (max-width: 700px) { .product-highlight .product-benefits { grid-template-columns: 1fr; } }
 
+
+    /* Formulario: aviso de resultado y trampa anti-robots */
+    .campo-trampa { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+    .form-aviso { display: none; margin-bottom: 16px; padding: 14px 16px; border-radius: 10px; font-size: 0.88rem; line-height: 1.55; }
+    .form-aviso.ok { display: block; background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; }
+    .form-aviso.error { display: block; background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; }
+    .form-aviso strong { display: block; margin-bottom: 4px; }
+
+    /* Aviso de privacidad previo a WhatsApp (Ley 1581 de 2012) */
+    .wa-modal { position: fixed; inset: 0; z-index: 9999; display: none; align-items: center; justify-content: center; padding: 20px; background: rgba(10,26,48,.6); }
+    .wa-modal.abierto { display: flex; }
+    .wa-modal-caja { background: #fff; border-radius: 16px; max-width: 460px; width: 100%; padding: 28px; box-shadow: 0 20px 60px rgba(0,0,0,.25); }
+    .wa-modal-caja h3 { font-size: 1.15rem; color: var(--primary); margin-bottom: 12px; display: flex; align-items: center; gap: 10px; }
+    .wa-modal-caja p { font-size: 0.87rem; line-height: 1.65; color: var(--gray-500); margin-bottom: 12px; }
+    .wa-modal-caja a { color: var(--primary); text-decoration: underline; }
+    .wa-modal-acciones { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
+    .wa-modal-acciones .btn { flex: 1; justify-content: center; min-width: 140px; }
+
     /* Aviso legal del intermediario */
     .footer-legal-note { font-size: 0.72rem; line-height: 1.6; color: rgba(255,255,255,0.45); margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.08); }
 
@@ -98,7 +116,7 @@
     "@context": "https://schema.org",
     "@type": "InsuranceAgency",
     "name": "AsiSeguros",
-    "legalName": "ASISEGUROS SAS",
+    "legalName": "ASISEGUROS LTDA",
     "taxID": "901483323-4",
     "url": "https://www.asiseguros.com",
     "description": "Agencia de seguros en Colombia. Cumplimiento estatal y particular, todo riesgo contratista, automóviles y carga, vida y salud. Con el respaldo de Seguros del Estado S.A.",
@@ -522,7 +540,8 @@
 
       <div class="contact-form-wrapper reveal">
         <h3><i class="fas fa-file-signature" style="color: var(--accent); margin-right: 8px;"></i>Cotiza tu seguro ahora</h3>
-        <form id="contactForm" data-whatsapp="573173712260">
+        <form id="contactForm" method="post" action="api/cotizacion.php"
+              data-whatsapp="573173712260" data-consent-version="2026-08-19">
           <div class="form-row">
             <div class="form-group">
               <label for="nombre">Nombre completo *</label>
@@ -585,13 +604,21 @@
           <div class="form-group form-consent">
             <label for="autorizacion_datos" class="consent-label">
               <input type="checkbox" id="autorizacion_datos" name="autorizacion_datos" required>
-              <span>
+              <span id="autorizacionTexto">
                 Autorizo a AsiSeguros el tratamiento de mis datos personales para ser contactado con
                 fines de cotización y asesoría en seguros, conforme a la Ley 1581 de 2012 y a la
                 <a href="politica-tratamiento-datos.html" target="_blank" rel="noopener">Política de Tratamiento de Datos</a>. *
               </span>
             </label>
           </div>
+
+          <!-- Trampa para robots: oculta a la vista, una persona nunca la rellena -->
+          <div class="campo-trampa" aria-hidden="true">
+            <label for="empresa_web">No rellenar</label>
+            <input type="text" id="empresa_web" name="empresa_web" tabindex="-1" autocomplete="off">
+          </div>
+
+          <div class="form-aviso" id="formAviso" role="status" aria-live="polite"></div>
 
           <button type="submit" class="btn btn-primary">
             <i class="fas fa-paper-plane"></i> Enviar cotización
@@ -671,7 +698,7 @@
       </div>
 
       <p class="footer-legal-note">
-        AsiSeguros es el nombre comercial de ASISEGUROS SAS, NIT 901.483.323-4, agencia de seguros
+        AsiSeguros es el nombre comercial de ASISEGUROS LTDA, NIT 901.483.323-4, agencia de seguros
         que actúa como intermediario y no asume la calidad de aseguradora. Las pólizas son expedidas
         por Seguros del Estado S.A., vigilada por la Superintendencia Financiera de Colombia. La
         información de este sitio es comercial e informativa y no constituye oferta; las coberturas,
@@ -679,6 +706,32 @@
       </p>
     </div>
   </footer>
+
+  <!-- Aviso de privacidad previo a WhatsApp.
+       Legal: el canal de WhatsApp recolecta datos personales, así que hay que
+       informar antes de abrirlo, no después. -->
+  <div class="wa-modal" id="waModal" role="dialog" aria-modal="true" aria-labelledby="waModalTitulo">
+    <div class="wa-modal-caja">
+      <h3 id="waModalTitulo"><i class="fab fa-whatsapp" style="color:#25D366"></i> Antes de escribirnos</h3>
+      <p>
+        Al continuar abrirás una conversación de WhatsApp con <strong>AsiSeguros</strong>
+        (ASISEGUROS LTDA, NIT 901.483.323-4). Los datos que compartas por ese canal
+        —tu número, tu nombre y lo que nos cuentes— se tratarán únicamente para
+        atender tu solicitud y ofrecerte asesoría en seguros.
+      </p>
+      <p>
+        Puedes conocer, actualizar, rectificar o suprimir tus datos escribiendo a
+        <a href="mailto:contacto@asiseguros.com">contacto@asiseguros.com</a>. Consulta la
+        <a href="politica-tratamiento-datos.html" target="_blank" rel="noopener">Política de Tratamiento de Datos Personales</a>.
+      </p>
+      <div class="wa-modal-acciones">
+        <button type="button" class="btn btn-outline" data-wa-cancelar>Cancelar</button>
+        <a href="#" class="btn btn-primary" id="waContinuar" target="_blank" rel="noopener">
+          <i class="fab fa-whatsapp"></i> Entiendo, continuar
+        </a>
+      </div>
+    </div>
+  </div>
 
   <!-- ========== WHATSAPP FLOAT ========== -->
   <a href="https://wa.me/573173712260?text=Hola%2C%20quiero%20información%20sobre%20seguros"

@@ -186,20 +186,31 @@ document.addEventListener('DOMContentLoaded', () => {
   /* ---------- Cart ---------- */
   initCart();
 
-  /* ---------- Contact Form ---------- */
+  /* ---------- Contact Form ----------
+     El envío va al servidor (api/cotizacion.php), que deja constancia de la
+     autorización de tratamiento de datos con fecha, hora y el texto exacto que
+     se le mostró al titular. Antes esto salía por WhatsApp: el usuario podía
+     editar el mensaje, o no enviarlo, y no quedaba prueba de nada. La Ley 1581
+     de 2012 (art. 17 lit. b) exige conservar esa prueba al responsable. */
   const contactForm = document.querySelector('#contactForm');
   if (contactForm) {
-    contactForm.addEventListener('submit', (e) => {
+    const aviso = document.querySelector('#formAviso');
+
+    const mostrarAviso = (tipo, titulo, texto) => {
+      if (!aviso) return;
+      aviso.className = 'form-aviso ' + tipo;
+      aviso.innerHTML = `<strong>${titulo}</strong>${texto}`;
+      aviso.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    };
+
+    contactForm.addEventListener('submit', async (e) => {
       e.preventDefault();
 
-      const formData = new FormData(contactForm);
-      const data = Object.fromEntries(formData);
-
-      // Validate required fields
+      // Validación en el navegador: mejora la experiencia, no acredita nada.
+      // La validación que cuenta es la del servidor.
       let isValid = true;
       contactForm.querySelectorAll('[required]').forEach(field => {
         if (field.type === 'checkbox') {
-          // Ley 1581/2012: sin autorización marcada el formulario no envía
           const wrapper = field.closest('.form-consent');
           if (!field.checked) {
             if (wrapper) wrapper.classList.add('consent-error');
@@ -214,38 +225,92 @@ document.addEventListener('DOMContentLoaded', () => {
           field.style.borderColor = '';
         }
       });
+      if (!isValid) {
+        mostrarAviso('error', 'Faltan datos',
+          'Revisa los campos marcados y confirma la autorización de tratamiento de datos.');
+        return;
+      }
 
-      if (!isValid) return;
+      const datos = Object.fromEntries(new FormData(contactForm));
+      // Se envía el texto íntegro de la autorización tal como se mostró, junto
+      // con su versión: es lo que se conserva como prueba.
+      const textoEl = document.querySelector('#autorizacionTexto');
+      datos.autorizacion_texto = textoEl ? textoEl.innerText.replace(/\s+/g, ' ').trim() : '';
+      datos.autorizacion_version = contactForm.getAttribute('data-consent-version') || '';
+      datos.autorizacion_datos = contactForm.querySelector('#autorizacion_datos').checked ? '1' : '';
 
-      // Build WhatsApp message
-      const tipoAsistencia = data.tipo_asistencia || data.tipo_seguro || '';
-      const message = encodeURIComponent(
-        `Hola, quiero información sobre ASI.\n\n` +
-        `*Nombre:* ${data.nombre}\n` +
-        `*Email:* ${data.email}\n` +
-        `*Teléfono:* ${data.telefono}\n` +
-        `*Interés:* ${tipoAsistencia}\n` +
-        `*Mensaje:* ${data.mensaje || 'Sin mensaje adicional'}\n` +
-        `*Autoriza tratamiento de datos:* ${data.autorizacion_datos ? 'Sí' : 'No'}`
-      );
-
-      const waNumber = contactForm.getAttribute('data-whatsapp') || '573173712260';
-      const whatsappURL = `https://wa.me/${waNumber}?text=${message}`;
-      window.open(whatsappURL, '_blank');
-
-      // Show success feedback
       const btn = contactForm.querySelector('button[type="submit"]');
-      const originalText = btn.innerHTML;
-      btn.innerHTML = '<i class="fas fa-check"></i> Mensaje enviado';
-      btn.style.background = '#22c55e';
-      btn.style.borderColor = '#22c55e';
+      const textoBtn = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Enviando…';
 
-      setTimeout(() => {
-        btn.innerHTML = originalText;
-        btn.style.background = '';
-        btn.style.borderColor = '';
-        contactForm.reset();
-      }, 3000);
+      try {
+        const r = await fetch(contactForm.getAttribute('action'), {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(datos)
+        });
+        const res = await r.json().catch(() => ({}));
+
+        if (r.ok && res.ok) {
+          const wa = contactForm.getAttribute('data-whatsapp') || '573173712260';
+          const msg = encodeURIComponent(
+            `Hola, acabo de enviar una solicitud de cotización por la página web.\n` +
+            `Radicado: ${res.radicado}\n` +
+            `Nombre: ${datos.nombre}\n` +
+            `Interés: ${datos.tipo_seguro}`
+          );
+          mostrarAviso('ok', 'Solicitud recibida',
+            `Guardamos tu solicitud con el radicado <strong>${res.radicado}</strong> y un asesor ` +
+            `se comunicará contigo. Si quieres adelantar la conversación, ` +
+            `<a href="https://wa.me/${wa}?text=${msg}" target="_blank" rel="noopener">escríbenos por WhatsApp</a>.`);
+          contactForm.reset();
+        } else {
+          mostrarAviso('error', 'No pudimos enviar tu solicitud',
+            (res.error || 'Inténtalo de nuevo en unos minutos.') +
+            ' También puedes escribirnos a <a href="mailto:contacto@asiseguros.com">contacto@asiseguros.com</a>.');
+        }
+      } catch (err) {
+        mostrarAviso('error', 'No pudimos enviar tu solicitud',
+          'Revisa tu conexión e inténtalo de nuevo, o escríbenos a ' +
+          '<a href="mailto:contacto@asiseguros.com">contacto@asiseguros.com</a>.');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = textoBtn;
+      }
+    });
+  }
+
+  /* ---------- Aviso de privacidad previo a WhatsApp ----------
+     WhatsApp es un canal de recolección de datos personales, así que hay que
+     informar antes de abrirlo. Todos los enlaces a wa.me pasan por este aviso. */
+  const waModal = document.querySelector('#waModal');
+  if (waModal) {
+    const waContinuar = waModal.querySelector('#waContinuar');
+    const YA_AVISADO = 'asi_wa_avisado';
+
+    const cerrar = () => waModal.classList.remove('abierto');
+
+    document.querySelectorAll('a[href*="wa.me"]').forEach(enlace => {
+      if (enlace.closest('#waModal') || enlace.closest('.form-aviso')) return;
+      enlace.addEventListener('click', (e) => {
+        // Una sola vez por sesión: informar en cada clic sería hostil.
+        if (sessionStorage.getItem(YA_AVISADO)) return;
+        e.preventDefault();
+        waContinuar.href = enlace.href;
+        waModal.classList.add('abierto');
+      });
+    });
+
+    waContinuar.addEventListener('click', () => {
+      try { sessionStorage.setItem(YA_AVISADO, '1'); } catch (err) { /* modo privado */ }
+      cerrar();
+    });
+
+    waModal.querySelectorAll('[data-wa-cancelar]').forEach(b => b.addEventListener('click', cerrar));
+    waModal.addEventListener('click', (e) => { if (e.target === waModal) cerrar(); });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && waModal.classList.contains('abierto')) cerrar();
     });
   }
 

@@ -1,0 +1,8 @@
+# Solo se sirve el endpoint; nada de listados ni de otros archivos.
+Options -Indexes
+<FilesMatch "\.(php)$">
+  Require all granted
+</FilesMatch>
+<FilesMatch "\.(csv|log|txt|md)$">
+  Require all denied
+</FilesMatch>

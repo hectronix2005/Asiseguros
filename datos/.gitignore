@@ -1,0 +1,4 @@
+# Los datos personales recogidos por el formulario no se versionan.
+*
+!.htaccess
+!.gitignore
