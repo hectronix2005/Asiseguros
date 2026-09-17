@@ -1,6 +1,55 @@
 # AsiSeguros — configuración para el hosting (Apache / LiteSpeed).
 # GitHub Pages ignora este archivo; solo actúa en el servidor de Colombia Hosting.
 
+# ---------- Bloqueo de sondeos automatizados ----------
+# Va ANTES del bloque de HTTPS a propósito: si redirigiéramos primero, cada
+# sondeo por HTTP costaría una redirección y el bot volvería a intentarlo.
+# Medido en los registros del servidor: 3.436 POST contra wp-login.php y cientos
+# de peticiones buscando .env, .git/config y xmlrpc. Nada de eso existe ya, pero
+# redirigirlo gastaba recursos y devolvía una señal de "aquí hay algo". Con [F]
+# se corta en seco, antes de llegar a PHP.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # Archivos de configuración y credenciales que nunca deben servirse
+  RewriteRule (^|/)\.(env|git|svn|aws|ssh|htpasswd|DS_Store) - [F,L,NC]
+  RewriteRule \.(sql|bak|old|swp|sqlite|log|ini|conf)$ - [F,L,NC]
+  RewriteRule (composer\.(json|lock)|package-lock\.json|yarn\.lock)$ - [F,L,NC]
+
+  # Puntos de entrada de WordPress usados para fuerza bruta. El sitio ya no es
+  # WordPress: quien los pide no es un visitante.
+  RewriteRule ^(wp-login\.php|xmlrpc\.php|wp-cron\.php|wp-comments-post\.php) - [F,L,NC]
+
+  # Herramientas de administración de bases de datos y shells
+  RewriteRule (phpmyadmin|adminer|(^|/)(shell|vendor)/|eval\(|base64_decode) - [F,L,NC]
+</IfModule>
+
+# ---------- Métodos HTTP ----------
+# El sitio solo necesita GET, POST y HEAD. Los registros muestran peticiones
+# DELETE y OPTIONS que no corresponden a ningún uso legítimo.
+<IfModule mod_rewrite.c>
+  RewriteCond %{REQUEST_METHOD} ^(TRACE|TRACK|DELETE|PUT|PATCH)$
+  RewriteRule .* - [F,L]
+</IfModule>
+
+# ---------- Cabeceras de seguridad ----------
+<IfModule mod_headers.c>
+  # Evita que el sitio se cargue dentro de un iframe ajeno (clickjacking)
+  Header always set X-Frame-Options "SAMEORIGIN"
+  # Impide que el navegador adivine tipos de archivo
+  Header always set X-Content-Type-Options "nosniff"
+  # No filtrar la URL completa a sitios externos
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  # Desactiva APIs del navegador que el sitio no usa
+  Header always set Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=()"
+  # Fuerza HTTPS durante un año en navegadores que ya visitaron el sitio
+  Header always set Strict-Transport-Security "max-age=31536000" env=HTTPS
+  # No cachear las respuestas del formulario ni del panel
+  <FilesMatch "\.(php)$">
+    Header set Cache-Control "no-store, no-cache, must-revalidate"
+  </FilesMatch>
+</IfModule>
+
 # ---------- Forzar HTTPS y www ----------
 # Las tres condiciones de HTTPS son deliberadas: en hostings con proxy o balanceador
 # %{HTTPS} puede no llegar como "on" aunque la petición sí sea segura. Comprobando
