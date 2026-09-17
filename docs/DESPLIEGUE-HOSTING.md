@@ -51,6 +51,9 @@ public_html/
 ├── terminos-y-condiciones.html
 ├── 404.html
 ├── .htaccess
+├── admin/          ← panel para publicar los documentos legales
+├── api/            ← recibe el formulario y registra la autorización
+├── datos/          ← respaldo si no se puede escribir fuera de public_html
 ├── assets/
 ├── css/
 └── js/
@@ -69,7 +72,10 @@ public_html/
 - `https://www.asiseguros.com/quienes-somos/` redirige al inicio
   (igual con `/asistencia-legal/`, `/shop/`, `/privacy-policy/`…).
 - Una dirección inventada muestra la página 404 con el logo.
-- El formulario de cotización abre WhatsApp con los datos.
+- **El formulario de cotización envía de verdad** y responde con un número de
+  radicado. Es la prueba de que el registro de autorizaciones funciona.
+- `https://www.asiseguros.com/admin/` pide definir una contraseña.
+- Al pulsar cualquier botón de WhatsApp aparece antes el aviso de privacidad.
 - **Enviar un correo de prueba a `contacto@asiseguros.com`** y confirmar que
   llega. No debería verse afectado, pero conviene verificarlo.
 
@@ -102,6 +108,25 @@ aire en segundos; luego se ajusta.
 El archivo se probó sobre Apache 2.4 real: sintaxis correcta, las once
 redirecciones responden 301 al destino previsto, la página 404 funciona y no se
 producen bucles de redirección.
+
+## Al terminar: dos cosas del panel
+
+1. Entra a `https://www.asiseguros.com/admin/` y **define la contraseña** de
+   inmediato. Mientras no lo hagas, cualquiera que encuentre la dirección puede
+   fijarla. No es un panel indexable —lleva `noindex`— pero conviene no dejarlo
+   abierto ni un día.
+2. Desde ahí carga los tres `.docx` de legal. Se publican solos con el diseño
+   del sitio y reemplazan mis borradores.
+
+## Comprobar que los datos quedan a salvo
+
+Tras el primer envío del formulario, en el Administrador de archivos debe
+aparecer `asiseguros-datos/autorizaciones.csv` **al mismo nivel que
+public_html**, no dentro. Ahí es donde queda la prueba de las autorizaciones, y
+estando fuera del árbol web no es descargable por nadie desde internet.
+
+Si en cambio aparece en `public_html/datos/`, el hosting impidió escribir fuera;
+sigue protegido por su `.htaccess`, pero avísame para revisarlo.
 
 ## Después
 
