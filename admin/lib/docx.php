@@ -13,23 +13,20 @@
 
 declare(strict_types=1);
 
+require_once __DIR__ . '/zip.php';
+
 function docx_a_html(string $rutaDocx): array
 {
     if (!is_file($rutaDocx)) {
         return ['ok' => false, 'error' => 'No se encontró el archivo.'];
     }
 
-    $zip = new ZipArchive();
-    if ($zip->open($rutaDocx) !== true) {
-        return ['ok' => false, 'error' => 'El archivo no es un .docx válido.'];
-    }
+    // Se lee el ZIP con un lector propio: el hosting corre PHP sin la extensión
+    // `zip`, así que ZipArchive no existe.
+    $xml = zip_leer($rutaDocx, 'word/document.xml');
 
-    $xml = $zip->getFromName('word/document.xml');
-    $numbering = $zip->getFromName('word/numbering.xml');
-    $zip->close();
-
-    if ($xml === false) {
-        return ['ok' => false, 'error' => 'El .docx no contiene word/document.xml.'];
+    if ($xml === null) {
+        return ['ok' => false, 'error' => 'El archivo no es un .docx válido o está dañado.'];
     }
 
     $previo = libxml_use_internal_errors(true);

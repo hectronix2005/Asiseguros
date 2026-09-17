@@ -141,7 +141,14 @@ if ($accion === 'publicar' && $dentro) {
         } elseif ($_FILES['archivo']['size'] > 8 * 1024 * 1024) {
             $aviso = 'El archivo supera los 8 MB.';
         } else {
-            $r = docx_a_html($tmp);
+            // Envuelto a propósito: un fallo al convertir debe mostrarse como
+            // aviso, nunca como un error 500 que deje el panel inservible.
+            try {
+                $r = docx_a_html($tmp);
+            } catch (Throwable $e) {
+                error_log('AsiSeguros panel: ' . $e->getMessage());
+                $r = ['ok' => false, 'error' => 'No se pudo leer el documento: ' . $e->getMessage()];
+            }
             if (!$r['ok']) {
                 $aviso = $r['error'];
             } else {
