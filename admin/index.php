@@ -17,6 +17,7 @@ date_default_timezone_set('America/Bogota');
 
 require __DIR__ . '/lib/docx.php';
 require __DIR__ . '/lib/paginas.php';
+require __DIR__ . '/lib/solicitudes.php';
 
 const ARCHIVO_CLAVE = __DIR__ . '/.clave.php';
 const ARCHIVO_INTENTOS = __DIR__ . '/.intentos.json';
@@ -117,6 +118,14 @@ if ($accion === 'salir') {
 }
 
 $dentro = !empty($_SESSION['ok']);
+
+// Pestaña activa: documentos (por defecto) o solicitudes
+$vista = ($_GET['ver'] ?? '') === 'solicitudes' ? 'solicitudes' : 'documentos';
+$busca = trim((string)($_GET['q'] ?? ''));
+
+if ($dentro && ($_GET['exportar'] ?? '') === '1') {
+    exportar_csv(solicitudes($busca));
+}
 
 if ($accion === 'publicar' && $dentro) {
     $clave = (string)($_POST['documento'] ?? '');
@@ -222,6 +231,34 @@ function estadoDocumento(array $doc): array {
   .btn:hover { background:#1a3a5c; }
   .intro { font-size:.9rem; margin-bottom:26px; }
   .nota { font-size:.8rem; color:var(--gray-400); margin-top:22px; line-height:1.7; }
+  .pestanas { display:flex; gap:4px; margin-bottom:24px; border-bottom:1px solid var(--gray-200); }
+  .pestanas a { padding:10px 18px; font-size:.88rem; font-weight:600; color:var(--gray-500);
+                text-decoration:none; border-bottom:2px solid transparent; margin-bottom:-1px; }
+  .pestanas a.activa { color:var(--primary); border-bottom-color:var(--accent); }
+  .cifras { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:22px; }
+  .cifra { background:#fff; border:1px solid var(--gray-200); border-radius:12px; padding:16px; text-align:center; }
+  .cifra b { display:block; font-size:1.6rem; color:var(--primary); line-height:1.2; }
+  .cifra span { font-size:.75rem; color:var(--gray-400); text-transform:uppercase; letter-spacing:.5px; }
+  .barra-busca { display:flex; gap:10px; margin-bottom:18px; flex-wrap:wrap; }
+  .barra-busca input { flex:1; min-width:200px; margin:0; }
+  .btn-sec { background:#fff; color:var(--primary); border:1px solid var(--gray-200);
+             padding:11px 18px; border-radius:8px; font-family:inherit; font-weight:600;
+             font-size:.85rem; cursor:pointer; text-decoration:none; display:inline-block; }
+  .sol { background:#fff; border:1px solid var(--gray-200); border-radius:12px; padding:18px 20px; margin-bottom:12px; }
+  .sol-cab { display:flex; justify-content:space-between; align-items:baseline; gap:12px; flex-wrap:wrap; margin-bottom:10px; }
+  .sol-cab b { font-size:1rem; color:var(--primary); }
+  .sol-rad { font-family:ui-monospace,monospace; font-size:.76rem; color:var(--accent); }
+  .sol-fecha { font-size:.76rem; color:var(--gray-400); }
+  .sol-prod { display:inline-block; background:var(--gray-50); border:1px solid var(--gray-200);
+              border-radius:20px; padding:3px 12px; font-size:.76rem; color:var(--gray-600); margin-bottom:10px; }
+  .sol-datos { display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:6px 18px; font-size:.84rem; }
+  .sol-datos div { color:var(--gray-600); }
+  .sol-datos span { color:var(--gray-400); }
+  .sol-msg { margin-top:10px; padding:10px 12px; background:var(--gray-50); border-radius:8px; font-size:.84rem; }
+  .sol-det { margin-top:12px; padding-top:12px; border-top:1px dashed var(--gray-200); }
+  .sol-det h4 { font-size:.76rem; text-transform:uppercase; letter-spacing:.5px; color:var(--gray-400); margin-bottom:8px; }
+  .sol-aut { margin-top:10px; font-size:.72rem; color:var(--gray-400); line-height:1.6; }
+  .vacio { background:#fff; border:1px dashed var(--gray-200); border-radius:12px; padding:40px 20px; text-align:center; color:var(--gray-400); font-size:.9rem; }
 </style>
 </head>
 <body>
@@ -267,6 +304,84 @@ function estadoDocumento(array $doc): array {
   </div>
 
 <?php else: ?>
+
+  <div class="pestanas">
+    <a href="?ver=documentos" class="<?= $vista==='documentos'?'activa':'' ?>">Documentos legales</a>
+    <a href="?ver=solicitudes" class="<?= $vista==='solicitudes'?'activa':'' ?>">Solicitudes de cotización</a>
+  </div>
+
+<?php if ($vista === 'solicitudes'):
+      $lista = solicitudes($busca);
+      $res   = resumen_solicitudes(solicitudes()); ?>
+
+  <div class="cifras">
+    <div class="cifra"><b><?= $res['total'] ?></b><span>en total</span></div>
+    <div class="cifra"><b><?= $res['mes'] ?></b><span>este mes</span></div>
+    <div class="cifra"><b><?= $res['hoy'] ?></b><span>hoy</span></div>
+  </div>
+
+  <form method="get" class="barra-busca">
+    <input type="hidden" name="ver" value="solicitudes">
+    <input type="text" name="q" value="<?= htmlspecialchars($busca) ?>"
+           placeholder="Buscar por nombre, radicado, correo o producto…">
+    <button class="btn">Buscar</button>
+    <?php if ($busca !== ''): ?><a href="?ver=solicitudes" class="btn-sec">Limpiar</a><?php endif; ?>
+    <?php if ($lista): ?>
+      <a href="?ver=solicitudes&amp;q=<?= urlencode($busca) ?>&amp;exportar=1" class="btn-sec">Descargar Excel</a>
+    <?php endif; ?>
+  </form>
+
+  <?php if (!$lista): ?>
+    <div class="vacio">
+      <?= $busca !== '' ? 'No hay solicitudes que coincidan con esa búsqueda.'
+                        : 'Todavía no hay solicitudes. Aparecerán aquí en cuanto alguien use el formulario del sitio.' ?>
+    </div>
+  <?php else: foreach ($lista as $s):
+        $f = strtotime((string)($s['fecha_hora'] ?? '')); ?>
+    <div class="sol">
+      <div class="sol-cab">
+        <b><?= htmlspecialchars($s['nombre'] ?? '') ?></b>
+        <span>
+          <span class="sol-rad"><?= htmlspecialchars($s['radicado'] ?? '') ?></span>
+          <span class="sol-fecha"> · <?= $f ? date('d/m/Y H:i', $f) : '' ?></span>
+        </span>
+      </div>
+      <div class="sol-prod"><?= htmlspecialchars($s['tipo_seguro'] ?? '') ?></div>
+      <div class="sol-datos">
+        <div><span>Teléfono:</span>
+          <a href="https://wa.me/57<?= preg_replace('/\D/','',(string)($s['telefono'] ?? '')) ?>"
+             target="_blank" rel="noopener"><?= htmlspecialchars($s['telefono'] ?? '') ?></a></div>
+        <div><span>Correo:</span>
+          <a href="mailto:<?= htmlspecialchars($s['email'] ?? '') ?>"><?= htmlspecialchars($s['email'] ?? '') ?></a></div>
+      </div>
+      <?php if (trim((string)($s['mensaje'] ?? '')) !== ''): ?>
+        <div class="sol-msg"><?= nl2br(htmlspecialchars($s['mensaje'])) ?></div>
+      <?php endif; ?>
+      <?php if (!empty($s['detalle'])): ?>
+        <div class="sol-det">
+          <h4>Datos del riesgo</h4>
+          <div class="sol-datos">
+            <?php foreach ($s['detalle'] as $k => $v): ?>
+              <div><span><?= htmlspecialchars(ucfirst(str_replace('_',' ',(string)$k))) ?>:</span>
+                   <?= htmlspecialchars((string)$v) ?></div>
+            <?php endforeach; ?>
+          </div>
+        </div>
+      <?php endif; ?>
+      <p class="sol-aut">
+        Autorización de tratamiento de datos: <strong><?= htmlspecialchars($s['autoriza'] ?? '') ?></strong>
+        · versión <?= htmlspecialchars($s['version_autorizacion'] ?? '') ?>
+        <?= $f ? ' · registrada el ' . date('d/m/Y \a \l\a\s H:i', $f) : '' ?>
+      </p>
+    </div>
+  <?php endforeach; endif; ?>
+
+  <p class="nota">
+    Estos registros son la prueba de la autorización que exige la Ley 1581 de 2012.
+    Se guardan fuera de la carpeta web y no se pueden editar ni borrar desde aquí.
+  </p>
+
+<?php else: ?>
   <p class="intro">
     Carga el documento en <strong>.docx</strong> y se publica como página del sitio,
     con el mismo diseño. La versión anterior se guarda por si hay que volver atrás.
@@ -308,7 +423,8 @@ function estadoDocumento(array $doc): array {
     sitio. Después de publicar, conviene abrir la página y revisar que la
     estructura quedó bien.
   </p>
-<?php endif; ?>
+<?php endif; // vista ?>
+<?php endif; // sesión ?>
 
 </main>
 </body>
