@@ -1,0 +1,2 @@
+# Librerías internas del panel: nunca deben servirse por HTTP.
+Require all denied
