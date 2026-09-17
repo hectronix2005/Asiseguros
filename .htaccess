@@ -22,7 +22,7 @@
   # jurídica. Va aquí y no como Redirect porque LiteSpeed no respeta el orden
   # de mod_alias y la regla genérica de fechas la pisaba; [L] corta el proceso.
   # Blog y taxonomías. El orden importa: la primera que coincide gana gracias a [L].
-  RewriteRule ^2015/11/19/blog-asistencia-legal/?$ /#diferenciales [R=301,L,NE]
+  RewriteRule ^2015/11/19/blog-asistencia-legal/?$ /asesoria-juridica.html [R=301,L]
   RewriteRule ^blog/?$                    / [R=301,L]
   RewriteRule ^category/                  / [R=301,L]
   RewriteRule ^author/                    / [R=301,L]
