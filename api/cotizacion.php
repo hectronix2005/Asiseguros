@@ -23,6 +23,8 @@ error_reporting(E_ALL);
 
 date_default_timezone_set('America/Bogota');
 
+require_once __DIR__ . '/correo.php';
+
 const CORREO_DESTINO    = 'comercial1@asiseguros.com';
 const LIMITE_POR_HORA   = 20;   // por IP
 const VERSION_ESPERADA  = '2026-08-19';
@@ -69,6 +71,24 @@ if ($crudo !== '' && str_contains($_SERVER['CONTENT_TYPE'] ?? '', 'json')) {
     $datos = json_decode($crudo, true) ?: [];
 } else {
     $datos = $_POST;
+}
+
+/** Recupera del registro los datos del paso 1 para un radicado. */
+function leer_solicitud(string $radicado): array {
+    $ruta = DIR_DATOS . '/autorizaciones.csv';
+    if (!is_file($ruta) || $radicado === '') return [];
+    $fh = @fopen($ruta, 'r');
+    if ($fh === false) return [];
+    $cab = fgetcsv($fh, 0, ',', '"', '\\');
+    if ($cab) $cab[0] = preg_replace('/^\xEF\xBB\xBF/', '', (string)$cab[0]);
+    $encontrado = [];
+    while (($f = fgetcsv($fh, 0, ',', '"', '\\')) !== false) {
+        if (($f[0] ?? '') === $radicado) {
+            $encontrado = array_combine($cab, array_pad(array_slice($f, 0, count($cab)), count($cab), ''));
+        }
+    }
+    fclose($fh);
+    return $encontrado ?: [];
 }
 
 function campo(array $d, string $k, int $max = 300): string {
@@ -119,15 +139,14 @@ if (($datos['accion'] ?? '') === 'detalle') {
     fclose($fh);
     @chmod($archivo, 0640);
 
-    $lineas = '';
-    foreach ($limpias as $k => $v) {
-        $lineas .= '  ' . str_pad(str_replace('_', ' ', $k) . ':', 34) . $v . "\n";
+    // Se reenvía la solicitud completa, no solo el complemento: así el asesor
+    // tiene en un único correo el contacto y los datos del riesgo, sin tener
+    // que buscar el aviso anterior.
+    $base = ['radicado' => $radicado, 'tipo_seguro' => $tipo, 'fecha_hora' => date('c')];
+    foreach (leer_solicitud($radicado) as $k => $v) {
+        if (($base[$k] ?? '') === '') $base[$k] = $v;
     }
-    @mail(CORREO_DESTINO,
-        "Datos para cotizar {$radicado} — {$tipo}",
-        "Complemento de la solicitud {$radicado}\n\nTipo: {$tipo}\n\n{$lineas}",
-        "From: Sitio web AsiSeguros <no-responder@asiseguros.com>\r\n"
-        . "Content-Type: text/plain; charset=UTF-8\r\n");
+    enviar_aviso(CORREO_DESTINO, $base, $limpias);
 
     responder(200, ['ok' => true, 'radicado' => $radicado]);
 }
@@ -222,26 +241,17 @@ fclose($fh);
 @chmod(ARCHIVO_REGISTRO, 0640);
 
 // ---- Aviso por correo -------------------------------------------------------
-$asunto = "Nueva cotización {$radicado} — {$tipoSeguro}";
-$cuerpo = "Nueva solicitud de cotización desde www.asiseguros.com\n\n"
-        . "Radicado: {$radicado}\n"
-        . "Fecha:    {$fechaISO}\n\n"
-        . "Nombre:   {$nombre}\n"
-        . "Teléfono: {$telefono}\n"
-        . "Correo:   {$email}\n"
-        . "Interés:  {$tipoSeguro}\n"
-        . "Mensaje:  " . ($mensaje !== '' ? $mensaje : '(sin mensaje)') . "\n\n"
-        . "--- Constancia de autorización (Ley 1581 de 2012) ---\n"
-        . "Autorización: OTORGADA\n"
-        . "Versión del texto: " . ($versionAut !== '' ? $versionAut : VERSION_ESPERADA) . "\n"
-        . "Texto mostrado al titular:\n{$textoAut}\n\n"
-        . "IP: {$ip}\n"
-        . "Navegador: " . ($_SERVER['HTTP_USER_AGENT'] ?? '') . "\n";
-
-$cabeceras = "From: Sitio web AsiSeguros <no-responder@asiseguros.com>\r\n"
-           . "Reply-To: {$nombre} <{$email}>\r\n"
-           . "Content-Type: text/plain; charset=UTF-8\r\n";
-@mail(CORREO_DESTINO, $asunto, $cuerpo, $cabeceras);
+enviar_aviso(CORREO_DESTINO, [
+    'radicado'             => $radicado,
+    'fecha_hora'           => $fechaISO,
+    'nombre'               => $nombre,
+    'telefono'             => $telefono,
+    'email'                => $email,
+    'tipo_seguro'          => $tipoSeguro,
+    'mensaje'              => $mensaje,
+    'texto_autorizacion'   => $textoAut,
+    'version_autorizacion' => $versionAut !== '' ? $versionAut : VERSION_ESPERADA,
+]);
 
 responder(200, [
     'ok' => true,
