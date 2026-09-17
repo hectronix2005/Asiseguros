@@ -1,0 +1,19 @@
+/* Estilo de las páginas de contenido (artículos).
+   Compartido para no repetirlo en cada página. */
+
+.art { padding: 56px 0 80px; }
+.art .container { max-width: 800px; }
+.art-volver { display: inline-flex; align-items: center; gap: 8px; font-size: 0.85rem; color: var(--gray-500); margin-bottom: 26px; }
+.art h1 { font-size: 2.1rem; color: var(--primary); line-height: 1.25; margin-bottom: 14px; }
+.art-entradilla { font-size: 1.05rem; line-height: 1.7; color: var(--gray-600); margin-bottom: 36px; padding-bottom: 28px; border-bottom: 1px solid var(--gray-200); }
+.art h2 { font-size: 1.3rem; color: var(--primary); margin: 42px 0 14px; }
+.art p { font-size: 0.97rem; line-height: 1.78; color: var(--gray-600); margin-bottom: 15px; }
+.art ul { margin: 0 0 18px 22px; list-style: disc; }
+.art li { font-size: 0.97rem; line-height: 1.75; color: var(--gray-600); margin-bottom: 10px; display: list-item; }
+.art li strong { color: var(--primary); }
+.art-nota { background: var(--gray-50); border-left: 3px solid var(--accent); border-radius: var(--radius-sm); padding: 20px 24px; margin: 32px 0; }
+.art-nota p { margin: 0; font-size: 0.92rem; }
+.art-cta { background: var(--primary); border-radius: var(--radius-lg); padding: 36px; text-align: center; margin-top: 48px; }
+.art-cta h3 { color: #fff; font-size: 1.25rem; margin-bottom: 10px; }
+.art-cta p { color: rgba(255,255,255,.75); margin-bottom: 22px; font-size: 0.92rem; }
+.footer-legal-note { font-size: 0.72rem; line-height: 1.6; color: rgba(255,255,255,0.45); margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.08); }

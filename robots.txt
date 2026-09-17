@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# El panel de documentos no debe indexarse
+Disallow: /admin/
+Disallow: /api/
+Disallow: /datos/
+
+Sitemap: https://www.asiseguros.com/sitemap.xml
