@@ -16,6 +16,21 @@ const COLOR_PRIMARIO = '#0f2441';
 const COLOR_ACENTO   = '#4db7b3';
 const CORREO_CONTACTO = 'comercial1@asiseguros.com';
 
+/**
+ * Remitente de sobre (Return-Path).
+ *
+ * Importa más de lo que parece: SPF valida este valor, no la cabecera From.
+ * Sin forzarlo, cPanel usa el usuario del sistema (algo como
+ * asisegur@kemuel.colombiahosting.com.co), y entonces el dominio validado no
+ * coincide con el del From. DMARC exige esa alineación y la política del
+ * dominio es p=reject, así que un correo desalineado no va a spam: se rechaza.
+ *
+ * Se usa una cuenta que existe de verdad, no un no-responder@ inventado: los
+ * rebotes vuelven a este buzón, y algunos servidores rechazan el correo si el
+ * remitente de sobre no acepta entregas.
+ */
+const REMITENTE_SOBRE = 'comercial1@asiseguros.com';
+
 function esc(string $t): string {
     return htmlspecialchars($t, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 }
@@ -170,12 +185,13 @@ function enviar_aviso(string $para, array $s, array $det = []): bool
     // El asunto lleva acentos: hay que codificarlo o llega ilegible.
     $asunto = '=?UTF-8?B?' . base64_encode("Cotización {$rad} — {$tipo}") . '?=';
 
-    $cabeceras = "From: Sitio web AsiSeguros <no-responder@asiseguros.com>\r\n"
+    $cabeceras = "From: Sitio web AsiSeguros <" . REMITENTE_SOBRE . ">\r\n"
                . ($mail !== '' ? "Reply-To: " . $mail . "\r\n" : '')
                . "MIME-Version: 1.0\r\n"
                . "Content-Type: multipart/alternative; boundary=\"{$sep}\"\r\n";
 
-    return @mail($para, $asunto, $cuerpo, $cabeceras);
+    // El quinto parámetro fija el Return-Path; sin él, SPF no alinea con DMARC.
+    return @mail($para, $asunto, $cuerpo, $cabeceras, '-f ' . REMITENTE_SOBRE);
 }
 
 /**
@@ -276,10 +292,10 @@ function enviar_acuse(array $s): bool
 
     $asunto = '=?UTF-8?B?' . base64_encode("Recibimos tu solicitud · Radicado {$rad}") . '?=';
 
-    $cabeceras = "From: AsiSeguros <no-responder@asiseguros.com>\r\n"
+    $cabeceras = "From: AsiSeguros <" . REMITENTE_SOBRE . ">\r\n"
                . "Reply-To: " . CORREO_CONTACTO . "\r\n"
                . "MIME-Version: 1.0\r\n"
                . "Content-Type: multipart/alternative; boundary=\"{$sep}\"\r\n";
 
-    return @mail($mail, $asunto, $cuerpo, $cabeceras);
+    return @mail($mail, $asunto, $cuerpo, $cabeceras, '-f ' . REMITENTE_SOBRE);
 }
