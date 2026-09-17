@@ -23,7 +23,7 @@ error_reporting(E_ALL);
 
 date_default_timezone_set('America/Bogota');
 
-const CORREO_DESTINO    = 'contacto@asiseguros.com';
+const CORREO_DESTINO    = 'comercial1@asiseguros.com';
 const LIMITE_POR_HORA   = 20;   // por IP
 const VERSION_ESPERADA  = '2026-08-19';
 

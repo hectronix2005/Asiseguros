@@ -425,12 +425,12 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
           mostrarAviso('error', 'No pudimos enviar tu solicitud',
             (res.error || 'Inténtalo de nuevo en unos minutos.') +
-            ' También puedes escribirnos a <a href="mailto:contacto@asiseguros.com">contacto@asiseguros.com</a>.');
+            ' También puedes escribirnos a <a href="mailto:comercial1@asiseguros.com">comercial1@asiseguros.com</a>.');
         }
       } catch (err) {
         mostrarAviso('error', 'No pudimos enviar tu solicitud',
           'Revisa tu conexión e inténtalo de nuevo, o escríbenos a ' +
-          '<a href="mailto:contacto@asiseguros.com">contacto@asiseguros.com</a>.');
+          '<a href="mailto:comercial1@asiseguros.com">comercial1@asiseguros.com</a>.');
       } finally {
         btn.disabled = false;
         btn.innerHTML = textoBtn;
