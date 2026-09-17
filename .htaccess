@@ -15,6 +15,19 @@
 
   RewriteCond %{HTTP_HOST} ^asiseguros\.com$ [NC]
   RewriteRule ^(.*)$ https://www.asiseguros.com/$1 [R=301,L]
+
+  # La entrada de asistencia legal concentra ~1.470 visitas humanas al mes
+  # (medido en los registros del servidor). Mandarla a la portada desperdicia
+  # esa intención: se lleva a los diferenciales, donde está la asesoría
+  # jurídica. Va aquí y no como Redirect porque LiteSpeed no respeta el orden
+  # de mod_alias y la regla genérica de fechas la pisaba; [L] corta el proceso.
+  # Blog y taxonomías. El orden importa: la primera que coincide gana gracias a [L].
+  RewriteRule ^2015/11/19/blog-asistencia-legal/?$ /#diferenciales [R=301,L,NE]
+  RewriteRule ^blog/?$                    / [R=301,L]
+  RewriteRule ^category/                  / [R=301,L]
+  RewriteRule ^author/                    / [R=301,L]
+  RewriteRule ^[0-9]{4}/[0-9]{2}/         / [R=301,L]
+  RewriteRule ^wp-(admin|login|json|content|includes) / [R=301,L]
 </IfModule>
 
 # ---------- Redirecciones de las URLs del sitio anterior ----------
@@ -42,14 +55,9 @@ Redirect 301 /product/plan-asi-x-3-meses/ /
 Redirect 301 /product/plan-asi-x-ano/     /
 RedirectMatch 301 ^/product-category/.*$  /
 
-# Blog y taxonomías
-Redirect 301 /blog/                       /
-RedirectMatch 301 ^/category/.*$          /
-RedirectMatch 301 ^/author/.*$            /
-RedirectMatch 301 ^/[0-9]{4}/[0-9]{2}/.*$ /
-
-# Restos de WordPress: cualquier /wp-* vuelve a la portada
-RedirectMatch 301 ^/wp-(admin|login|json|content|includes).*$ /
+# Blog, taxonomías y restos de WordPress: ver el bloque mod_rewrite de arriba.
+# No se usan RedirectMatch aquí porque en LiteSpeed mod_alias se impone sobre
+# mod_rewrite, y una regla genérica pisaría a las específicas.
 
 # ---------- Página de error ----------
 ErrorDocument 404 /404.html
