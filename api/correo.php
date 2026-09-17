@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 const COLOR_PRIMARIO = '#0f2441';
 const COLOR_ACENTO   = '#4db7b3';
+const CORREO_CONTACTO = 'comercial1@asiseguros.com';
 
 function esc(string $t): string {
     return htmlspecialchars($t, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
@@ -175,4 +176,110 @@ function enviar_aviso(string $para, array $s, array $det = []): bool
                . "Content-Type: multipart/alternative; boundary=\"{$sep}\"\r\n";
 
     return @mail($para, $asunto, $cuerpo, $cabeceras);
+}
+
+/**
+ * Acuse de recibo para el titular de los datos.
+ *
+ * Además de cerrar el círculo con el cliente, cumple una función probatoria: el
+ * artículo 12 de la Ley 1581 de 2012 obliga a informar al titular la finalidad
+ * del tratamiento y sus derechos, y el artículo 15 del Decreto 1377 de 2013
+ * exige poner a su disposición los mecanismos para consultarlos o revocarlos.
+ * Un correo con copia de lo que autorizó, enviado a su propia dirección, deja
+ * constancia de que esa información se entregó.
+ */
+function enviar_acuse(array $s): bool
+{
+    $rad   = (string)($s['radicado'] ?? '');
+    $nom   = (string)($s['nombre'] ?? '');
+    $mail  = (string)($s['email'] ?? '');
+    $tipo  = (string)($s['tipo_seguro'] ?? '');
+    $fecha = (string)($s['fecha_hora'] ?? '');
+    $texto = (string)($s['texto_autorizacion'] ?? '');
+
+    if (!filter_var($mail, FILTER_VALIDATE_EMAIL)) return false;
+
+    $fechaLegible = $fecha !== '' ? date('d/m/Y \a \l\a\s H:i', strtotime($fecha)) : '';
+    $nombreCorto  = trim(explode(' ', trim($nom))[0] ?: $nom);
+
+    /* ---------- texto plano ---------- */
+    $plano = "Hola {$nombreCorto},\n\n"
+           . "Recibimos tu solicitud de cotización y un asesor se comunicará contigo.\n\n"
+           . "Radicado: {$rad}\n"
+           . "Producto: {$tipo}\n"
+           . "Fecha:    {$fechaLegible}\n\n"
+           . str_repeat('-', 52) . "\n"
+           . "TRATAMIENTO DE TUS DATOS PERSONALES\n"
+           . str_repeat('-', 52) . "\n\n"
+           . "El {$fechaLegible} autorizaste lo siguiente:\n\n"
+           . "  \"{$texto}\"\n\n"
+           . "Responsable: ASISEGUROS LTDA, NIT 901.483.323-4.\n"
+           . "Finalidad: contactarte para cotizar y asesorarte en seguros.\n\n"
+           . "Puedes conocer, actualizar, rectificar o suprimir tus datos, y revocar\n"
+           . "esta autorización, escribiendo a " . CORREO_CONTACTO . ".\n"
+           . "Política completa: https://www.asiseguros.com/politica-tratamiento-datos.html\n\n"
+           . "AsiSeguros es una agencia de seguros que actúa como intermediario.\n"
+           . "Las pólizas son expedidas por Seguros del Estado S.A.\n";
+
+    /* ---------- HTML ---------- */
+    $html =
+      '<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8">'
+    . '<meta name="viewport" content="width=device-width,initial-scale=1"></head>'
+    . '<body style="margin:0;padding:0;background:#f1f5f9;font-family:-apple-system,BlinkMacSystemFont,\'Segoe UI\',Roboto,Arial,sans-serif">'
+    . '<table cellpadding="0" cellspacing="0" style="width:100%;background:#f1f5f9;padding:28px 12px"><tr><td align="center">'
+    . '<table cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;background:#ffffff;border-radius:14px;overflow:hidden;box-shadow:0 2px 12px rgba(15,36,65,.08)">'
+
+    . '<tr><td style="background:' . COLOR_PRIMARIO . ';padding:26px 28px">'
+    . '<h1 style="margin:0;color:#ffffff;font-size:19px;font-weight:700">Recibimos tu solicitud</h1>'
+    . '<p style="margin:8px 0 0;color:rgba(255,255,255,.65);font-size:13px">'
+    . 'Radicado <span style="color:' . COLOR_ACENTO . ';font-family:monospace">' . esc($rad) . '</span></p>'
+    . '</td></tr>'
+
+    . '<tr><td style="padding:24px 28px 0">'
+    . '<p style="margin:0 0 14px;font-size:15px;color:#334155;line-height:1.65">'
+    . 'Hola ' . esc($nombreCorto) . ', gracias por escribirnos. Un asesor se comunicará contigo '
+    . 'para darte la cotización de <strong>' . esc($tipo) . '</strong>.</p>'
+    . '<p style="margin:0;font-size:14px;color:#64748b;line-height:1.65">'
+    . 'Guarda este radicado por si necesitas hacer seguimiento.</p>'
+    . '</td></tr>'
+
+    . '<tr><td style="padding:22px 28px 26px">'
+    . '<div style="background:#f8fafc;border-left:3px solid ' . COLOR_ACENTO . ';border-radius:6px;padding:16px 18px">'
+    . '<p style="margin:0 0 10px;font-size:13px;font-weight:600;color:' . COLOR_PRIMARIO . '">'
+    . 'Sobre el tratamiento de tus datos</p>'
+    . '<p style="margin:0 0 10px;font-size:13px;color:#64748b;line-height:1.65">'
+    . 'El ' . esc($fechaLegible) . ' autorizaste lo siguiente:</p>'
+    . '<p style="margin:0 0 12px;font-size:12px;color:#94a3b8;line-height:1.6;font-style:italic">'
+    . '&ldquo;' . esc($texto) . '&rdquo;</p>'
+    . '<p style="margin:0;font-size:12px;color:#64748b;line-height:1.7">'
+    . 'Responsable: <strong>ASISEGUROS LTDA</strong>, NIT 901.483.323-4.<br>'
+    . 'Puedes conocer, actualizar, rectificar o suprimir tus datos, y revocar esta '
+    . 'autorización, escribiendo a <a href="mailto:' . CORREO_CONTACTO . '" style="color:' . COLOR_PRIMARIO . '">'
+    . CORREO_CONTACTO . '</a>.<br>'
+    . '<a href="https://www.asiseguros.com/politica-tratamiento-datos.html" style="color:' . COLOR_PRIMARIO . '">'
+    . 'Consultar la política completa</a></p>'
+    . '</div></td></tr>'
+
+    . '</table>'
+    . '<p style="margin:16px 0 0;font-size:11px;color:#94a3b8;line-height:1.6;max-width:520px">'
+    . 'AsiSeguros es el nombre comercial de ASISEGUROS LTDA, agencia de seguros que actúa como '
+    . 'intermediario y no asume la calidad de aseguradora. Las pólizas son expedidas por '
+    . 'Seguros del Estado S.A., vigilada por la Superintendencia Financiera de Colombia.</p>'
+    . '</td></tr></table></body></html>';
+
+    $sep = '=_asi_' . bin2hex(random_bytes(8));
+    $cuerpo = "--{$sep}\r\n"
+            . "Content-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\n"
+            . $plano . "\r\n--{$sep}\r\n"
+            . "Content-Type: text/html; charset=UTF-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\n"
+            . $html . "\r\n--{$sep}--\r\n";
+
+    $asunto = '=?UTF-8?B?' . base64_encode("Recibimos tu solicitud · Radicado {$rad}") . '?=';
+
+    $cabeceras = "From: AsiSeguros <no-responder@asiseguros.com>\r\n"
+               . "Reply-To: " . CORREO_CONTACTO . "\r\n"
+               . "MIME-Version: 1.0\r\n"
+               . "Content-Type: multipart/alternative; boundary=\"{$sep}\"\r\n";
+
+    return @mail($mail, $asunto, $cuerpo, $cabeceras);
 }

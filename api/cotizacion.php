@@ -241,7 +241,7 @@ fclose($fh);
 @chmod(ARCHIVO_REGISTRO, 0640);
 
 // ---- Aviso por correo -------------------------------------------------------
-enviar_aviso(CORREO_DESTINO, [
+$datosAviso = [
     'radicado'             => $radicado,
     'fecha_hora'           => $fechaISO,
     'nombre'               => $nombre,
@@ -251,7 +251,12 @@ enviar_aviso(CORREO_DESTINO, [
     'mensaje'              => $mensaje,
     'texto_autorizacion'   => $textoAut,
     'version_autorizacion' => $versionAut !== '' ? $versionAut : VERSION_ESPERADA,
-]);
+];
+enviar_aviso(CORREO_DESTINO, $datosAviso);
+
+// Acuse al titular. Va después del registro y del aviso interno: si fallara el
+// envío, la solicitud y su autorización ya están guardadas.
+enviar_acuse($datosAviso);
 
 responder(200, [
     'ok' => true,
