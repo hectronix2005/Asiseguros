@@ -77,6 +77,61 @@ function campo(array $d, string $k, int $max = 300): string {
     return mb_substr($v, 0, $max);
 }
 
+/* ------------------------------------------------------------------
+   Paso 2: datos técnicos del riesgo.
+
+   Llega después de que el titular ya quedó registrado con su autorización.
+   Se guarda aparte, referenciado por radicado, para no alterar la estructura
+   del registro de autorizaciones, que es la prueba legal.
+   ------------------------------------------------------------------ */
+if (($datos['accion'] ?? '') === 'detalle') {
+    $radicado = campo($datos, 'radicado', 20);
+    $tipo     = campo($datos, 'tipo_seguro', 120);
+    $respuestas = $datos['respuestas'] ?? [];
+
+    if ($radicado === '' || !is_array($respuestas) || !$respuestas) {
+        responder(422, ['ok' => false, 'error' => 'Faltan datos del complemento.']);
+    }
+
+    $dir = directorioDatos();
+    $archivo = $dir . '/detalles.csv';
+    $nuevo = !is_file($archivo);
+
+    $limpias = [];
+    foreach ($respuestas as $k => $v) {
+        $k = mb_substr(preg_replace('/[^a-zA-Z0-9_]/', '', (string)$k), 0, 60);
+        $limpias[$k] = mb_substr(trim((string)$v), 0, 500);
+    }
+
+    $fh = @fopen($archivo, 'a');
+    if ($fh === false) {
+        responder(500, ['ok' => false, 'error' => 'No se pudo guardar el detalle.']);
+    }
+    if (flock($fh, LOCK_EX)) {
+        if ($nuevo) {
+            fwrite($fh, "\xEF\xBB\xBF");
+            fputcsv($fh, ['radicado','fecha_hora','tipo_seguro','respuestas'], ',', '"', '\\');
+        }
+        fputcsv($fh, [$radicado, date('c'), $tipo,
+                      json_encode($limpias, JSON_UNESCAPED_UNICODE)], ',', '"', '\\');
+        fflush($fh); flock($fh, LOCK_UN);
+    }
+    fclose($fh);
+    @chmod($archivo, 0640);
+
+    $lineas = '';
+    foreach ($limpias as $k => $v) {
+        $lineas .= '  ' . str_pad(str_replace('_', ' ', $k) . ':', 34) . $v . "\n";
+    }
+    @mail(CORREO_DESTINO,
+        "Datos para cotizar {$radicado} — {$tipo}",
+        "Complemento de la solicitud {$radicado}\n\nTipo: {$tipo}\n\n{$lineas}",
+        "From: Sitio web AsiSeguros <no-responder@asiseguros.com>\r\n"
+        . "Content-Type: text/plain; charset=UTF-8\r\n");
+
+    responder(200, ['ok' => true, 'radicado' => $radicado]);
+}
+
 // Trampa para robots: un campo oculto que una persona nunca rellena.
 if (campo($datos, 'empresa_web') !== '') {
     responder(200, ['ok' => true, 'radicado' => 'n/a']);

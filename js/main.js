@@ -186,6 +186,149 @@ document.addEventListener('DOMContentLoaded', () => {
   /* ---------- Cart ---------- */
   initCart();
 
+  /* ---------- Cuestionarios del paso 2 ----------
+     Tras registrar la solicitud (y la autorización), se piden los datos
+     técnicos que la aseguradora necesita para cotizar ese producto concreto.
+     Van aparte a propósito: pedirlos de entrada alargaría el formulario y
+     haría que mucha gente lo abandone antes de autorizar. */
+  const CUESTIONARIOS = {
+    autos: {
+      titulo: 'Datos para cotizar tu seguro de vehículo',
+      campos: [
+        { id: 'propietario',  etiqueta: 'Nombre y cédula del propietario',
+          ayuda: 'Tal como figura en la tarjeta de propiedad', tipo: 'text', obligatorio: true },
+        { id: 'placa',        etiqueta: 'Placa del vehículo', tipo: 'text', obligatorio: true },
+        { id: 'beneficiario_oneroso', etiqueta: '¿Tiene beneficiario oneroso?', tipo: 'select',
+          opciones: ['No', 'Sí'], obligatorio: true },
+        { id: 'beneficiario_cual', etiqueta: '¿Cuál? (banco o entidad)', tipo: 'text',
+          dependeDe: { campo: 'beneficiario_oneroso', valor: 'Sí' } },
+        { id: 'fecha_nacimiento', etiqueta: 'Fecha de nacimiento del propietario',
+          tipo: 'date', obligatorio: true },
+        { id: 'zona_circulacion', etiqueta: 'Zona de circulación del vehículo',
+          ayuda: 'Ciudad o región donde circula habitualmente', tipo: 'text', obligatorio: true }
+      ]
+    },
+    inmueble: {
+      titulo: 'Datos para cotizar el seguro del inmueble',
+      campos: [
+        { id: 'propietario', etiqueta: 'Nombre y cédula del propietario', tipo: 'text', obligatorio: true },
+        { id: 'uso', etiqueta: '¿El propietario habita el inmueble o lo arrienda?', tipo: 'select',
+          opciones: ['Lo habita', 'Lo arrienda'], obligatorio: true },
+        { id: 'direccion', etiqueta: 'Dirección completa del inmueble',
+          ayuda: 'Incluye torre, número de apartamento, interior, etc.', tipo: 'textarea', obligatorio: true },
+        { id: 'pisos', etiqueta: 'Número de pisos del edificio',
+          ayuda: 'Indica también si tiene sótano', tipo: 'text', obligatorio: true },
+        { id: 'anio_construccion', etiqueta: 'Año de construcción', tipo: 'text', obligatorio: true },
+        { id: 'area_m2', etiqueta: 'Área de construcción (m²)', tipo: 'text', obligatorio: true },
+        { id: 'valor_comercial', etiqueta: 'Valor comercial del inmueble', tipo: 'text', obligatorio: true }
+      ]
+    }
+  };
+
+  // Qué producto del portafolio usa cada cuestionario.
+  const CUESTIONARIO_POR_TIPO = {
+    'Livianos': 'autos',
+    'Transporte de Carga por Carretera': 'autos',
+    'RC para Vehículos de Carga': 'autos',
+    'Incendio': 'inmueble',
+    'Sustracción': 'inmueble'
+  };
+
+  function construirPaso2(clave, radicado, tipo) {
+    const q = CUESTIONARIOS[clave];
+    if (!q) return null;
+
+    const caja = document.createElement('div');
+    caja.className = 'paso2';
+    caja.innerHTML = '<h3>' + q.titulo + '</h3>'
+      + '<p class="paso2-intro">Tu solicitud ya quedó registrada con el radicado <strong>'
+      + radicado + '</strong>. Estos datos nos permiten cotizar sin llamarte para pedírtelos.</p>';
+
+    const form = document.createElement('form');
+    form.className = 'paso2-form';
+
+    q.campos.forEach(c => {
+      const g = document.createElement('div');
+      g.className = 'form-group';
+      if (c.dependeDe) { g.dataset.dependeDe = c.dependeDe.campo; g.dataset.dependeValor = c.dependeDe.valor; g.style.display = 'none'; }
+
+      let control;
+      if (c.tipo === 'select') {
+        control = document.createElement('select');
+        control.innerHTML = c.opciones.map(o => '<option value="' + o + '">' + o + '</option>').join('');
+      } else if (c.tipo === 'textarea') {
+        control = document.createElement('textarea');
+        control.rows = 3;
+      } else {
+        control = document.createElement('input');
+        control.type = c.tipo === 'date' ? 'date' : 'text';
+      }
+      control.id = 'p2_' + c.id;
+      control.name = c.id;
+      if (c.obligatorio) control.required = true;
+
+      g.innerHTML = '<label for="p2_' + c.id + '">' + c.etiqueta + (c.obligatorio ? ' *' : '') + '</label>'
+        + (c.ayuda ? '<span class="campo-ayuda">' + c.ayuda + '</span>' : '');
+      g.appendChild(control);
+      form.appendChild(g);
+    });
+
+    const acciones = document.createElement('div');
+    acciones.className = 'paso2-acciones';
+    acciones.innerHTML = '<button type="submit" class="btn btn-primary">'
+      + '<i class="fas fa-paper-plane"></i> Enviar datos</button>'
+      + '<button type="button" class="btn btn-outline" data-omitir>Prefiero que me llamen</button>';
+    form.appendChild(acciones);
+    caja.appendChild(form);
+
+    // Campos que solo aplican según otra respuesta
+    form.addEventListener('change', () => {
+      form.querySelectorAll('[data-depende-de]').forEach(g => {
+        const origen = form.querySelector('[name="' + g.dataset.dependeDe + '"]');
+        const visible = origen && origen.value === g.dataset.dependeValor;
+        g.style.display = visible ? '' : 'none';
+        const ctrl = g.querySelector('input,select,textarea');
+        if (ctrl) ctrl.required = !!visible;
+      });
+    });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const respuestas = {};
+      q.campos.forEach(c => {
+        const el = form.querySelector('[name="' + c.id + '"]');
+        if (el && el.closest('.form-group').style.display !== 'none' && el.value.trim()) {
+          respuestas[c.id] = el.value.trim();
+        }
+      });
+      const btn = form.querySelector('button[type="submit"]');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Enviando…';
+      try {
+        const r = await fetch('api/cotizacion.php', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ accion: 'detalle', radicado: radicado, tipo_seguro: tipo, respuestas: respuestas })
+        });
+        const res = await r.json().catch(() => ({}));
+        caja.innerHTML = (r.ok && res.ok)
+          ? '<h3>Listo, ya tenemos todo</h3><p class="paso2-intro">Recibimos los datos de tu '
+            + 'solicitud <strong>' + radicado + '</strong>. Un asesor te contactará con la cotización.</p>'
+          : '<h3>No pudimos guardar los datos</h3><p class="paso2-intro">Tu solicitud '
+            + '<strong>' + radicado + '</strong> sí quedó registrada. Un asesor te contactará igualmente.</p>';
+      } catch (err) {
+        caja.innerHTML = '<h3>No pudimos guardar los datos</h3><p class="paso2-intro">Tu solicitud '
+          + '<strong>' + radicado + '</strong> sí quedó registrada. Un asesor te contactará igualmente.</p>';
+      }
+    });
+
+    acciones.querySelector('[data-omitir]').addEventListener('click', () => {
+      caja.innerHTML = '<h3>Solicitud registrada</h3><p class="paso2-intro">Guardamos tu solicitud '
+        + '<strong>' + radicado + '</strong>. Un asesor se comunicará contigo para tomar los datos.</p>';
+    });
+
+    return caja;
+  }
+
   /* ---------- Contact Form ----------
      El envío va al servidor (api/cotizacion.php), que deja constancia de la
      autorización de tratamiento de datos con fecha, hora y el texto exacto que
@@ -260,10 +403,24 @@ document.addEventListener('DOMContentLoaded', () => {
             `Nombre: ${datos.nombre}\n` +
             `Interés: ${datos.tipo_seguro}`
           );
-          mostrarAviso('ok', 'Solicitud recibida',
-            `Guardamos tu solicitud con el radicado <strong>${res.radicado}</strong> y un asesor ` +
-            `se comunicará contigo. Si quieres adelantar la conversación, ` +
-            `<a href="https://wa.me/${wa}?text=${msg}" target="_blank" rel="noopener">escríbenos por WhatsApp</a>.`);
+
+          // Si el producto necesita datos técnicos, se pide el paso 2 en lugar
+          // del mensaje de cierre. El registro ya está hecho: lo que siga es
+          // opcional y no condiciona la autorización.
+          const clave = CUESTIONARIO_POR_TIPO[datos.tipo_seguro];
+          const paso2 = clave ? construirPaso2(clave, res.radicado, datos.tipo_seguro) : null;
+
+          if (paso2) {
+            if (aviso) aviso.className = 'form-aviso';
+            contactForm.style.display = 'none';
+            contactForm.parentElement.appendChild(paso2);
+            paso2.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          } else {
+            mostrarAviso('ok', 'Solicitud recibida',
+              `Guardamos tu solicitud con el radicado <strong>${res.radicado}</strong> y un asesor ` +
+              `se comunicará contigo. Si quieres adelantar la conversación, ` +
+              `<a href="https://wa.me/${wa}?text=${msg}" target="_blank" rel="noopener">escríbenos por WhatsApp</a>.`);
+          }
           contactForm.reset();
         } else {
           mostrarAviso('error', 'No pudimos enviar tu solicitud',
