@@ -1,0 +1,7 @@
+# Lo que el panel genera en el servidor no se versiona
+.clave.php
+.intentos.json
+originales/*
+versiones/*
+!originales/.htaccess
+!versiones/.htaccess
