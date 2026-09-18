@@ -58,8 +58,9 @@ public_html/
 ├── poliza-de-cumplimiento.html      guía (nicho de mayor margen)
 ├── todo-riesgo-contratista.html     guía
 ├── asesoria-juridica.html           recupera el tráfico del blog antiguo
-├── politica-tratamiento-datos.html  ← reemplazar por el .docx de legal
-├── terminos-y-condiciones.html      ← reemplazar por el .docx de legal
+├── politica-tratamiento-datos.html  publicada desde el .docx de legal
+├── terminos-y-condiciones.html      publicada desde el .docx de legal
+├── anexos-datos-personales.html     publicada desde el .docx de legal
 ├── 404.html · robots.txt · sitemap.xml
 ├── .htaccess                        redirecciones, seguridad, cabeceras
 ├── admin/                           panel: documentos + solicitudes
@@ -67,6 +68,20 @@ public_html/
 ├── assets/ · css/ · js/
 └── (fuera) ../asiseguros-datos/     registros de autorización
 ```
+
+### Cuidado al desplegar: tres páginas las manda el panel, no el repositorio
+
+`politica-tratamiento-datos.html`, `terminos-y-condiciones.html` y
+`anexos-datos-personales.html` **las genera el panel** a partir de los `.docx`.
+Subir la copia del repositorio encima de ellas borra lo que publicó el panel.
+
+Pasó el 17 de septiembre: legal cargó los tres documentos a las 14:45 y un
+despliegue posterior, a las 20:35, devolvió dos de las tres páginas al borrador
+anterior. Se recuperaron regenerándolas desde los `.docx` originales, que el
+panel conserva en `admin/originales/`.
+
+Antes de subir cualquiera de esas tres, traer primero la versión del servidor.
+Los `.docx` originales son la fuente de verdad y nunca se borran.
 
 ### El panel — `https://www.asiseguros.com/admin/`
 
@@ -84,8 +99,10 @@ como segunda capa.
 
 ### Requieren acción tuya
 
-- Cargar los tres `.docx` de legal en `/admin/`. **Hoy está publicada mi
-  redacción, sin revisión jurídica.** Es el pendiente más importante.
+- Decidir si `anexos-datos-personales.html` debe seguir siendo público: el
+  propio documento se declara **«Documento de uso interno»**. Hoy está en la
+  web, sin enlaces desde ninguna página y fuera del `sitemap.xml`, pero con
+  `robots: index, follow`, así que Google podría indexarlo si llega a la URL.
 - Borrar la cuenta FTP `despliegue@asiseguros.com`: su contraseña quedó escrita
   en la conversación.
 - Search Console: verificar por DNS, enviar `sitemap.xml` y pedir indexación de
@@ -123,7 +140,9 @@ como segunda capa.
 
 ### Dependen de terceros
 
-- Revisión jurídica de las dos páginas legales y de las dos guías técnicas.
+- Revisión jurídica de las dos guías técnicas (cumplimiento y todo riesgo
+  contratista). Las páginas legales ya no la necesitan: las tres salen de los
+  `.docx` que aprobó legal, no de mi redacción.
 - Logo de Seguros del Estado del manual de marca. **Verificado que no hay nada
   mejor en público**: los cuatro archivos que publica su propio sitio
   —`logo.png` 226×60, `logo-fx1.png` 232×60, `logo-sv.png` 226×60 y el del pie

@@ -18,18 +18,25 @@
     .legal-back { display: inline-flex; align-items: center; gap: 8px; font-size: 0.85rem; color: var(--gray-500); margin-bottom: 24px; }
     .legal-page h1 { font-size: 2rem; color: var(--primary); margin-bottom: 8px; }
     .legal-meta { font-size: 0.8rem; color: var(--gray-400); margin-bottom: 40px; padding-bottom: 24px; border-bottom: 1px solid var(--gray-200); }
-    .legal-page h2 { font-size: 1.15rem; color: var(--primary); margin: 36px 0 12px; }
-    .legal-page p, .legal-page li { font-size: 0.95rem; line-height: 1.75; color: var(--gray-600); }
+    .legal-page h2 { font-size: 1.3rem; color: var(--primary); margin: 40px 0 14px; }
+    .legal-page h3 { font-size: 1.08rem; color: var(--primary); margin: 32px 0 12px; }
+    .legal-page h4, .legal-page h5, .legal-page h6 { font-size: 1rem; color: var(--primary); margin: 26px 0 10px; }
+    .legal-page p, .legal-page li, .legal-page td, .legal-page th { font-size: 0.95rem; line-height: 1.75; color: var(--gray-600); }
     .legal-page p { margin-bottom: 14px; }
-    .legal-page ul { margin: 0 0 14px 22px; list-style: disc; }
-    .legal-page li { display: list-item; }
-    .legal-page li { margin-bottom: 8px; }
+    .legal-page ul, .legal-page ol { margin: 0 0 14px 22px; list-style: disc; }
+    .legal-page ol { list-style: decimal; }
+    .legal-page li { display: list-item; margin-bottom: 8px; }
+    .legal-page a { color: var(--primary); text-decoration: underline; }
+    .tabla-scroll { overflow-x: auto; margin: 0 0 20px; }
+    .legal-page table { border-collapse: collapse; width: 100%; min-width: 480px; }
+    .legal-page th, .legal-page td { border: 1px solid var(--gray-200); padding: 10px 12px; text-align: left; vertical-align: top; }
+    .legal-page th { background: var(--gray-50); color: var(--primary); font-weight: 600; }
 
     @media print {
       .header, .footer, .legal-back { display: none !important; }
       .legal-page { padding: 0; }
       .legal-page .container { max-width: 100%; padding: 0; }
-      .legal-page h2 { break-after: avoid; page-break-after: avoid; }
+      .legal-page h2, .legal-page h3 { break-after: avoid; page-break-after: avoid; }
       .legal-page p, .legal-page li { break-inside: avoid; }
       a { color: inherit; text-decoration: none; }
     }
@@ -57,89 +64,142 @@
       <a href="index.html" class="legal-back"><i class="fas fa-arrow-left"></i> Volver al inicio</a>
 
       <h1>Política de Tratamiento de Datos Personales</h1>
-      <p class="legal-meta">ASISEGUROS LTDA · NIT 901.483.323-4 · Última actualización: agosto de 2026</p>
+      <p class="legal-meta">ASISEGUROS LTDA · NIT 901.483.323-4 · Última actualización: septiembre de 2026</p>
 
-
-      <h2>1. Responsable del tratamiento</h2>
-      <p>
-        ASISEGUROS LTDA, identificada con NIT 901.483.323-4, que en adelante se denominará
-        <strong>AsiSeguros</strong>, con correo electrónico de contacto
-        <a href="mailto:comercial1@asiseguros.com">comercial1@asiseguros.com</a> y teléfono
-        <a href="tel:+573173712260">+57 317 371 2260</a>, es la responsable del tratamiento de los
-        datos personales recolectados a través de este sitio web.
-      </p>
-
-      <h2>2. Marco legal</h2>
-      <p>
-        Esta política se adopta en cumplimiento de la Ley 1581 de 2012, el Decreto 1074 de 2015 y
-        demás normas que las modifiquen, adicionen o reglamenten en materia de protección de datos
-        personales en Colombia.
-      </p>
-
-      <h2>3. Datos que recolectamos</h2>
-      <p>A través del formulario de cotización de este sitio recolectamos:</p>
+      <h2>POLÍTICA DE TRATAMIENTO DE DATOS PERSONALES</h2>
+      <p><strong>ASISEGUROS LTDA.</strong></p>
+      <p>Versión 01.09.2026 — Vigente desde el 1 de septiembre de 2026</p>
+      <h2><strong>1. OBJETIVO</strong></h2>
+      <p>Establecer los criterios y los procedimientos que ASISEGUROS LTDA. aplica para la recolección, el almacenamiento, el uso, la circulación, la transferencia, la transmisión y la supresión de los datos personales que trata en su calidad de responsable, en cumplimiento de la Ley 1581 de 2012, del Decreto 1377 de 2013 y de las demás normas que las modifiquen, adicionen o reglamenten.</p>
+      <h2><strong>2. ALCANCE</strong></h2>
+      <p>Esta política aplica a toda la información personal registrada en las bases de datos de ASISEGUROS LTDA., cualquiera que sea el soporte físico o electrónico en que conste, y es de obligatorio cumplimiento para sus socios, administradores, empleados, contratistas y encargados del tratamiento.</p>
+      <p>Las categorías de titulares cubiertas por esta política son, entre otras:</p>
       <ul>
-        <li>Nombre completo.</li>
-        <li>Número de teléfono o celular.</li>
-        <li>Correo electrónico.</li>
-        <li>Tipo de seguro de interés y el mensaje que el titular decida incluir.</li>
+        <li>Tomadores, asegurados, beneficiarios y sus grupos familiares.</li>
+        <li>Prospectos y personas que solicitan cotizaciones o información.</li>
+        <li>Representantes legales, apoderados y contactos de clientes personas jurídicas.</li>
+        <li>Proveedores, contratistas y sus empleados de contacto.</li>
+        <li>Empleados, candidatos a vacantes y sus beneficiarios.</li>
+        <li>Usuarios del sitio web, de los formularios en línea y de los canales de atención de la Compañía.</li>
       </ul>
-      <p>
-        No recolectamos datos sensibles ni datos de menores de edad a través de este sitio. Cuando
-        la expedición de una póliza requiera información adicional, esta será solicitada de forma
-        directa y con una autorización específica para esa finalidad.
-      </p>
-
-      <h2>4. Finalidad del tratamiento</h2>
+      <h2><strong>3. RESPONSABLE DEL TRATAMIENTO</strong></h2>
+      <p>ASISEGUROS LTDA., sociedad legalmente constituida bajo las leyes de Colombia, identificada con el NIT 901.483.323-4, con domicilio principal en la Calle 106 No. 51-19, Piso 2, de la ciudad de Bogotá D.C. – Colombia, página web www.asiseguros.com, teléfono (+57) 318 523 1290 y correo electrónico <a href="mailto:legal@asiseguros.com">legal@asiseguros.com</a>, en adelante la “Compañía”.</p>
+      <h2><strong>4. DEFINICIONES</strong></h2>
+      <p>Para efectos de esta política se adoptan las definiciones contenidas en el artículo 3 de la Ley 1581 de 2012 y en el artículo 3 del Decreto 1377 de 2013, en particular las de autorización, base de datos, dato personal, dato sensible, encargado del tratamiento, responsable del tratamiento, titular, tratamiento, aviso de privacidad, transferencia y transmisión.</p>
+      <h2><strong>5. PRINCIPIOS</strong></h2>
+      <p>El tratamiento de datos personales por parte de la Compañía se sujeta a los principios de legalidad, finalidad, libertad, veracidad o calidad, transparencia, acceso y circulación restringida, seguridad y confidencialidad, previstos en el artículo 4 de la Ley 1581 de 2012.</p>
+      <h2><strong>6. TRATAMIENTO Y FINALIDADES</strong></h2>
+      <p>La Compañía recolecta, almacena, usa, circula, transfiere, transmite, actualiza, suprime y, en general, trata datos personales para las siguientes finalidades:</p>
+      <div class="tabla-scroll">
+      <table>
+        <tr><th><strong>Grupo de finalidades</strong></th><th><strong>Descripción</strong></th></tr>
+        <tr><td><strong>A. Ejecución de la relación de intermediación y del contrato de seguro</strong></td><td><strong>Cotizar, gestionar, colocar, renovar y modificar pólizas ante las compañías aseguradoras; elaborar y remitir cotizaciones y propuestas; verificar la identidad del Titular; gestionar el pago de primas, extractos, estados de cuenta y facturas; acompañar el trámite de reclamaciones y siniestros ante la aseguradora; prestar el servicio posventa y atender solicitudes derivadas del contrato.</strong></td></tr>
+        <tr><td><strong>B. Cumplimiento de obligaciones legales y contractuales</strong></td><td><strong>Atender requerimientos de autoridades administrativas y judiciales; cumplir obligaciones tributarias, contables y de conservación documental; atender los deberes de conocimiento del cliente y prevención de lavado de activos y financiación del terrorismo que resulten aplicables; ejercer y defender los derechos de la Compañía.</strong></td></tr>
+        <tr><td><strong>C. Gestión de peticiones, quejas, reclamos y solicitudes</strong></td><td><strong>Recibir, tramitar y responder peticiones, consultas, quejas, reclamos y solicitudes de habeas data; llevar el registro y la trazabilidad de dichas actuaciones.</strong></td></tr>
+        <tr><td><strong>D. Finalidades opcionales — mercadeo y relacionamiento</strong></td><td><strong>Enviar información comercial y publicitaria sobre productos y servicios propios; realizar invitaciones a eventos; adelantar encuestas de satisfacción y estudios de mercado; ejecutar campañas de fidelización a través de correo electrónico, mensajes de texto, llamadas telefónicas o aplicaciones de mensajería instantánea. El Titular puede negarse a estas finalidades sin que ello afecte la prestación de los servicios.</strong></td></tr>
+      </table>
+      </div>
+      <p>Las finalidades del grupo D son opcionales y se someten a una autorización separada e independiente de la que el Titular otorga para las finalidades de los grupos A, B y C. La negativa del Titular frente a las finalidades opcionales no condiciona ni afecta la prestación de los servicios de la Compañía.</p>
+      <p>La Compañía no recolecta datos personales que no sean pertinentes y adecuados para las finalidades aquí descritas, ni utiliza medios engañosos o fraudulentos para su recolección.</p>
+      <h2><strong>7. TRATAMIENTO DE DATOS PERSONALES SENSIBLES</strong></h2>
+      <p>En desarrollo de su actividad de intermediación de seguros, la Compañía puede tratar las siguientes categorías de datos sensibles:</p>
       <ul>
-        <li>Contactar al titular para atender su solicitud de cotización o asesoría.</li>
-        <li>Estructurar y presentar propuestas de seguros ante la compañía aseguradora.</li>
-        <li>Gestionar la expedición, renovación y modificación de pólizas.</li>
-        <li>Acompañar al titular en procesos de reclamación y siniestros.</li>
-        <li>Enviar información comercial sobre productos de seguros, cuando el titular lo autorice.</li>
+        <li><strong>Datos relativos a la salud</strong>: información contenida en declaraciones de asegurabilidad, cuestionarios médicos, historias clínicas aportadas por el Titular, exámenes exigidos por la aseguradora y documentos asociados a reclamaciones por siniestros de pólizas de vida, salud, accidentes personales o exequiales.</li>
+        <li><strong>Datos biométricos</strong>: imagen facial, fotografía del documento de identidad y demás elementos utilizados para la validación de identidad en procesos de vinculación digital o firma electrónica.</li>
       </ul>
-
-      <h2>5. Autorización del titular</h2>
-      <p>
-        La autorización se obtiene mediante la casilla de aceptación incluida en el formulario de
-        cotización, la cual no se encuentra premarcada y debe ser diligenciada de forma libre,
-        previa, expresa e informada por el titular. Sin esa autorización el formulario no puede
-        enviarse.
-      </p>
-
-      <h2>6. Transferencia y transmisión de datos</h2>
-      <p>
-        En su condición de intermediario de seguros, AsiSeguros transmite los datos necesarios a
-        Seguros del Estado S.A. y a Seguros de Vida del Estado S.A., según el ramo, vigiladas por
-        la Superintendencia Financiera de Colombia, con el único fin de cotizar y expedir las
-        pólizas solicitadas por el titular. No comercializamos ni
-        cedemos bases de datos a terceros con fines distintos a los aquí señalados.
-      </p>
-
-      <h2>7. Derechos del titular</h2>
+      <p>El tratamiento de estos datos se realiza únicamente para las finalidades de los grupos A y B de la sección 6 y, en particular, para la evaluación del riesgo asegurable por parte de la compañía de seguros, la expedición y ejecución de la póliza, el trámite de reclamaciones y siniestros y la validación de identidad.</p>
+      <p>De conformidad con el artículo 6 de la Ley 1581 de 2012 y el artículo 6 del Decreto 1377 de 2013, la Compañía:</p>
       <ul>
-        <li>Conocer, actualizar y rectificar sus datos personales.</li>
-        <li>Solicitar prueba de la autorización otorgada.</li>
-        <li>Ser informado sobre el uso que se ha dado a sus datos.</li>
-        <li>Presentar quejas ante la Superintendencia de Industria y Comercio.</li>
-        <li>Revocar la autorización y solicitar la supresión de sus datos, cuando no exista un deber legal o contractual que lo impida.</li>
+        <li>Informa al Titular, de forma previa y explícita, cuáles de los datos solicitados son sensibles y con qué finalidad serán tratados.</li>
+        <li>Informa al Titular que, por tratarse de datos sensibles, no está obligado a autorizar su tratamiento y que la respuesta a las preguntas que versen sobre ellos es facultativa.</li>
+        <li>Obtiene autorización explícita y separada para el tratamiento de datos sensibles.</li>
+        <li>No condiciona ninguna actividad al suministro de datos personales sensibles.</li>
       </ul>
-
-      <h2>8. Procedimiento para ejercer sus derechos</h2>
-      <p>
-        Las consultas y reclamos pueden dirigirse al correo
-        <a href="mailto:comercial1@asiseguros.com">comercial1@asiseguros.com</a>, indicando el nombre
-        del titular, la descripción de la solicitud y un canal de contacto. Las consultas se atienden
-        dentro de los diez (10) días hábiles siguientes a su recepción y los reclamos dentro de los
-        quince (15) días hábiles, en los términos de los artículos 14 y 15 de la Ley 1581 de 2012.
-      </p>
-
-      <h2>9. Vigencia</h2>
-      <p>
-        Esta política rige a partir de su publicación. Los datos personales se conservarán mientras
-        subsista la relación comercial con el titular y durante el término adicional que exijan las
-        obligaciones legales aplicables a la actividad de intermediación de seguros.
-      </p>
+      <p>La Compañía deja constancia de que la negativa del Titular a suministrar datos sensibles puede impedir que la compañía aseguradora evalúe el riesgo o expida la póliza. Esa consecuencia corresponde a una decisión del asegurador en ejercicio de su facultad de aceptar o rechazar el riesgo, y no a un condicionamiento impuesto por la Compañía.</p>
+      <h2><strong>8. DATOS PERSONALES DE NIÑAS, NIÑOS Y ADOLESCENTES</strong></h2>
+      <p>La Compañía trata datos personales de niñas, niños y adolescentes cuando estos figuran como asegurados o beneficiarios de las pólizas intermediadas. Dicho tratamiento se sujeta a los artículos 7 de la Ley 1581 de 2012 y 12 del Decreto 1377 de 2013, de manera que:</p>
+      <ul>
+        <li>Responde y respeta el interés superior de la niña, el niño o el adolescente y asegura el respeto de sus derechos fundamentales.</li>
+        <li>La autorización es otorgada por el representante legal del menor, previo ejercicio por parte de este de su derecho a ser escuchado, opinión que se valora atendiendo su madurez, autonomía y capacidad para entender el asunto.</li>
+        <li>La respuesta a las preguntas sobre datos de niñas, niños y adolescentes es facultativa.</li>
+        <li>Los datos se limitan a los estrictamente necesarios para la vinculación como asegurado o beneficiario y para el pago de la indemnización.</li>
+      </ul>
+      <h2><strong>9. TRANSFERENCIA Y TRANSMISIÓN DE DATOS PERSONALES</strong></h2>
+      <p>Para el cumplimiento de las finalidades descritas, la Compañía comunica datos personales a los siguientes destinatarios:</p>
+      <ul>
+        <li><strong>Compañías de seguros y reaseguradoras</strong>, que reciben la información en calidad de responsables autónomos del tratamiento para la evaluación del riesgo, la expedición de la póliza y el trámite de siniestros. Esta comunicación constituye una transferencia y se realiza con fundamento en la autorización del Titular y en la ejecución del contrato.</li>
+        <li><strong>Encargados del tratamiento</strong>: proveedores de servicios tecnológicos, de alojamiento de información, de mensajería, de contabilidad y de gestión documental que tratan datos por cuenta y bajo instrucciones de la Compañía.</li>
+        <li><strong>Autoridades administrativas y judiciales</strong>, en ejercicio de sus funciones legales o por orden judicial.</li>
+      </ul>
+      <p>La operación comercial de la Compañía se desarrolla en Colombia y las compañías aseguradoras destinatarias de la información están domiciliadas en el país. No obstante, los servicios tecnológicos que la Compañía utiliza —correo electrónico, aplicaciones de mensajería instantánea a través de las cuales los interesados pueden contactarla y alojamiento del sitio web— almacenan o hacen transitar información en servidores ubicados fuera del territorio nacional. Esa comunicación constituye una transmisión internacional entre responsable y encargado y se ampara en los contratos suscritos con dichos proveedores, en los términos del artículo 24 del Decreto 1377 de 2013. Cualquier transferencia internacional a un tercero que actúe como responsable autónomo se sujetará a lo previsto en el artículo 26 de la Ley 1581 de 2012.</p>
+      <p>Con cada encargado la Compañía suscribe un contrato de transmisión de datos personales en los términos del artículo 25 del Decreto 1377 de 2013, en el que se delimitan el alcance del tratamiento y las actividades autorizadas, y se imponen al encargado, como mínimo, las obligaciones de tratar los datos conforme a los principios legales, salvaguardar la seguridad de las bases de datos y guardar confidencialidad.</p>
+      <h2><strong>10. DERECHOS DE LOS TITULARES</strong></h2>
+      <p>Como titular de sus datos personales usted tiene derecho a:</p>
+      <ul>
+        <li>Acceder de forma gratuita a los datos proporcionados que hayan sido objeto de tratamiento.</li>
+        <li>Conocer, actualizar y rectificar su información frente a datos parciales, inexactos, incompletos, fraccionados, que induzcan a error, o aquellos cuyo tratamiento esté prohibido o no haya sido autorizado.</li>
+        <li>Solicitar prueba de la autorización otorgada, salvo cuando la ley exceptúe la autorización como requisito para el tratamiento.</li>
+        <li>Ser informado, previa solicitud, respecto del uso que se ha dado a sus datos personales.</li>
+        <li>Presentar ante la Superintendencia de Industria y Comercio quejas por infracciones a la normatividad vigente, una vez agotado el trámite de consulta o reclamo ante la Compañía.</li>
+        <li>Revocar la autorización, total o parcialmente, y solicitar la supresión del dato, siempre que no exista un deber legal o contractual que imponga permanecer en la base de datos.</li>
+        <li>Abstenerse de responder las preguntas sobre datos sensibles o sobre datos de niñas, niños y adolescentes, cuya respuesta es facultativa.</li>
+      </ul>
+      <p>El Titular puede consultar sus datos personales de forma gratuita al menos una vez cada mes calendario y cada vez que existan modificaciones sustanciales de esta política que motiven nuevas consultas.</p>
+      <p>Estos derechos pueden ser ejercidos por el Titular, por sus causahabientes, por su representante o apoderado y por estipulación a favor de otro o para otro, acreditando en cada caso la calidad correspondiente. Los derechos de las niñas, niños y adolescentes se ejercen por quienes estén facultados para representarlos.</p>
+      <h2><strong>11. ÁREA RESPONSABLE Y CANALES DE ATENCIÓN</strong></h2>
+      <p>El Área Jurídica, a cargo del Gerente Jurídico, tiene la función de protección de datos personales y el trámite de las peticiones, consultas y reclamos de los titulares.</p>
+      <p>Los titulares pueden ejercer sus derechos por cualquiera de los siguientes canales:</p>
+      <ul>
+        <li>Correo electrónico: <a href="mailto:legal@asiseguros.com">legal@asiseguros.com</a></li>
+        <li>Formulario de contacto disponible en www.asiseguros.com</li>
+        <li>Dirección física: Calle 106 No. 51-19, Piso 2, Bogotá D.C., de lunes a viernes de 8:00 a. m. a 6:00 p. m.</li>
+      </ul>
+      <p>La línea telefónica (+57) 318 523 1290 atiende información comercial y no está habilitada para radicar solicitudes de habeas data, las cuales deben presentarse por el correo electrónico, el formulario de contacto o la dirección física indicados.</p>
+      <p>La radicación de la solicitud ante un canal o un área distinta a la indicada no releva a la Compañía del deber de resolverla; en tal caso, la solicitud se traslada internamente al área competente.</p>
+      <h2><strong>12. PROCEDIMIENTO PARA EL EJERCICIO DE LOS DERECHOS</strong></h2>
+      <h3><strong>12.1. Información mínima de la solicitud</strong></h3>
+      <p>Para la radicación y atención de su solicitud, se solicita al Titular suministrar:</p>
+      <ul>
+        <li>Nombres y apellidos completos y número de identificación.</li>
+        <li>Datos de contacto: dirección física y/o electrónica y teléfonos.</li>
+        <li>Medio por el cual desea recibir la respuesta.</li>
+        <li>Descripción del derecho que desea ejercer y de los hechos que dan lugar a la solicitud.</li>
+        <li>Documentos que quiera hacer valer y, cuando actúe por intermedio de tercero, el documento que acredite la representación o el apoderamiento.</li>
+        <li>Firma, cuando aplique.</li>
+      </ul>
+      <h3><strong>12.2. Consultas</strong></h3>
+      <p>Cuando el Titular solicite conocer la información personal que reposa en las bases de datos de la Compañía, la solicitud se tramita como consulta y se atiende en un término máximo de diez (10) días hábiles contados a partir de la fecha de su recibo. Cuando no fuere posible atenderla dentro de dicho término, se informará al interesado los motivos de la demora y la fecha en que se atenderá, la cual en ningún caso podrá superar los cinco (5) días hábiles siguientes al vencimiento del primer término, conforme al artículo 14 de la Ley 1581 de 2012.</p>
+      <h3><strong>12.3. Reclamos</strong></h3>
+      <p>Cuando el Titular considere que la información debe ser objeto de corrección, actualización o supresión, o advierta un presunto incumplimiento de los deberes legales, la solicitud se tramita como reclamo, conforme al artículo 15 de la Ley 1581 de 2012, bajo las siguientes reglas:</p>
+      <ul>
+        <li>Si el reclamo resulta incompleto, la Compañía requerirá al interesado dentro de los cinco (5) días siguientes a su recepción para que subsane las fallas. Transcurridos dos (2) meses desde la fecha del requerimiento sin que el solicitante presente la información requerida, se entenderá que ha desistido del reclamo.</li>
+        <li>Si quien recibe el reclamo no es competente para resolverlo, dará traslado a quien corresponda en un término máximo de dos (2) días hábiles e informará de la situación al interesado.</li>
+        <li>Recibido el reclamo completo, se incluirá en la base de datos, en un término no mayor a dos (2) días hábiles, una leyenda que diga “reclamo en trámite” y el motivo del mismo. Dicha leyenda se mantendrá hasta que el reclamo sea decidido.</li>
+        <li>El término máximo para atender el reclamo será de quince (15) días hábiles contados a partir del día siguiente a la fecha de su recibo. Cuando no fuere posible atenderlo dentro de dicho término, se informará al interesado los motivos de la demora y la fecha en que se atenderá su reclamo, la cual en ningún caso podrá superar los ocho (8) días hábiles siguientes al vencimiento del primer término.</li>
+      </ul>
+      <h3><strong>12.4. Revocatoria de la autorización y supresión del dato</strong></h3>
+      <p>El Titular puede en cualquier momento revocar la autorización otorgada, de manera total o respecto de finalidades específicas —en particular las finalidades opcionales del grupo D—, y solicitar la supresión de sus datos, mediante la presentación de un reclamo en los términos de la sección 12.3. La solicitud no procederá cuando el Titular tenga un deber legal o contractual de permanecer en la base de datos, caso en el cual la Compañía informará al Titular la norma o la estipulación contractual que lo impone.</p>
+      <h3><strong>12.5. Requisito de procedibilidad</strong></h3>
+      <p>De conformidad con el artículo 16 de la Ley 1581 de 2012, el Titular o causahabiente solo podrá elevar queja ante la Superintendencia de Industria y Comercio una vez haya agotado el trámite de consulta o reclamo ante la Compañía.</p>
+      <h2><strong>13. AUTORIZACIÓN DEL TITULAR</strong></h2>
+      <p>La Compañía solicita la autorización del Titular a más tardar en el momento de la recolección de los datos personales, informándole los datos que serán recolectados y todas las finalidades específicas para las cuales se obtiene el consentimiento. La autorización puede constar por escrito, de forma oral o mediante conductas inequívocas del Titular; en ningún caso el silencio se asimila a una conducta inequívoca.</p>
+      <p>La Compañía conserva prueba de la autorización otorgada y del cumplimiento del deber de informar, por medios que permitan su consulta posterior. En los formularios electrónicos, la autorización se obtiene mediante casillas de aceptación no premarcadas e independientes para las finalidades opcionales y para el tratamiento de datos sensibles.</p>
+      <h2><strong>14. AVISO DE PRIVACIDAD</strong></h2>
+      <p>Cuando no sea posible poner esta política a disposición del Titular de manera directa —por ejemplo, en la recolección telefónica o presencial de datos—, la Compañía informará mediante un aviso de privacidad la existencia de la política, la forma de acceder a ella, el tratamiento y su finalidad, los derechos del Titular y el carácter facultativo de la respuesta a las preguntas sobre datos sensibles. La Compañía conserva el modelo del aviso de privacidad que utilice mientras trate datos personales conforme al mismo y perduren las obligaciones que de él se deriven.</p>
+      <h2><strong>15. MEDIDAS DE SEGURIDAD</strong></h2>
+      <p>La Compañía adopta medidas técnicas, humanas y administrativas razonables para otorgar seguridad a los registros y evitar su adulteración, pérdida, consulta, uso o acceso no autorizado o fraudulento, entre ellas el control de accesos por perfiles, la suscripción de acuerdos de confidencialidad con empleados y contratistas, las copias de respaldo, el cifrado de la información sensible y la capacitación periódica del personal.</p>
+      <p>Todas las personas que intervienen en el tratamiento de datos personales están obligadas a garantizar la reserva de la información, inclusive después de finalizada su relación con la Compañía.</p>
+      <h2><strong>16. PERÍODO DE VIGENCIA DE LAS BASES DE DATOS Y SUPRESIÓN</strong></h2>
+      <p>Los datos personales se conservan durante el tiempo razonable y necesario para cumplir las finalidades que justificaron su tratamiento y, en todo caso, mientras subsistan las obligaciones legales y contractuales que impongan su conservación, atendiendo los aspectos administrativos, contables, fiscales, jurídicos e históricos de la información.</p>
+      <p>Los datos asociados a una relación contractual se conservan durante la vigencia de la póliza intermediada y por diez (10) años contados desde la fecha del último documento o comprobante relacionado con ella. Este plazo atiende el término de conservación de los libros y papeles del comerciante previsto en el artículo 28 de la Ley 962 de 2005 y cubre el término de prescripción extraordinaria de las acciones derivadas del contrato de seguro, de cinco (5) años, previsto en el artículo 1081 del Código de Comercio.</p>
+      <p>Los datos de personas que solicitaron una cotización y no llegaron a vincularse se conservan por doce (12) meses contados desde el último contacto, salvo que antes soliciten su supresión.</p>
+      <p>Cumplidas las finalidades y vencidos los plazos de conservación, los datos son suprimidos de las bases de datos de la Compañía.</p>
+      <h2><strong>17. MODIFICACIONES A LA POLÍTICA</strong></h2>
+      <p>Cualquier cambio sustancial en esta política, referido a la identificación del responsable o a las finalidades del tratamiento, será comunicado oportunamente a los titulares por un medio eficiente, antes de o a más tardar al momento de implementar la nueva política. Cuando el cambio se refiera a la finalidad del tratamiento, la Compañía obtendrá una nueva autorización del Titular.</p>
+      <h2><strong>18. MECANISMOS PARA CONOCER LA POLÍTICA</strong></h2>
+      <p>Esta política se encuentra permanentemente publicada en el sitio web www.asiseguros.com, accesible desde el enlace “Política de Tratamiento de Datos” del pie de página y desde el formulario de contacto, y se pone a disposición de los titulares en las oficinas de la Compañía.</p>
+      <h2><strong>19. VIGENCIA</strong></h2>
+      <p>La presente Política de Tratamiento de Datos Personales rige a partir del 1 de septiembre de 2026 y deja sin efectos la Política de Tratamiento de Datos Personales publicada por la Compañía en agosto de 2026. Las bases de datos administradas por la Compañía tendrán una vigencia igual al tiempo en que se mantenga y utilice la información para las finalidades descritas en esta política.</p>
     </div>
   </main>
 
