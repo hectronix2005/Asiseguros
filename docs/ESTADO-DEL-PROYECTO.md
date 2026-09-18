@@ -87,6 +87,10 @@ Los anexos son públicos por decisión del cliente. El enlace va en el **pie de
 la plantilla**, no dentro del documento, para que sobreviva a cada nueva carga
 de legal: `admin/lib/paginas.php` y el pie de `index.html`.
 
+El `.htaccess` termina con un bloque que genera cPanel y fija PHP 8.1. Está
+copiado en el repositorio para que un despliegue no lo borre: sin él, el panel
+y el formulario pueden dejar de ejecutarse.
+
 ### El panel — `https://www.asiseguros.com/admin/`
 
 Dos pestañas. **Documentos legales**: se carga el `.docx` y se publica como
