@@ -35,7 +35,7 @@ atribución obligatoria y sin costo. Se listan aquí para dejar registro.
 | `autos.jpg` | https://stocksnap.io/photo/people-man-B6JKY2BT1U |
 | `proceso.jpg` | https://stocksnap.io/photo/writing-papers-Y01VDYAX63 |
 | `nosotros.jpg` | https://stocksnap.io/photo/typing-working-T1NUHZ0SU7 |
-| `card-personas.jpg` | https://stocksnap.io/photo/happy-family-99FGTTMHTI |
+| `card-personas.jpg` | https://stocksnap.io/photo/silhouette-family-Q7UIKF58IR |
 | `card-automoviles.jpg` | https://stocksnap.io/photo/highway-road-AOEI2XN99G |
 | `card-generales.jpg` | https://stocksnap.io/photo/construction-blueprint-BZ4FJO6KZE |
 | `card-empresariales.jpg` | https://stocksnap.io/photo/work-business-J5LXKNDREC |
@@ -45,16 +45,33 @@ lado opuesto al texto.
 
 Dos límites que conviene tener presentes:
 
+- **El logo de Seguros del Estado no existe en alta resolución públicamente.**
+  Se revisaron los cuatro archivos que publica su propio sitio —`logo.png`
+  (226×60), `logo-fx1.png` (232×60), `logo-sv.png` (226×60) y el del pie
+  (185×54)— y ninguno supera los 60 px de alto. No hay versión vectorial. El
+  que está publicado es el mayor disponible; para mejorarlo hay que pedirle a
+  la compañía el archivo de su manual de marca. Se muestra a 40 px de alto,
+  donde la pérdida no se percibe en pantallas normales.
 - **Resolución de origen.** El banco solo expone estas fotos a 960 px de ancho.
   Se reescalaron al tamaño de la tabla de arriba. En las tarjetas y en `nosotros`
   no se nota; en los dos fondos a ancho completo el detalle es blando, aunque
   queda disimulado por la capa oscura. Fotos propias en alta resolución darían
   mejor resultado.
-- **Derechos de imagen.** La licencia CC0 cubre los derechos de autor del
-  fotógrafo, pero **no acredita autorización de las personas que aparecen**.
-  Varias de estas fotos muestran personas identificables en una pieza comercial.
-  Conviene que legal lo valide, o sustituirlas por fotos propias con
-  autorización firmada.
+- **Derechos de imagen: resuelto.** La licencia CC0 cubre los derechos de autor
+  del fotógrafo, pero **no acredita autorización de las personas retratadas**.
+  Se revisaron las siete fotos una por una y solo `card-personas.jpg` mostraba
+  rostros identificables: una familia de cuatro, **dos de ellos menores de
+  edad**. Usar la imagen de un menor en una pieza comercial exige autorización
+  expresa de sus padres (Ley 1581, art. 7 y Decreto 1377, art. 12), que la
+  licencia CC0 no otorga. Se reemplazó por una silueta a contraluz, sin rostros.
+
+  Las otras seis no tienen el problema: `autos.jpg` es el conductor visto desde
+  atrás, `nosotros.jpg` una persona de espaldas, `card-empresariales.jpg` y
+  `proceso.jpg` solo manos, y las dos restantes no muestran personas.
+
+  **Ninguna foto del sitio permite hoy identificar a una persona.** Si en el
+  futuro se suben fotos propias con personas reconocibles, hace falta
+  autorización de uso de imagen firmada.
 
 ## Recomendaciones
 
