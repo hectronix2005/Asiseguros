@@ -30,7 +30,9 @@
     .backing-eyebrow { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; color: var(--gray-400); font-weight: 600; }
     .backing-name { font-size: 1.35rem; font-weight: 700; color: var(--primary, #0f2f5e); }
     .backing-note { font-size: 0.8rem; color: var(--gray-500, #6b7280); }
-    .backing-logo { max-height: 52px; max-width: 240px; object-fit: contain; margin-bottom: 2px; }
+    /* 40 px y no más: el logo oficial solo existe a 226x60, y mostrarlo cerca de
+       su tamaño real lo dejaría borroso en pantallas de alta densidad. */
+    .backing-logo { height: 40px; width: auto; object-fit: contain; margin-bottom: 4px; }
     /* Con el logo presente, el nombre deja de ser el elemento principal */
     .backing-logo + .backing-name { font-size: 0.95rem; font-weight: 600; color: var(--gray-500, #6b7280); }
 
