@@ -94,13 +94,22 @@ como segunda capa.
 
 ### Decisiones abiertas
 
-- **¿«Seguro de Hogar» vuelve al portafolio?** Su cuestionario está aplicado
-  hoy a Incendio y Sustracción.
-- **¿Los productos de carga necesitan cuestionario propio?** Comparten el de
-  vehículos.
-- **¿Qué compañía expide los productos de personas?** El pie legal atribuye
-  todo a Seguros del Estado S.A., pero vida y salud suele expedirlos Seguros de
-  Vida del Estado S.A., que es otra entidad. Si es así, hay que precisarlo.
+- **¿«Seguro de Hogar» vuelve al portafolio?** El brief lo retiró porque no está
+  en el catálogo de Seguros del Estado, y su sitio tampoco lo lista. Si sí se
+  intermedia, hay que devolverlo a las tarjetas, al desplegable y al panel.
+  Mientras tanto, su cuestionario sirve a Incendio y Sustracción.
+
+### Cerrado sin necesitar criterio del cliente
+
+- **Qué compañía expide cada póliza.** Verificado en el sitio de la aseguradora:
+  su aviso de cookies nombra por separado a Seguros del Estado S.A. y Seguros de
+  Vida del Estado S.A., y la sección de vida es de la segunda. Como seis de los
+  veinte productos son de personas, la atribución era imprecisa para casi un
+  tercio del catálogo. Corregido en las seis páginas, la plantilla del panel y
+  los correos.
+- **Cuestionarios del formulario.** De 5 a los 20 productos. El transporte de
+  carga dejó de compartir el de vehículos y tiene el suyo: mercancía, rutas,
+  valor por despacho y modalidad de flota.
 
 ### Dependen de terceros
 
