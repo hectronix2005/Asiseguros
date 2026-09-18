@@ -199,6 +199,10 @@ function estadoDocumento(array $doc): array {
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow">
 <title>Documentos legales · AsiSeguros</title>
+<!-- Rutas absolutas: el panel cuelga de /admin/, no de la raíz. -->
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root { --primary:#0f2441; --secondary:#7df89a; --accent:#4db7b3; --gray-50:#f8fafc;
