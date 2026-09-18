@@ -83,6 +83,10 @@ panel conserva en `admin/originales/`.
 Antes de subir cualquiera de esas tres, traer primero la versión del servidor.
 Los `.docx` originales son la fuente de verdad y nunca se borran.
 
+Los anexos son públicos por decisión del cliente. El enlace va en el **pie de
+la plantilla**, no dentro del documento, para que sobreviva a cada nueva carga
+de legal: `admin/lib/paginas.php` y el pie de `index.html`.
+
 ### El panel — `https://www.asiseguros.com/admin/`
 
 Dos pestañas. **Documentos legales**: se carga el `.docx` y se publica como
@@ -99,10 +103,6 @@ como segunda capa.
 
 ### Requieren acción tuya
 
-- Decidir si `anexos-datos-personales.html` debe seguir siendo público: el
-  propio documento se declara **«Documento de uso interno»**. Hoy está en la
-  web, sin enlaces desde ninguna página y fuera del `sitemap.xml`, pero con
-  `robots: index, follow`, así que Google podría indexarlo si llega a la URL.
 - Borrar la cuenta FTP `despliegue@asiseguros.com`: su contraseña quedó escrita
   en la conversación.
 - Search Console: verificar por DNS, enviar `sitemap.xml` y pedir indexación de

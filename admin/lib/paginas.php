@@ -122,6 +122,7 @@ function construir_pagina(string $titulo, string $metaDescripcion, string $conte
         <div class="footer-bottom-links">
           <a href="politica-tratamiento-datos.html">Política de Privacidad</a>
           <a href="terminos-y-condiciones.html">Términos y Condiciones</a>
+          <a href="anexos-datos-personales.html">Anexos de Datos Personales</a>
         </div>
       </div>
     </div>
