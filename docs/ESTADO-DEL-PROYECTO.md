@@ -107,8 +107,6 @@ como segunda capa.
 
 ### Requieren acción tuya
 
-- Borrar la cuenta FTP `despliegue@asiseguros.com`: su contraseña quedó escrita
-  en la conversación.
 - Search Console: verificar por DNS, enviar `sitemap.xml` y pedir indexación de
   las cuatro páginas principales.
 - Abrir la bandeja de `comercial1@asiseguros.com` y confirmar que los avisos
@@ -179,5 +177,14 @@ Devolver esas carpetas a `public_html` restaura el sitio anterior.
 
 ### Para actualizar el sitio
 
-Se edita en el repositorio y se sube por FTP o por el administrador de archivos.
-Los documentos legales no requieren eso: se cargan desde el panel.
+**Ya no hay cuenta FTP.** La de despliegue se eliminó el 17 de septiembre porque
+su contraseña se había escrito en una conversación. Antes de cerrarla se
+comprobaron los 62 archivos del repositorio contra el servidor: ninguna
+diferencia.
+
+Para volver a desplegar hay que crear una cuenta FTP nueva en cPanel,
+apuntándola a `/home/asisegur/public_html` —no a `/home/asisegur`, como estaba
+la anterior—. También sirve el administrador de archivos de cPanel.
+
+Los documentos legales no necesitan nada de eso: se cargan desde el panel, que
+no depende de FTP.
