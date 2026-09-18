@@ -222,16 +222,107 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: 'area_m2', etiqueta: 'Área de construcción (m²)', tipo: 'text', obligatorio: true },
         { id: 'valor_comercial', etiqueta: 'Valor comercial del inmueble', tipo: 'text', obligatorio: true }
       ]
+    },
+    carga: {
+      titulo: 'Datos para cotizar el transporte de carga',
+      campos: [
+        { id: 'propietario', etiqueta: 'Nombre o razón social y NIT del transportador', tipo: 'text', obligatorio: true },
+        { id: 'mercancia', etiqueta: '¿Qué mercancía se transporta?',
+          ayuda: 'Tipo de producto y si requiere condiciones especiales', tipo: 'text', obligatorio: true },
+        { id: 'rutas', etiqueta: 'Rutas habituales',
+          ayuda: 'Ciudades de origen y destino', tipo: 'textarea', obligatorio: true },
+        { id: 'valor_despacho', etiqueta: 'Valor máximo por despacho', tipo: 'text', obligatorio: true },
+        { id: 'despachos_mes', etiqueta: 'Número aproximado de despachos al mes', tipo: 'text', obligatorio: true },
+        { id: 'vehiculos', etiqueta: '¿Los vehículos son propios o contratados?', tipo: 'select',
+          opciones: ['Propios', 'Contratados', 'Mixto'], obligatorio: true }
+      ]
+    },
+    cumplimiento: {
+      titulo: 'Datos para cotizar la póliza de cumplimiento',
+      campos: [
+        { id: 'contratista', etiqueta: 'Nombre o razón social y NIT del contratista', tipo: 'text', obligatorio: true },
+        { id: 'entidad', etiqueta: 'Entidad contratante', tipo: 'text', obligatorio: true },
+        { id: 'objeto', etiqueta: 'Objeto del contrato', tipo: 'textarea', obligatorio: true },
+        { id: 'valor_contrato', etiqueta: 'Valor del contrato', tipo: 'text', obligatorio: true },
+        { id: 'plazo', etiqueta: 'Plazo de ejecución', tipo: 'text', obligatorio: true },
+        { id: 'amparos', etiqueta: '¿Qué amparos exige el pliego?',
+          ayuda: 'Cumplimiento, anticipo, salarios, estabilidad… con sus porcentajes si los tienes',
+          tipo: 'textarea', obligatorio: true },
+        { id: 'anticipo', etiqueta: '¿El contrato tiene anticipo?', tipo: 'select',
+          opciones: ['No', 'Sí'], obligatorio: true },
+        { id: 'consorcio', etiqueta: '¿Se presenta en consorcio o unión temporal?', tipo: 'select',
+          opciones: ['No', 'Sí'], obligatorio: true }
+      ]
+    },
+    obra: {
+      titulo: 'Datos para cotizar todo riesgo contratista',
+      campos: [
+        { id: 'contratista', etiqueta: 'Nombre o razón social y NIT del contratista', tipo: 'text', obligatorio: true },
+        { id: 'tipo_obra', etiqueta: 'Tipo de obra',
+          ayuda: 'Edificación, vía, red, estructura…', tipo: 'text', obligatorio: true },
+        { id: 'ubicacion', etiqueta: 'Ubicación exacta de la obra',
+          ayuda: 'Determina la exposición sísmica y de inundación', tipo: 'text', obligatorio: true },
+        { id: 'valor_obra', etiqueta: 'Valor total de la obra terminada',
+          ayuda: 'Incluye materiales, mano de obra y costos indirectos', tipo: 'text', obligatorio: true },
+        { id: 'plazo', etiqueta: 'Plazo de ejecución y fecha de inicio', tipo: 'text', obligatorio: true },
+        { id: 'maquinaria', etiqueta: '¿Se amparan maquinaria y equipos?', tipo: 'select',
+          opciones: ['No', 'Sí'], obligatorio: true }
+      ]
+    },
+    personas: {
+      titulo: 'Datos para cotizar el seguro de personas',
+      campos: [
+        { id: 'tomador', etiqueta: 'Nombre o razón social del tomador', tipo: 'text', obligatorio: true },
+        { id: 'num_asegurados', etiqueta: '¿Cuántas personas se van a asegurar?', tipo: 'text', obligatorio: true },
+        { id: 'edades', etiqueta: 'Rango de edades',
+          ayuda: 'Por ejemplo: entre 25 y 60 años', tipo: 'text', obligatorio: true },
+        { id: 'actividad', etiqueta: 'Actividad u ocupación del grupo',
+          ayuda: 'Influye en el riesgo y en la tarifa', tipo: 'text', obligatorio: true },
+        { id: 'valor_asegurado', etiqueta: 'Valor asegurado que buscas por persona', tipo: 'text' }
+      ]
+    },
+    empresarial: {
+      titulo: 'Datos para cotizar el seguro',
+      campos: [
+        { id: 'empresa', etiqueta: 'Nombre o razón social y NIT', tipo: 'text', obligatorio: true },
+        { id: 'actividad', etiqueta: 'Actividad económica de la empresa', tipo: 'text', obligatorio: true },
+        { id: 'ubicacion', etiqueta: 'Dirección donde está el riesgo', tipo: 'textarea', obligatorio: true },
+        { id: 'valor_asegurar', etiqueta: 'Valor que se busca asegurar', tipo: 'text', obligatorio: true },
+        { id: 'detalle', etiqueta: 'Detalle de lo que se quiere cubrir',
+          ayuda: 'Bienes, empleados con manejo de fondos, equipos…', tipo: 'textarea' }
+      ]
     }
   };
 
   // Qué producto del portafolio usa cada cuestionario.
   const CUESTIONARIO_POR_TIPO = {
+    // Automóviles
     'Livianos': 'autos',
-    'Transporte de Carga por Carretera': 'autos',
     'RC para Vehículos de Carga': 'autos',
+    // Carga: preguntas propias — lo que importa es la mercancía y la ruta,
+    // no la placa de un vehículo concreto.
+    'Transporte de Carga por Carretera': 'carga',
+    'Transportes': 'carga',
+    // Inmuebles
     'Incendio': 'inmueble',
-    'Sustracción': 'inmueble'
+    'Sustracción': 'inmueble',
+    // Contratación estatal y privada
+    'Cumplimiento Estatal y Particular': 'cumplimiento',
+    'Disposiciones Legales': 'cumplimiento',
+    'RC derivada de Cumplimiento': 'cumplimiento',
+    'Todo Riesgo Contratista': 'obra',
+    'Todo Riesgo Maquinaria': 'obra',
+    // Personas
+    'Vida Grupo': 'personas',
+    'Salud': 'personas',
+    'Accidentes Personales': 'personas',
+    'Póliza Integral Estudiantil': 'personas',
+    'Vida Fácil': 'personas',
+    'Vida Deudores': 'personas',
+    // Resto de empresariales
+    'Manejo': 'empresarial',
+    'Infidelidad y Riesgos Financieros (IRF)': 'empresarial',
+    'Responsabilidad Civil Extracontractual': 'empresarial'
   };
 
   function construirPaso2(clave, radicado, tipo) {

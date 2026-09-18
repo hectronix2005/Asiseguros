@@ -235,7 +235,7 @@ function enviar_acuse(array $s): bool
            . "esta autorización, escribiendo a " . CORREO_CONTACTO . ".\n"
            . "Política completa: https://www.asiseguros.com/politica-tratamiento-datos.html\n\n"
            . "AsiSeguros es una agencia de seguros que actúa como intermediario.\n"
-           . "Las pólizas son expedidas por Seguros del Estado S.A.\n";
+           . "Las pólizas son expedidas por Seguros del Estado S.A. y Seguros de Vida del Estado S.A.\n";
 
     /* ---------- HTML ---------- */
     $html =
