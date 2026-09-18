@@ -22,6 +22,7 @@ Para quitar una foto, basta con borrar el archivo.
 | `card-empresariales.jpg` | Tarjeta «Seguros Empresariales» | 800×500 | 150 KB | Firma de contrato, reunión de negocios o entrega de obra. |
 | `nosotros.jpg` | Sección «Nosotros» | 1200×900 | 250 KB | Asesoría uno a uno o equipo de la agencia. Mientras no exista, se muestra la ilustración actual. |
 | `proceso.jpg` | Fondo de «Cómo trabajamos» | 1920×1080 | 300 KB | Escena de asesoría, sin mucho detalle: va cubierta por una capa oscura al 90 %. |
+| `seguros-del-estado.png` | Franja «Con el respaldo de» | alto 104 px o más | 60 KB | Logo oficial de Seguros del Estado, en PNG con fondo transparente. Uso autorizado por la compañía. Mientras no exista, la franja muestra el nombre en texto. |
 
 ## Fotos actualmente publicadas
 

@@ -30,6 +30,10 @@
     .backing-eyebrow { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; color: var(--gray-400); font-weight: 600; }
     .backing-name { font-size: 1.35rem; font-weight: 700; color: var(--primary, #0f2f5e); }
     .backing-note { font-size: 0.8rem; color: var(--gray-500, #6b7280); }
+    .backing-logo { max-height: 52px; max-width: 240px; object-fit: contain; margin-bottom: 2px; }
+    /* Con el logo presente, el nombre deja de ser el elemento principal */
+    .backing-logo + .backing-name { font-size: 0.95rem; font-weight: 600; color: var(--gray-500, #6b7280); }
+
     /* Casilla de autorización de datos personales (Ley 1581 de 2012) */
     .form-consent { margin-bottom: 20px; }
     .consent-label { display: flex; align-items: flex-start; gap: 10px; font-size: 0.8rem; line-height: 1.5; color: var(--gray-500, #6b7280); font-weight: 400; cursor: pointer; }
@@ -268,6 +272,10 @@
   <section class="marquee-section backing-strip">
     <div class="container">
       <span class="backing-eyebrow">Con el respaldo de</span>
+      <!-- El logo se muestra solo si el archivo existe; si falta, queda el nombre
+           en texto. Uso autorizado por Seguros del Estado. Ver docs/FOTOS.md -->
+      <img src="assets/img/seguros-del-estado.png" alt="Seguros del Estado S.A."
+           class="backing-logo" onerror="this.remove()">
       <strong class="backing-name">Seguros del Estado S.A.</strong>
       <span class="backing-note">Compañía vigilada por la Superintendencia Financiera de Colombia</span>
     </div>
