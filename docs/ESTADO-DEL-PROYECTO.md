@@ -90,7 +90,10 @@ como segunda capa.
   en la conversación.
 - Search Console: verificar por DNS, enviar `sitemap.xml` y pedir indexación de
   las cuatro páginas principales.
-- Confirmar que llegan los avisos a `comercial1@asiseguros.com`.
+- Abrir la bandeja de `comercial1@asiseguros.com` y confirmar que los avisos
+  están ahí. El servidor ya se verificó: responde `250 Accepted` para
+  `comercial1@` y `administrativo@`, y `550 No Such User Here` para
+  `contacto@` —que por eso se retiró del sitio—. Falta solo mirar el buzón.
 
 ### Decisiones abiertas
 
@@ -110,14 +113,22 @@ como segunda capa.
 - **Cuestionarios del formulario.** De 5 a los 20 productos. El transporte de
   carga dejó de compartir el de vehículos y tiene el suyo: mercancía, rutas,
   valor por despacho y modalidad de flota.
+- **Derechos de imagen de las fotos.** No era un tema para legal: se revisaron
+  las siete una por una y solo `card-personas.jpg` mostraba rostros
+  identificables —una familia de cuatro, **dos de ellos menores**—. Usar la
+  imagen de un menor en publicidad exige autorización de los padres, que la
+  licencia CC0 no otorga. Se reemplazó por una silueta a contraluz. Las otras
+  seis son manos, personas de espaldas o sin gente. Hoy **ninguna foto del
+  sitio permite identificar a una persona**.
 
 ### Dependen de terceros
 
 - Revisión jurídica de las dos páginas legales y de las dos guías técnicas.
-- Derechos de imagen de las fotos: son CC0, lo que cubre al fotógrafo pero no
-  acredita autorización de las personas retratadas.
-- Logo de Seguros del Estado del manual de marca: el actual se tomó de su web y
-  solo existe a 226×60 px.
+- Logo de Seguros del Estado del manual de marca. **Verificado que no hay nada
+  mejor en público**: los cuatro archivos que publica su propio sitio
+  —`logo.png` 226×60, `logo-fx1.png` 232×60, `logo-sv.png` 226×60 y el del pie
+  185×54— ninguno pasa de 60 px de alto, y no existe versión vectorial. Hay que
+  pedírselo a la compañía. Mientras tanto se muestra a 40 px, donde no se nota.
 
 ### En observación
 
