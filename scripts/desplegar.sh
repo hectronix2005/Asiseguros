@@ -33,6 +33,14 @@ cd "$REPO"
 
 git fetch --quiet origin main
 git reset --quiet --hard origin/main
+
+# El reset puede haber cambiado este mismo script, pero sh ya lo tiene cargado y
+# seguiría con la versión vieja: así se quedaron sin copiar las tres guías nuevas
+# el 25 de septiembre de 2026. Se vuelve a ejecutar una vez, ya actualizado.
+if [ "${1:-}" != "--actualizado" ]; then
+  exec /bin/sh "$0" --actualizado
+fi
+
 AHORA=$(git rev-parse HEAD)
 
 # Se compara contra el último commit DESPLEGADO, no contra el que había antes de
