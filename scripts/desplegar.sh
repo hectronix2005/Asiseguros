@@ -46,7 +46,9 @@ fi
 
 # Páginas
 cp -f index.html 404.html asesoria-juridica.html \
-      poliza-de-cumplimiento.html todo-riesgo-contratista.html "$DESTINO/"
+      poliza-de-cumplimiento.html todo-riesgo-contratista.html \
+      responsabilidad-civil-extracontractual.html poliza-de-manejo.html \
+      seguro-transporte-de-carga.html "$DESTINO/"
 
 # Servidor e indexación
 cp -f .htaccess robots.txt sitemap.xml "$DESTINO/"

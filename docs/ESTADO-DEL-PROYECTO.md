@@ -57,6 +57,9 @@ public_html/
 ├── index.html                       portada
 ├── poliza-de-cumplimiento.html      guía (nicho de mayor margen)
 ├── todo-riesgo-contratista.html     guía
+├── responsabilidad-civil-extracontractual.html  guía (25-sep, sin revisión de legal)
+├── poliza-de-manejo.html            guía (25-sep, sin revisión de legal)
+├── seguro-transporte-de-carga.html  guía (25-sep, sin revisión de legal)
 ├── asesoria-juridica.html           recupera el tráfico del blog antiguo
 ├── politica-tratamiento-datos.html  publicada desde el .docx de legal
 ├── terminos-y-condiciones.html      publicada desde el .docx de legal
