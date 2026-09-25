@@ -107,12 +107,35 @@ como segunda capa.
 
 ### Requieren acción tuya
 
-- Search Console: verificar por DNS, enviar `sitemap.xml` y pedir indexación de
-  las cuatro páginas principales.
 - Abrir la bandeja de `comercial1@asiseguros.com` y confirmar que los avisos
   están ahí. El servidor ya se verificó: responde `250 Accepted` para
   `comercial1@` y `administrativo@`, y `550 No Such User Here` para
   `contacto@` —que por eso se retiró del sitio—. Falta solo mirar el buzón.
+
+### Esperando a Google — nada que hacer
+
+El 25 de septiembre se completó el trabajo en Search Console: propiedad
+verificada por etiqueta HTML y registro TXT, `sitemap.xml` enviado (7 URLs,
+estado correcto) y las cuatro páginas principales en cola de rastreo
+prioritario.
+
+Quedan **dos validaciones en curso** en *Fragmentos de productos*, por los
+campos `review` y `aggregateRating`. No eran un problema del sitio actual:
+venían de `/product/plan-asi-x-ano/` y las demás fichas de WooCommerce del
+WordPress anterior, que Google no rastreaba desde el 22 de agosto —antes de la
+migración— y seguía teniendo indexadas con su marcado de producto.
+
+La causa era una regla propia: esas URLs redirigían a la portada, y Google trata
+el redirect masivo al inicio como «soft 404», así que las mantenía en el índice
+indefinidamente. Ahora `/shop/`, `/cart/`, `/checkout/`, `/my-account/` y todo
+`/product/` y `/product-category/` responden **410**.
+
+**No añadir `review` ni `aggregateRating`.** Significan reseñas y calificación
+promedio: rellenarlos obligaría a inventarlas, que es lo que se retiró del sitio,
+y Google lo trata como spam de datos estructurados.
+
+Si alguna validación termina «Con errores», habrá aparecido una URL de tienda con
+otra forma; se añade al patrón del `.htaccess`.
 
 ### Decisiones abiertas
 
