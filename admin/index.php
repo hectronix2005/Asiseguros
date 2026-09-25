@@ -243,6 +243,10 @@ function estadoDocumento(array $doc): array {
   .cifra { background:#fff; border:1px solid var(--gray-200); border-radius:12px; padding:16px; text-align:center; }
   .cifra b { display:block; font-size:1.6rem; color:var(--primary); line-height:1.2; }
   .cifra span { font-size:.75rem; color:var(--gray-400); text-transform:uppercase; letter-spacing:.5px; }
+  .canales { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin:-8px 0 20px; font-size:.85rem; color:var(--gray-400); }
+  .canal-chip { display:inline-block; background:#eef4ff; color:var(--primary); border-radius:999px; padding:2px 10px; font-size:.75rem; }
+  .canal-chip b { margin-left:4px; }
+  .sol-origen { font-size:.8rem; color:var(--gray-400); margin-top:6px; }
   .barra-busca { display:flex; gap:10px; margin-bottom:18px; flex-wrap:wrap; }
   .barra-busca input { flex:1; min-width:200px; margin:0; }
   .btn-sec { background:#fff; color:var(--primary); border:1px solid var(--gray-200);
@@ -324,6 +328,15 @@ function estadoDocumento(array $doc): array {
     <div class="cifra"><b><?= $res['hoy'] ?></b><span>hoy</span></div>
   </div>
 
+  <?php if ($res['canales']): ?>
+    <p class="canales">
+      <span>Por dónde llegaron:</span>
+      <?php foreach ($res['canales'] as $c => $n): ?>
+        <span class="canal-chip"><?= htmlspecialchars($c) ?> <b><?= $n ?></b></span>
+      <?php endforeach; ?>
+    </p>
+  <?php endif; ?>
+
   <form method="get" class="barra-busca">
     <input type="hidden" name="ver" value="solicitudes">
     <input type="text" name="q" value="<?= htmlspecialchars($busca) ?>"
@@ -351,6 +364,13 @@ function estadoDocumento(array $doc): array {
         </span>
       </div>
       <div class="sol-prod"><?= htmlspecialchars($s['tipo_seguro'] ?? '') ?></div>
+      <span class="canal-chip"><?= htmlspecialchars($s['canal'] ?? '') ?></span>
+      <?php $pr = $s['procedencia'] ?? []; if (($pr['campana'] ?? '') !== '' || ($pr['pagina_llegada'] ?? '') !== ''): ?>
+        <div class="sol-origen">
+          <?php if (($pr['campana'] ?? '') !== ''): ?>Campaña: <?= htmlspecialchars($pr['campana']) ?> · <?php endif; ?>
+          Llegó por <?= htmlspecialchars($pr['pagina_llegada'] ?? '') ?>
+        </div>
+      <?php endif; ?>
       <div class="sol-datos">
         <div><span>Teléfono:</span>
           <a href="https://wa.me/57<?= preg_replace('/\D/','',(string)($s['telefono'] ?? '')) ?>"

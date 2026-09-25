@@ -426,6 +426,35 @@ document.addEventListener('DOMContentLoaded', () => {
      se le mostró al titular. Antes esto salía por WhatsApp: el usuario podía
      editar el mensaje, o no enviarlo, y no quedaba prueba de nada. La Ley 1581
      de 2012 (art. 17 lit. b) exige conservar esa prueba al responsable. */
+  /* ---------- Procedencia de la visita ----------
+     Se guarda la primera página a la que llegó la persona en esta sesión, el
+     dominio que la trajo y los parámetros de campaña (utm_*), para saber qué
+     canal produce solicitudes. No se guarda la URL completa del sitio de origen
+     ni identificadores de clic: solo el dominio y si venía de un anuncio. */
+  const PROCEDENCIA = 'asi_procedencia';
+  const procedencia = (() => {
+    try {
+      const guardada = sessionStorage.getItem(PROCEDENCIA);
+      if (guardada) return JSON.parse(guardada);
+    } catch (err) { /* modo privado */ }
+    const q = new URLSearchParams(location.search);
+    let referente = '';
+    try {
+      const h = document.referrer ? new URL(document.referrer).hostname : '';
+      if (h && h.replace(/^www\./, '') !== location.hostname.replace(/^www\./, '')) referente = h;
+    } catch (err) { /* referente ilegible */ }
+    const p = {
+      fuente: (q.get('utm_source') || '').slice(0, 80),
+      medio: (q.get('utm_medium') || '').slice(0, 80),
+      campana: (q.get('utm_campaign') || '').slice(0, 120),
+      anuncio: (q.has('gclid') || q.has('gbraid') || q.has('wbraid') || q.has('fbclid')) ? '1' : '',
+      llegada: location.pathname.slice(0, 200),
+      referente: referente.slice(0, 120)
+    };
+    try { sessionStorage.setItem(PROCEDENCIA, JSON.stringify(p)); } catch (err) { /* modo privado */ }
+    return p;
+  })();
+
   const contactForm = document.querySelector('#contactForm');
   if (contactForm) {
     const aviso = document.querySelector('#formAviso');
@@ -472,6 +501,7 @@ document.addEventListener('DOMContentLoaded', () => {
       datos.autorizacion_texto = textoEl ? textoEl.innerText.replace(/\s+/g, ' ').trim() : '';
       datos.autorizacion_version = contactForm.getAttribute('data-consent-version') || '';
       datos.autorizacion_datos = contactForm.querySelector('#autorizacion_datos').checked ? '1' : '';
+      datos.procedencia = procedencia;
 
       const btn = contactForm.querySelector('button[type="submit"]');
       const textoBtn = btn.innerHTML;

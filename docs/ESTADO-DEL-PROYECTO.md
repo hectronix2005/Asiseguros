@@ -98,6 +98,18 @@ página del sitio, conservando el original y la versión anterior. **Solicitudes
 listado con búsqueda y exportación a Excel, incluida la constancia de
 autorización.
 
+Cada solicitud muestra además **por dónde llegó** la persona: anuncio pagado,
+buscador, redes sociales, campaña, correo, directo u otro sitio. Arriba sale el
+conteo por canal y el Excel trae las columnas de campaña. Se registra la primera
+página que visitó en la sesión, el dominio que la trajo y los parámetros `utm_*`;
+no la URL completa de origen ni identificadores de clic. Va en
+`../asiseguros-datos/procedencia.csv`, aparte del registro de autorizaciones.
+Las solicitudes anteriores al 25-sep-2026 salen como «Sin dato».
+
+Para que una campaña se distinga, sus enlaces deben llevar
+`?utm_source=…&utm_medium=…&utm_campaign=…` (por ejemplo
+`utm_source=facebook&utm_medium=social&utm_campaign=cumplimiento-oct`).
+
 Protegido con contraseña, bloqueo tras cinco intentos, y el firewall del hosting
 como segunda capa.
 

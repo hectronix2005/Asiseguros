@@ -57,8 +57,16 @@ function solicitudes(string $busca = ''): array
         $det[$r] = json_decode($d['respuestas'] ?? '[]', true) ?: [];
     }
 
+    $proc = [];
+    foreach (leer_csv($dir . '/procedencia.csv') as $p) {
+        $r = $p['radicado'] ?? '';
+        if ($r !== '') $proc[$r] = $p;
+    }
+
     foreach ($sol as &$s) {
         $s['detalle'] = $det[$s['radicado'] ?? ''] ?? [];
+        $s['procedencia'] = $proc[$s['radicado'] ?? ''] ?? [];
+        $s['canal'] = canal($s['procedencia']);
     }
     unset($s);
 
@@ -77,20 +85,45 @@ function solicitudes(string $busca = ''): array
     return $sol;
 }
 
+/**
+ * Traduce la procedencia registrada a un canal legible. Las solicitudes
+ * anteriores a este registro no tienen procedencia y quedan «Sin dato».
+ */
+function canal(array $p): string
+{
+    if (!$p) return 'Sin dato';
+    $medio = mb_strtolower((string)($p['medio'] ?? ''));
+    $ref   = (string)($p['sitio_referente'] ?? '');
+
+    if (($p['anuncio'] ?? '') === '1' || preg_match('/^(cpc|ppc|paid|pago|ads?|display)/', $medio)) return 'Anuncio pagado';
+    if (($p['fuente'] ?? '') !== '') {
+        if (str_contains($medio, 'mail') || str_contains($medio, 'correo')) return 'Correo';
+        if (preg_match('/social|redes/', $medio)) return 'Redes sociales';
+        return 'Campaña';
+    }
+    if ($ref === '') return 'Directo';
+    if (preg_match('/(^|\.)(google|bing|duckduckgo|yahoo|ecosia|search\.brave)\./', $ref)) return 'Buscador';
+    if (preg_match('/(^|\.)(facebook|instagram|linkedin|lnkd|tiktok|t|x|twitter|youtube|whatsapp)\.(com|co|in)$/', $ref)) return 'Redes sociales';
+    return 'Otro sitio: ' . $ref;
+}
+
 /** Resumen para las cifras de arriba. */
 function resumen_solicitudes(array $sol): array
 {
     $hoy = date('Y-m-d');
     $mes = date('Y-m');
-    $r = ['total' => count($sol), 'hoy' => 0, 'mes' => 0, 'productos' => []];
+    $r = ['total' => count($sol), 'hoy' => 0, 'mes' => 0, 'productos' => [], 'canales' => []];
     foreach ($sol as $s) {
         $f = substr((string)($s['fecha_hora'] ?? ''), 0, 10);
         if ($f === $hoy) $r['hoy']++;
         if (str_starts_with($f, $mes)) $r['mes']++;
         $p = (string)($s['tipo_seguro'] ?? '');
         if ($p !== '') $r['productos'][$p] = ($r['productos'][$p] ?? 0) + 1;
+        $c = (string)($s['canal'] ?? 'Sin dato');
+        $r['canales'][$c] = ($r['canales'][$c] ?? 0) + 1;
     }
     arsort($r['productos']);
+    arsort($r['canales']);
     return $r;
 }
 
@@ -110,7 +143,8 @@ function exportar_csv(array $sol): void
     fwrite($out, "\xEF\xBB\xBF");
     fputcsv($out, array_merge(
         ['Radicado','Fecha','Nombre','Teléfono','Correo','Producto','Mensaje',
-         'Autoriza','Versión autorización','Texto de la autorización'],
+         'Autoriza','Versión autorización','Texto de la autorización',
+         'Canal','Fuente (utm)','Medio (utm)','Campaña (utm)','Página de llegada','Sitio de origen'],
         array_map(fn($k) => ucfirst(str_replace('_',' ',$k)), $claves)
     ), ',', '"', '\\');
 
@@ -120,6 +154,9 @@ function exportar_csv(array $sol): void
             $s['telefono'] ?? '', $s['email'] ?? '', $s['tipo_seguro'] ?? '',
             $s['mensaje'] ?? '', $s['autoriza'] ?? '',
             $s['version_autorizacion'] ?? '', $s['texto_autorizacion'] ?? '',
+            $s['canal'] ?? '', $s['procedencia']['fuente'] ?? '', $s['procedencia']['medio'] ?? '',
+            $s['procedencia']['campana'] ?? '', $s['procedencia']['pagina_llegada'] ?? '',
+            $s['procedencia']['sitio_referente'] ?? '',
         ];
         foreach ($claves as $k) $fila[] = $s['detalle'][$k] ?? '';
         fputcsv($out, $fila, ',', '"', '\\');

@@ -240,6 +240,41 @@ if (flock($fh, LOCK_EX)) {
 fclose($fh);
 @chmod(ARCHIVO_REGISTRO, 0640);
 
+// ---- Procedencia de la visita -----------------------------------------------
+// Canal por el que llegó la persona (campaña, buscador, red social...). Va en
+// un archivo aparte, enlazado por radicado, para no alterar la estructura del
+// registro de autorizaciones. Si falla, la solicitud sigue adelante.
+$proc = is_array($datos['procedencia'] ?? null) ? $datos['procedencia'] : [];
+$filaProc = [
+    $radicado,
+    $fechaISO,
+    campo($proc, 'fuente', 80),
+    campo($proc, 'medio', 80),
+    campo($proc, 'campana', 120),
+    campo($proc, 'anuncio', 1) === '1' ? '1' : '',
+    campo($proc, 'llegada', 200),
+    preg_replace('/[^a-z0-9.\-]/', '', mb_strtolower(campo($proc, 'referente', 120))),
+];
+$archivoProc = DIR_DATOS . '/procedencia.csv';
+$nuevoProc = !is_file($archivoProc);
+$fp = @fopen($archivoProc, 'a');
+if ($fp !== false) {
+    if (flock($fp, LOCK_EX)) {
+        if ($nuevoProc) {
+            fwrite($fp, "\xEF\xBB\xBF");
+            fputcsv($fp, ['radicado','fecha_hora','fuente','medio','campana','anuncio',
+                          'pagina_llegada','sitio_referente'], ',', '"', '\\');
+        }
+        fputcsv($fp, $filaProc, ',', '"', '\\');
+        fflush($fp);
+        flock($fp, LOCK_UN);
+    }
+    fclose($fp);
+    @chmod($archivoProc, 0640);
+} else {
+    error_log('AsiSeguros: no se pudo abrir ' . $archivoProc);
+}
+
 // ---- Aviso por correo -------------------------------------------------------
 $datosAviso = [
     'radicado'             => $radicado,
