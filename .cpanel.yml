@@ -1,5 +1,10 @@
 ---
-# Despliegue desde GitHub con Git Version Control de cPanel.
+# Despliegue para Git Version Control de cPanel.
+#
+# El plan actual de Colombia Hosting NO incluye esta herramienta; el despliegue
+# real lo hace scripts/desplegar.sh desde una tarea cron. Este archivo queda por
+# si algún día se cambia a un plan que sí la traiga, y delega en el mismo script
+# para que no haya dos listas que mantener.
 #
 # Lista blanca deliberada. Tres archivos del repositorio NO se copian nunca:
 #
@@ -16,47 +21,4 @@
 # el histórico), datos/ (registros de autorización) ni admin/.clave.php.
 deployment:
   tasks:
-    - export DESTINO=/home/asisegur/public_html
-
-    # Portada y páginas de contenido
-    - /bin/cp -f index.html $DESTINO/
-    - /bin/cp -f 404.html $DESTINO/
-    - /bin/cp -f asesoria-juridica.html $DESTINO/
-    - /bin/cp -f poliza-de-cumplimiento.html $DESTINO/
-    - /bin/cp -f todo-riesgo-contratista.html $DESTINO/
-
-    # Configuración del servidor e indexación
-    - /bin/cp -f .htaccess $DESTINO/
-    - /bin/cp -f robots.txt $DESTINO/
-    - /bin/cp -f sitemap.xml $DESTINO/
-
-    # Iconos
-    - /bin/cp -f favicon.ico $DESTINO/
-    - /bin/cp -f favicon-32x32.png $DESTINO/
-    - /bin/cp -f favicon-16x16.png $DESTINO/
-    - /bin/cp -f apple-touch-icon.png $DESTINO/
-
-    # Estáticos
-    - /bin/cp -Rf css $DESTINO/
-    - /bin/cp -Rf js $DESTINO/
-
-    # Imágenes: lista explícita, no la carpeta entera. En assets/img quedan doce
-    # archivos del sitio anterior que ya no se usan, y entre ellos vaas.png, la
-    # pieza que anunciaba «Vacaciones así de seguras desde $25.000». El brief
-    # mandó retirarla por publicitar el precio de un producto ajeno al
-    # portafolio. Copiar la carpeta completa la devolvería a una URL pública.
-    - /bin/mkdir -p $DESTINO/assets/img
-    - /bin/cp -f assets/img/logo.png assets/img/banner2.jpg assets/img/site-11.png $DESTINO/assets/img/
-    - /bin/cp -f assets/img/autos.jpg assets/img/nosotros.jpg assets/img/proceso.jpg $DESTINO/assets/img/
-    - /bin/cp -f assets/img/card-personas.jpg assets/img/card-automoviles.jpg $DESTINO/assets/img/
-    - /bin/cp -f assets/img/card-generales.jpg assets/img/card-empresariales.jpg $DESTINO/assets/img/
-    - /bin/cp -f assets/img/seguros-del-estado.png $DESTINO/assets/img/
-
-    # Formulario y correos
-    - /bin/mkdir -p $DESTINO/api
-    - /bin/cp -f api/.htaccess api/correo.php api/cotizacion.php $DESTINO/api/
-
-    # Panel: solo el código, nunca los documentos cargados ni la contraseña
-    - /bin/mkdir -p $DESTINO/admin/lib
-    - /bin/cp -f admin/.htaccess admin/index.php $DESTINO/admin/
-    - /bin/cp -f admin/lib/.htaccess admin/lib/docx.php admin/lib/paginas.php admin/lib/solicitudes.php admin/lib/zip.php $DESTINO/admin/lib/
+    - /bin/sh $HOME/repos/asiseguros/scripts/desplegar.sh
