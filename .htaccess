@@ -100,14 +100,18 @@ Redirect 301 /asistencia-odontologica/    /
 Redirect 301 /asistencia-vial/            /
 
 # Tienda y productos de WooCommerce
-Redirect 301 /shop/                       /
-Redirect 301 /cart/                       /
-Redirect 301 /checkout/                   /
-Redirect 301 /my-account/                 /
-Redirect 301 /product/plan-asi-x-mes/     /
-Redirect 301 /product/plan-asi-x-3-meses/ /
-Redirect 301 /product/plan-asi-x-ano/     /
-RedirectMatch 301 ^/product-category/.*$  /
+# La tienda del WordPress anterior no tiene equivalente: los planes Así salieron
+# del portafolio. Se responde 410 y no 301 a la portada porque Google trata el
+# redirect masivo al inicio como «soft 404»: deja la URL en el índice —con su
+# marcado de producto— y la sigue reportando. Ese fue el origen del aviso de
+# «Fragmentos de productos» de septiembre de 2026, que señalaba
+# /product/plan-asi-x-ano/. El 410 dice «dejó de existir» y la retira.
+Redirect gone /shop/
+Redirect gone /cart/
+Redirect gone /checkout/
+Redirect gone /my-account/
+RedirectMatch gone ^/product/.*$
+RedirectMatch gone ^/product-category/.*$
 
 # Blog, taxonomías y restos de WordPress: ver el bloque mod_rewrite de arriba.
 # No se usan RedirectMatch aquí porque en LiteSpeed mod_alias se impone sobre
