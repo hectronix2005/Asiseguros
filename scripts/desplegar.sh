@@ -31,14 +31,16 @@ REGISTRO="$HOME/despliegue.log"
 
 cd "$REPO"
 
-ANTES=$(git rev-parse HEAD)
 git fetch --quiet origin main
 git reset --quiet --hard origin/main
 AHORA=$(git rev-parse HEAD)
 
-# Sin commits nuevos no se copia nada: la tarea corre a menudo y así no reescribe
-# archivos ni cambia sus fechas sin motivo.
-if [ "$ANTES" = "$AHORA" ]; then
+# Se compara contra el último commit DESPLEGADO, no contra el que había antes de
+# traer. Comparar antes/después fallaba en la primera ejecución: el clon recién
+# hecho ya venía al día, así que nunca llegaba a copiar nada.
+MARCA="$HOME/.ultimo-desplegado"
+ULTIMO=$(cat "$MARCA" 2>/dev/null || true)
+if [ "$ULTIMO" = "$AHORA" ]; then
   exit 0
 fi
 
@@ -73,4 +75,5 @@ cp -f admin/.htaccess admin/index.php "$DESTINO/admin/"
 cp -f admin/lib/.htaccess admin/lib/docx.php admin/lib/paginas.php \
       admin/lib/solicitudes.php admin/lib/zip.php "$DESTINO/admin/lib/"
 
+echo "$AHORA" > "$MARCA"
 echo "$(date '+%Y-%m-%d %H:%M:%S') desplegado $AHORA" >> "$REGISTRO"
