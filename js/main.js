@@ -459,6 +459,13 @@ document.addEventListener('DOMContentLoaded', () => {
   if (contactForm) {
     const aviso = document.querySelector('#formAviso');
 
+    // Las guías enlazan con ?seguro=<producto> para llegar con el producto ya elegido.
+    try {
+      const pedido = new URLSearchParams(location.search).get('seguro');
+      const sel = contactForm.querySelector('#tipo_seguro');
+      if (pedido && sel && [...sel.options].some(o => o.value === pedido)) sel.value = pedido;
+    } catch (err) { /* sin preselección */ }
+
     const mostrarAviso = (tipo, titulo, texto) => {
       if (!aviso) return;
       aviso.className = 'form-aviso ' + tipo;
