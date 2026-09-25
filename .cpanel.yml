@@ -1,0 +1,51 @@
+---
+# Despliegue desde GitHub con Git Version Control de cPanel.
+#
+# Lista blanca deliberada. Tres archivos del repositorio NO se copian nunca:
+#
+#   politica-tratamiento-datos.html
+#   terminos-y-condiciones.html
+#   anexos-datos-personales.html
+#
+# Esas páginas las genera el panel a partir de los .docx que carga el área
+# jurídica. La copia del repositorio es solo un reflejo de la última versión
+# conocida y suele estar desactualizada. Copiarlas revertiría el documento
+# vigente, que es exactamente lo que ocurrió el 17 de septiembre de 2026.
+#
+# Tampoco se tocan admin/originales/ ni admin/versiones/ (los .docx cargados y
+# el histórico), datos/ (registros de autorización) ni admin/.clave.php.
+deployment:
+  tasks:
+    - export DESTINO=/home/asisegur/public_html
+
+    # Portada y páginas de contenido
+    - /bin/cp -f index.html $DESTINO/
+    - /bin/cp -f 404.html $DESTINO/
+    - /bin/cp -f asesoria-juridica.html $DESTINO/
+    - /bin/cp -f poliza-de-cumplimiento.html $DESTINO/
+    - /bin/cp -f todo-riesgo-contratista.html $DESTINO/
+
+    # Configuración del servidor e indexación
+    - /bin/cp -f .htaccess $DESTINO/
+    - /bin/cp -f robots.txt $DESTINO/
+    - /bin/cp -f sitemap.xml $DESTINO/
+
+    # Iconos
+    - /bin/cp -f favicon.ico $DESTINO/
+    - /bin/cp -f favicon-32x32.png $DESTINO/
+    - /bin/cp -f favicon-16x16.png $DESTINO/
+    - /bin/cp -f apple-touch-icon.png $DESTINO/
+
+    # Estáticos
+    - /bin/cp -Rf css $DESTINO/
+    - /bin/cp -Rf js $DESTINO/
+    - /bin/cp -Rf assets $DESTINO/
+
+    # Formulario y correos
+    - /bin/mkdir -p $DESTINO/api
+    - /bin/cp -f api/.htaccess api/correo.php api/cotizacion.php $DESTINO/api/
+
+    # Panel: solo el código, nunca los documentos cargados ni la contraseña
+    - /bin/mkdir -p $DESTINO/admin/lib
+    - /bin/cp -f admin/.htaccess admin/index.php $DESTINO/admin/
+    - /bin/cp -f admin/lib/.htaccess admin/lib/docx.php admin/lib/paginas.php admin/lib/solicitudes.php admin/lib/zip.php $DESTINO/admin/lib/
