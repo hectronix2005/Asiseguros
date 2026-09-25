@@ -39,7 +39,18 @@ deployment:
     # Estáticos
     - /bin/cp -Rf css $DESTINO/
     - /bin/cp -Rf js $DESTINO/
-    - /bin/cp -Rf assets $DESTINO/
+
+    # Imágenes: lista explícita, no la carpeta entera. En assets/img quedan doce
+    # archivos del sitio anterior que ya no se usan, y entre ellos vaas.png, la
+    # pieza que anunciaba «Vacaciones así de seguras desde $25.000». El brief
+    # mandó retirarla por publicitar el precio de un producto ajeno al
+    # portafolio. Copiar la carpeta completa la devolvería a una URL pública.
+    - /bin/mkdir -p $DESTINO/assets/img
+    - /bin/cp -f assets/img/logo.png assets/img/banner2.jpg assets/img/site-11.png $DESTINO/assets/img/
+    - /bin/cp -f assets/img/autos.jpg assets/img/nosotros.jpg assets/img/proceso.jpg $DESTINO/assets/img/
+    - /bin/cp -f assets/img/card-personas.jpg assets/img/card-automoviles.jpg $DESTINO/assets/img/
+    - /bin/cp -f assets/img/card-generales.jpg assets/img/card-empresariales.jpg $DESTINO/assets/img/
+    - /bin/cp -f assets/img/seguros-del-estado.png $DESTINO/assets/img/
 
     # Formulario y correos
     - /bin/mkdir -p $DESTINO/api
