@@ -175,9 +175,37 @@ como segunda capa.
 El WordPress está íntegro en `/wp-anterior` y la base de datos nunca se tocó.
 Devolver esas carpetas a `public_html` restaura el sitio anterior.
 
-### Para actualizar el sitio
+### Para actualizar el sitio: se publica solo desde GitHub
 
-**Ya no hay cuenta FTP.** La de despliegue se eliminó el 17 de septiembre porque
+Una tarea cron del hosting corre cada 10 minutos, trae los commits nuevos de
+`main` y ejecuta `scripts/desplegar.sh`. Subir a GitHub es publicar; en menos de
+diez minutos está en el sitio. No hace falta FTP ni entrar a cPanel.
+
+El plan de Colombia Hosting **no incluye Git Version Control** de cPanel —se
+comprobó enumerando sus 50 herramientas—, pero el servidor sí trae git 2.52 en
+`/usr/bin/git` y tareas cron, que es todo lo necesario.
+
+El comando de la tarea es:
+
+```
+[ -d $HOME/repos/asiseguros ] || /usr/bin/git clone -q \
+  https://github.com/hectronix2005/Asiseguros.git $HOME/repos/asiseguros; \
+/bin/sh $HOME/repos/asiseguros/scripts/desplegar.sh >> $HOME/despliegue.log 2>&1
+```
+
+El script compara contra el último commit **desplegado**, que guarda en
+`~/.ultimo-desplegado`. Comparar el HEAD de antes y después de traer no servía:
+un clon recién hecho ya viene al día y la condición nunca se cumplía.
+
+Cada despliegue deja una línea en `~/despliegue.log`. El script respeta la lista
+blanca: nunca copia las tres páginas que genera el panel, no toca los documentos
+cargados ni los registros de autorización, y de `assets/img` publica solo las
+once imágenes en uso —las doce restantes son del sitio anterior, entre ellas la
+pieza del precio que retiró el brief—.
+
+### Si hiciera falta subir algo a mano
+
+**No hay cuenta FTP permanente.** La de despliegue se eliminó el 17 de septiembre porque
 su contraseña se había escrito en una conversación. Antes de cerrarla se
 comprobaron los 62 archivos del repositorio contra el servidor: ninguna
 diferencia.
