@@ -10,9 +10,9 @@ var STORAGE_KEY = 'asiseguros_admin_v2';
 var DEFAULT_CONFIG = {
   site: {
     name: 'AsiSeguros',
-    phone: '+57 317 371 2260',
+    phone: '+57 318 523 1290',
     email: 'comercial1@asiseguros.com',
-    whatsapp: '573173712260',
+    whatsapp: '573185231290',
     schedule: 'Lun - Vie: 8:00 AM - 6:00 PM',
     location: 'Cobertura nacional - Colombia',
     facebook: 'https://www.facebook.com/profile.php?id=61556481256358',

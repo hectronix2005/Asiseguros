@@ -524,7 +524,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const res = await r.json().catch(() => ({}));
 
         if (r.ok && res.ok) {
-          const wa = contactForm.getAttribute('data-whatsapp') || '573173712260';
+          const wa = contactForm.getAttribute('data-whatsapp') || '573185231290';
           const msg = encodeURIComponent(
             `Hola, acabo de enviar una solicitud de cotización por la página web.\n` +
             `Radicado: ${res.radicado}\n` +
@@ -694,7 +694,7 @@ function initCart() {
       const msg = encodeURIComponent(
         `Hola, quiero adquirir los siguientes planes ASI:\n\n${lines}\n\n*Total: ${fmt(total)}*`
       );
-      window.open(`https://wa.me/573173712260?text=${msg}`, '_blank');
+      window.open(`https://wa.me/573185231290?text=${msg}`, '_blank');
     });
   }
 
