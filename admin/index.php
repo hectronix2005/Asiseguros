@@ -2,7 +2,7 @@
 /**
  * Panel de documentos legales de AsiSeguros.
  *
- * Permite cargar los .docx de la política, los términos y los anexos, y
+ * Permite cargar los .docx de la política y los términos, y
  * publicarlos como páginas del sitio sin tocar código.
  *
  * Seguridad: escribe archivos en la raíz del sitio, así que el acceso va con

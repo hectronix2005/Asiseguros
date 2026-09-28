@@ -79,6 +79,21 @@ cp -f assets/img/logo.png assets/img/banner2.jpg assets/img/site-11.png \
 mkdir -p "$DESTINO/api"
 cp -f api/.htaccess api/correo.php api/cotizacion.php "$DESTINO/api/"
 
+# Anexos del manual de datos personales: son de uso interno y no se publican
+# (área jurídica, 28-sep-2026). Si la página sigue en el servidor se aparta a
+# un respaldo fuera de la web, y se quita su enlace del pie de las dos páginas
+# legales que genera el panel. Solo se toca esa línea del pie, no el documento.
+if [ -f "$DESTINO/anexos-datos-personales.html" ]; then
+  mkdir -p "$HOME/respaldos"
+  mv "$DESTINO/anexos-datos-personales.html" \
+     "$HOME/respaldos/anexos-datos-personales-$(date +%Y%m%d-%H%M%S).html"
+fi
+for f in politica-tratamiento-datos.html terminos-y-condiciones.html; do
+  if [ -f "$DESTINO/$f" ]; then
+    sed -i '/^ *<a href="anexos-datos-personales.html">Anexos de Datos Personales<\/a> *$/d' "$DESTINO/$f"
+  fi
+done
+
 # Panel: solo el código
 mkdir -p "$DESTINO/admin/lib"
 cp -f admin/.htaccess admin/index.php "$DESTINO/admin/"

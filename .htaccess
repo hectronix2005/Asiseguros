@@ -121,6 +121,10 @@ RedirectMatch gone ^/product-category/.*$
 ErrorDocument 404 /404.html
 ErrorDocument 410 /404.html
 
+# Anexos del manual de datos personales: documento de uso interno, no se
+# publica (indicación del área jurídica, 28-sep-2026).
+Redirect gone /anexos-datos-personales.html
+
 # ---------- Caché del navegador ----------
 <IfModule mod_expires.c>
   ExpiresActive On

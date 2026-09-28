@@ -63,7 +63,6 @@ public_html/
 ├── asesoria-juridica.html           recupera el tráfico del blog antiguo
 ├── politica-tratamiento-datos.html  publicada desde el .docx de legal
 ├── terminos-y-condiciones.html      publicada desde el .docx de legal
-├── anexos-datos-personales.html     publicada desde el .docx de legal
 ├── 404.html · robots.txt · sitemap.xml
 ├── .htaccess                        redirecciones, seguridad, cabeceras
 ├── admin/                           panel: documentos + solicitudes
@@ -86,9 +85,11 @@ panel conserva en `admin/originales/`.
 Antes de subir cualquiera de esas tres, traer primero la versión del servidor.
 Los `.docx` originales son la fuente de verdad y nunca se borran.
 
-Los anexos son públicos por decisión del cliente. El enlace va en el **pie de
-la plantilla**, no dentro del documento, para que sobreviva a cada nueva carga
-de legal: `admin/lib/paginas.php` y el pie de `index.html`.
+**Los anexos del manual de datos personales son de uso interno y no se
+publican** (área jurídica, 28-sep-2026). Se retiraron del sitio, del sitemap,
+de los pies de página y del panel; la URL responde 410. La página que estaba en
+el servidor se apartó a `~/respaldos/` y el `.docx` sigue en
+`admin/originales/`.
 
 El `.htaccess` termina con un bloque que genera cPanel y fija PHP 8.1. Está
 copiado en el repositorio para que un despliegue no lo borre: sin él, el panel

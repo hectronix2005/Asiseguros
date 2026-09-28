@@ -11,7 +11,12 @@ declare(strict_types=1);
 
 const RAIZ_SITIO = __DIR__ . '/../..';
 
-/** Documentos que el panel sabe publicar. */
+/**
+ * Documentos que el panel sabe publicar.
+ *
+ * Los anexos del manual de datos personales NO van aquí: son de uso interno,
+ * según indicó el área jurídica el 28-sep-2026. No se publican en el sitio.
+ */
 function documentos_disponibles(): array
 {
     return [
@@ -26,12 +31,6 @@ function documentos_disponibles(): array
             'archivo'  => 'terminos-y-condiciones.html',
             'meta'     => 'Términos y Condiciones de uso del sitio web de ASISEGUROS LTDA, agencia de seguros intermediaria en Colombia.',
             'ayuda'    => 'Se enlaza desde el pie de página.',
-        ],
-        'anexos' => [
-            'titulo'   => 'Anexos del Manual de Datos Personales',
-            'archivo'  => 'anexos-datos-personales.html',
-            'meta'     => 'Anexos del Manual de Tratamiento de Datos Personales de ASISEGUROS LTDA.',
-            'ayuda'    => 'Se enlaza desde la Política de Tratamiento de Datos.',
         ],
     ];
 }
@@ -127,7 +126,6 @@ function construir_pagina(string $titulo, string $metaDescripcion, string $conte
         <div class="footer-bottom-links">
           <a href="politica-tratamiento-datos.html">Política de Privacidad</a>
           <a href="terminos-y-condiciones.html">Términos y Condiciones</a>
-          <a href="anexos-datos-personales.html">Anexos de Datos Personales</a>
         </div>
       </div>
     </div>
