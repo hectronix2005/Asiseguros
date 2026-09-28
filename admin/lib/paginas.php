@@ -163,3 +163,85 @@ function publicar_documento(string $clave, string $htmlContenido, string $fecha)
 
     return ['ok' => true, 'archivo' => $doc['archivo'], 'bytes' => strlen($pagina)];
 }
+
+/* ------------------------------------------------------------------
+   Documentos internos.
+
+   Se cargan igual que los legales, pero no se publican en el sitio: se guardan
+   fuera de public_html y solo se leen dentro del panel, con sesión iniciada.
+   ------------------------------------------------------------------ */
+
+/** Documentos de uso interno que el panel guarda y muestra. */
+function documentos_internos(): array
+{
+    return [
+        'anexos' => [
+            'titulo'   => 'Anexos del Manual de Datos Personales',
+            'archivo'  => 'anexos.json',
+            // Copia que quedó en ~/respaldos al retirar la página pública.
+            'respaldo' => 'anexos-datos-personales-*.html',
+        ],
+    ];
+}
+
+function dir_internos(): string
+{
+    return dir_datos() . '/internos';
+}
+
+/** Guarda la versión nueva de un documento interno y aparta la anterior. */
+function guardar_interno(string $clave, string $htmlContenido, string $fecha): array
+{
+    $docs = documentos_internos();
+    if (!isset($docs[$clave])) {
+        return ['ok' => false, 'error' => 'Documento desconocido.'];
+    }
+    $dir = dir_internos();
+    if (!is_dir($dir) && !@mkdir($dir . '/versiones', 0750, true)) {
+        return ['ok' => false, 'error' => 'No se pudo crear la carpeta de documentos internos.'];
+    }
+    if (!is_dir($dir . '/versiones')) @mkdir($dir . '/versiones', 0750, true);
+
+    $destino = $dir . '/' . $docs[$clave]['archivo'];
+    if (is_file($destino)) {
+        @copy($destino, $dir . '/versiones/' . date('Ymd-His') . '-' . $docs[$clave]['archivo']);
+    }
+
+    $datos = json_encode(['fecha' => $fecha, 'html' => $htmlContenido], JSON_UNESCAPED_UNICODE);
+    if (@file_put_contents($destino, $datos) === false) {
+        return ['ok' => false, 'error' => 'No se pudo guardar el documento interno.'];
+    }
+    @chmod($destino, 0640);
+    return ['ok' => true];
+}
+
+/**
+ * Lee un documento interno. Si todavía no se ha cargado ninguno desde el panel,
+ * recupera el contenido de la última copia de ~/respaldos.
+ */
+function leer_interno(string $clave): array
+{
+    $docs = documentos_internos();
+    if (!isset($docs[$clave])) return ['existe' => false];
+    $doc = $docs[$clave];
+
+    $ruta = dir_internos() . '/' . $doc['archivo'];
+    if (is_file($ruta)) {
+        $d = json_decode((string)file_get_contents($ruta), true) ?: [];
+        return ['existe' => true, 'origen' => 'panel', 'html' => (string)($d['html'] ?? ''),
+                'fecha' => (string)($d['fecha'] ?? ''),
+                'guardado' => date('d/m/Y H:i', (int)filemtime($ruta))];
+    }
+
+    $copias = glob(dirname(__DIR__, 3) . '/respaldos/' . $doc['respaldo']) ?: [];
+    rsort($copias);
+    if (!$copias) return ['existe' => false];
+
+    $pagina = (string)file_get_contents($copias[0]);
+    if (!preg_match('~<p class="legal-meta">(.*?)</p>(.*?)</div>\s*</main>~s', $pagina, $m)) {
+        return ['existe' => false];
+    }
+    $fecha = preg_match('~Última actualización:\s*(.+)$~u', strip_tags($m[1]), $f) ? trim($f[1]) : '';
+    return ['existe' => true, 'origen' => 'respaldo', 'html' => trim($m[2]), 'fecha' => $fecha,
+            'guardado' => date('d/m/Y H:i', (int)filemtime($copias[0]))];
+}

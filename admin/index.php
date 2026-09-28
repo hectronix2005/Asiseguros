@@ -119,8 +119,8 @@ if ($accion === 'salir') {
 
 $dentro = !empty($_SESSION['ok']);
 
-// Pestaña activa: documentos (por defecto) o solicitudes
-$vista = ($_GET['ver'] ?? '') === 'solicitudes' ? 'solicitudes' : 'documentos';
+// Pestaña activa: documentos (por defecto), internos o solicitudes
+$vista = in_array($_GET['ver'] ?? '', ['solicitudes', 'internos'], true) ? $_GET['ver'] : 'documentos';
 $busca = trim((string)($_GET['q'] ?? ''));
 
 if ($dentro && ($_GET['exportar'] ?? '') === '1') {
@@ -130,8 +130,10 @@ if ($dentro && ($_GET['exportar'] ?? '') === '1') {
 if ($accion === 'publicar' && $dentro) {
     $clave = (string)($_POST['documento'] ?? '');
     $docs = documentos_disponibles();
+    $internos = documentos_internos();
+    $esInterno = ($_POST['interno'] ?? '') === '1';
 
-    if (!isset($docs[$clave])) {
+    if ($esInterno ? !isset($internos[$clave]) : !isset($docs[$clave])) {
         $aviso = 'Documento no válido.';
     } elseif (!isset($_FILES['archivo']) || $_FILES['archivo']['error'] !== UPLOAD_ERR_OK) {
         $codigos = [
@@ -162,7 +164,8 @@ if ($accion === 'publicar' && $dentro) {
                 $aviso = $r['error'];
             } else {
                 $fecha = trim((string)($_POST['fecha'] ?? '')) ?: strftime_es();
-                $pub = publicar_documento($clave, $r['html'], $fecha);
+                $pub = $esInterno ? guardar_interno($clave, $r['html'], $fecha)
+                                  : publicar_documento($clave, $r['html'], $fecha);
                 if (!$pub['ok']) {
                     $aviso = $pub['error'];
                 } else {
@@ -171,8 +174,10 @@ if ($accion === 'publicar' && $dentro) {
                     if (!is_dir($dirOrig)) @mkdir($dirOrig, 0750, true);
                     @move_uploaded_file($tmp, $dirOrig . '/' . date('Ymd-His') . '-' . preg_replace('/[^A-Za-z0-9._-]/', '_', $nombre));
 
-                    $aviso = 'Publicado en <strong>' . htmlspecialchars($pub['archivo']) . '</strong>. '
-                           . '<a href="../' . htmlspecialchars($pub['archivo']) . '" target="_blank">Ver la página</a>.';
+                    $aviso = $esInterno
+                        ? 'Guardado. Solo se ve en esta pestaña; no se publica en el sitio.'
+                        : 'Publicado en <strong>' . htmlspecialchars($pub['archivo']) . '</strong>. '
+                          . '<a href="../' . htmlspecialchars($pub['archivo']) . '" target="_blank">Ver la página</a>.';
                     $tipoAviso = 'ok';
                 }
             }
@@ -246,6 +251,14 @@ function estadoDocumento(array $doc): array {
   .canales { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin:-8px 0 20px; font-size:.85rem; color:var(--gray-400); }
   .canal-chip { display:inline-block; background:#eef4ff; color:var(--primary); border-radius:999px; padding:2px 10px; font-size:.75rem; }
   .canal-chip b { margin-left:4px; }
+  .documento { background:#fff; border:1px solid var(--gray-200); border-radius:12px; padding:28px 30px; margin-bottom:22px; font-size:.9rem; line-height:1.75; }
+  .documento h2 { font-size:1.05rem; color:var(--primary); margin:26px 0 10px; }
+  .documento h3 { font-size:.95rem; color:var(--primary); margin:20px 0 8px; }
+  .documento p { margin-bottom:12px; }
+  .documento ul, .documento ol { margin:0 0 12px 22px; }
+  .documento .tabla-wrap, .documento table { max-width:100%; overflow-x:auto; }
+  .documento table { border-collapse:collapse; display:block; margin-bottom:14px; }
+  .documento td, .documento th { border:1px solid var(--gray-200); padding:6px 10px; vertical-align:top; }
   .sol-origen { font-size:.8rem; color:var(--gray-400); margin-top:6px; }
   .barra-busca { display:flex; gap:10px; margin-bottom:18px; flex-wrap:wrap; }
   .barra-busca input { flex:1; min-width:200px; margin:0; }
@@ -315,10 +328,53 @@ function estadoDocumento(array $doc): array {
 
   <div class="pestanas">
     <a href="?ver=documentos" class="<?= $vista==='documentos'?'activa':'' ?>">Documentos legales</a>
+    <a href="?ver=internos" class="<?= $vista==='internos'?'activa':'' ?>">Documentos internos</a>
     <a href="?ver=solicitudes" class="<?= $vista==='solicitudes'?'activa':'' ?>">Solicitudes de cotización</a>
   </div>
 
-<?php if ($vista === 'solicitudes'):
+<?php if ($vista === 'internos'): ?>
+  <p class="intro">
+    Documentos de <strong>uso interno</strong>. Se leen aquí, con la sesión del panel, y
+    no se publican en el sitio. Para actualizarlos se carga el <strong>.docx</strong>; la
+    versión anterior se guarda.
+  </p>
+
+  <?php foreach (documentos_internos() as $clave => $doc):
+        $int = leer_interno($clave); ?>
+    <div class="tarjeta">
+      <h2><?= htmlspecialchars($doc['titulo']) ?></h2>
+      <p class="estado">
+        <?php if (!$int['existe']): ?>
+          Todavía no cargado
+        <?php elseif ($int['origen'] === 'respaldo'): ?>
+          Copia de la página que estuvo publicada hasta el 28-sep-2026<?= $int['fecha'] !== '' ? ' · versión de ' . htmlspecialchars($int['fecha']) : '' ?>
+        <?php else: ?>
+          Versión de <b><?= htmlspecialchars($int['fecha']) ?></b> · cargada el <?= $int['guardado'] ?>
+        <?php endif; ?>
+      </p>
+      <form method="post" enctype="multipart/form-data">
+        <input type="hidden" name="accion" value="publicar">
+        <input type="hidden" name="interno" value="1">
+        <input type="hidden" name="documento" value="<?= $clave ?>">
+        <div class="fila">
+          <div>
+            <label>Archivo .docx</label>
+            <input type="file" name="archivo" accept=".docx" required>
+          </div>
+          <div>
+            <label>Fecha de actualización</label>
+            <input type="text" name="fecha" value="<?= htmlspecialchars(strftime_es()) ?>">
+          </div>
+        </div>
+        <button class="btn">Guardar versión nueva</button>
+      </form>
+    </div>
+    <?php if ($int['existe']): ?>
+      <article class="documento"><?= $int['html'] ?></article>
+    <?php endif; ?>
+  <?php endforeach; ?>
+
+<?php elseif ($vista === 'solicitudes'):
       $lista = solicitudes($busca);
       $res   = resumen_solicitudes(solicitudes()); ?>
 

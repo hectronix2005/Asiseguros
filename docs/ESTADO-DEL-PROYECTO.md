@@ -91,6 +91,11 @@ de los pies de página y del panel; la URL responde 410. La página que estaba e
 el servidor se apartó a `~/respaldos/` y el `.docx` sigue en
 `admin/originales/`.
 
+Se leen en el panel, pestaña **Documentos internos**, con la sesión iniciada.
+Mientras nadie cargue una versión nueva, se muestra la copia de `~/respaldos/`.
+Al cargar un `.docx` se guarda en `../asiseguros-datos/internos/anexos.json`
+(fuera de la web) y la versión anterior pasa a `internos/versiones/`.
+
 El `.htaccess` termina con un bloque que genera cPanel y fija PHP 8.1. Está
 copiado en el repositorio para que un despliegue no lo borre: sin él, el panel
 y el formulario pueden dejar de ejecutarse.
