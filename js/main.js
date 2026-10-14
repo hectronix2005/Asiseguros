@@ -493,6 +493,96 @@ document.addEventListener('DOMContentLoaded', () => {
       mostrarPolizas('');
     }
 
+    // Búsqueda rápida de póliza: se escribe una palabra («moto», «hogar») y se
+    // elige de la lista; queda seleccionado el tipo de seguro y la póliza.
+    const cajaBusca = contactForm.querySelector('#buscaPolizaCaja');
+    const inputBusca = contactForm.querySelector('#buscaPoliza');
+    const listaBusca = contactForm.querySelector('#buscaPolizaLista');
+    if (cajaBusca && inputBusca && listaBusca && selRama && selPoliza) {
+      cajaBusca.hidden = false;
+      const sinTildes = (t) => (t || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+      const SINONIMOS = {
+        casa: ['hogar', 'vivienda', 'copropiedad'], apartamento: ['hogar', 'copropiedad'],
+        carro: ['carro', 'automovil', 'famiestado'], auto: ['carro', 'automovil'],
+        licitacion: ['cumplimiento', 'estatal'], contrato: ['cumplimiento', 'contrat'],
+        robo: ['sustraccion', 'hurto'], camion: ['carga', 'volqueta'],
+        empleado: ['manejo', 'vida grupo', 'colectivo'], medico: ['salud', 'profesional'],
+        colegio: ['estudiantil'], bus: ['pasajeros', 'servicio publico'], taxi: ['taxiestado']
+      };
+      const catalogo = originales.filter(n => n.tagName === 'OPTGROUP').flatMap(g =>
+        Array.from(g.children).map(o => ({
+          nombre: o.value, rama: g.dataset.rama, ramaNombre: g.label,
+          enNombre: ' ' + sinTildes(o.value + ' ' + g.label).replace(/[^a-z0-9+]+/g, ' ') + ' ',
+          enTodo: ' ' + sinTildes(o.dataset.buscar || o.value).replace(/[^a-z0-9+]+/g, ' ') + ' '
+        })));
+      let resultados = [];
+      let activo = -1;
+
+      const cerrarLista = () => {
+        listaBusca.hidden = true; listaBusca.innerHTML = '';
+        inputBusca.setAttribute('aria-expanded', 'false');
+        inputBusca.removeAttribute('aria-activedescendant');
+        activo = -1;
+      };
+      const marcar = (i) => {
+        activo = i;
+        Array.from(listaBusca.children).forEach((li, j) => li.setAttribute('aria-selected', String(j === i)));
+        if (i >= 0) inputBusca.setAttribute('aria-activedescendant', 'buscaPolizaOp' + i);
+      };
+      const elegir = (r) => {
+        selRama.value = r.rama;
+        mostrarPolizas(r.rama);
+        selPoliza.value = r.nombre;
+        inputBusca.value = '';
+        cerrarLista();
+        selPoliza.style.borderColor = '';
+        selRama.style.borderColor = '';
+      };
+      const buscar = () => {
+        const palabras = sinTildes(inputBusca.value).replace(/[^a-z0-9+]+/g, ' ').trim().split(' ')
+          .filter(w => w.length > 1 && !['de', 'la', 'el', 'para', 'mi', 'un', 'una', 'seguro', 'poliza'].includes(w));
+        if (!palabras.length) { cerrarLista(); return; }
+        const opciones = palabras.map(w => {
+          const raiz = w.length > 3 && w.endsWith('s') ? w.slice(0, -1) : w;
+          return [raiz].concat(SINONIMOS[raiz] || []);
+        });
+        const cumple = (t) => opciones.every(ops => ops.some(r => t.includes(' ' + r)));
+        resultados = catalogo
+          .map(c => ({ c, puntos: cumple(c.enNombre) ? 2 : (cumple(c.enTodo) ? 1 : 0) }))
+          .filter(x => x.puntos).sort((a, b) => b.puntos - a.puntos).slice(0, 8).map(x => x.c);
+        listaBusca.innerHTML = '';
+        if (!resultados.length) {
+          const li = document.createElement('li');
+          li.className = 'busca-poliza-vacio';
+          li.textContent = 'Sin coincidencias. Elige «No estoy seguro» y te orientamos.';
+          listaBusca.appendChild(li);
+        }
+        resultados.forEach((r, i) => {
+          const li = document.createElement('li');
+          li.id = 'buscaPolizaOp' + i;
+          li.setAttribute('role', 'option');
+          const b = document.createElement('strong'); b.textContent = r.nombre;
+          const s = document.createElement('span'); s.textContent = r.ramaNombre;
+          li.append(b, s);
+          // mousedown para que la elección ocurra antes de que el campo pierda el foco
+          li.addEventListener('mousedown', (e) => { e.preventDefault(); elegir(r); });
+          listaBusca.appendChild(li);
+        });
+        listaBusca.hidden = false;
+        inputBusca.setAttribute('aria-expanded', 'true');
+        marcar(resultados.length ? 0 : -1);
+      };
+
+      inputBusca.addEventListener('input', buscar);
+      inputBusca.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowDown' && resultados.length) { e.preventDefault(); marcar((activo + 1) % resultados.length); }
+        else if (e.key === 'ArrowUp' && resultados.length) { e.preventDefault(); marcar((activo - 1 + resultados.length) % resultados.length); }
+        else if (e.key === 'Enter') { e.preventDefault(); if (activo >= 0 && resultados[activo]) elegir(resultados[activo]); }
+        else if (e.key === 'Escape') { cerrarLista(); }
+      });
+      inputBusca.addEventListener('blur', () => setTimeout(cerrarLista, 120));
+    }
+
     // El catálogo y las guías enlazan con ?seguro=<póliza> para llegar con la
     // póliza ya elegida.
     try {

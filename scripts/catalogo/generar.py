@@ -258,7 +258,7 @@ pagina = f'''<!DOCTYPE html>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link rel="stylesheet" href="css/styles.css?v=6">
+  <link rel="stylesheet" href="css/styles.css?v=7">
   <link rel="stylesheet" href="css/articulo.css?v=2">
   <link rel="stylesheet" href="css/catalogo.css?v=1">
   <script>document.documentElement.classList.add('js')</script>
@@ -430,7 +430,7 @@ pagina = f'''<!DOCTYPE html>
     <i class="fab fa-whatsapp"></i>
   </a>
 
-  <script src="js/main.js?v=7"></script>
+  <script src="js/main.js?v=8"></script>
   <script src="js/catalogo.js?v=1"></script>
 </body>
 </html>
@@ -441,7 +441,9 @@ pagina = f'''<!DOCTYPE html>
 ramas_form = []
 for r in DATOS['ramas']:
     pols = [{'nombre': p['nombre'], 'slug': p['slug'],
-             'cuestionario': CUESTIONARIO_POR_POLIZA.get(p['slug'], CUESTIONARIO_POR_RAMA[r['id']])}
+             'cuestionario': CUESTIONARIO_POR_POLIZA.get(p['slug'], CUESTIONARIO_POR_RAMA[r['id']]),
+             # Texto para el buscador rápido del formulario: nombre, rama y a quién va dirigida.
+             'buscar': plano(' '.join([p['nombre'], r['nombre'], p['para_quien']]))}
             for p in r['polizas'] if p['slug'] not in SIN_COTIZACION]
     ramas_form.append({'id': r['id'], 'nombre': r['nombre'], 'polizas': pols})
 
@@ -450,8 +452,8 @@ opciones = []
 for r in ramas_form:
     opciones.append(f'                <optgroup label="{e(r["nombre"])}" data-rama="{r["id"]}">')
     for p in r['polizas']:
-        opciones.append(f'                  <option value="{e(p["nombre"])}" data-cuestionario="{p["cuestionario"]}">'
-                        f'{e(p["nombre"])}</option>')
+        opciones.append(f'                  <option value="{e(p["nombre"])}" data-cuestionario="{p["cuestionario"]}"'
+                        f' data-buscar="{e(p["buscar"])}">{e(p["nombre"])}</option>')
     opciones.append('                </optgroup>')
 opciones.append('                <option value="Otro">No sé cuál necesito: quiero asesoría</option>')
 

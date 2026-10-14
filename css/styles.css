@@ -2319,3 +2319,14 @@ a.why-card p { color: var(--gray-500); }
   .estatal-grid { grid-template-columns: 1fr; }
   .portafolio-acciones .btn { width: 100%; justify-content: center; }
 }
+
+/* Búsqueda rápida de póliza en el formulario */
+.busca-poliza { position: relative; margin-bottom: 8px; }
+.busca-poliza > i { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--gray-400); font-size: 0.85rem; pointer-events: none; }
+.busca-poliza input { padding-left: 38px !important; background: var(--gray-50); }
+.busca-poliza-lista { position: absolute; z-index: 30; left: 0; right: 0; top: calc(100% + 4px); list-style: none; margin: 0; padding: 6px; background: var(--white); border: 1px solid var(--gray-200); border-radius: var(--radius-md); box-shadow: var(--shadow-lg); max-height: 320px; overflow-y: auto; }
+.busca-poliza-lista li { padding: 9px 12px; border-radius: var(--radius-sm); cursor: pointer; line-height: 1.35; }
+.busca-poliza-lista li strong { display: block; font-size: 0.88rem; color: var(--primary); font-weight: 600; }
+.busca-poliza-lista li span { font-size: 0.75rem; color: var(--gray-500); }
+.busca-poliza-lista li[aria-selected="true"], .busca-poliza-lista li:hover { background: var(--gray-100); }
+.busca-poliza-lista .busca-poliza-vacio { font-size: 0.82rem; color: var(--gray-500); cursor: default; }

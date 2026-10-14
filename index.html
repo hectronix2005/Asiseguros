@@ -28,7 +28,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link rel="stylesheet" href="css/styles.css?v=6">
+  <link rel="stylesheet" href="css/styles.css?v=7">
   <style>
     /* Franja de respaldo (reemplaza el carrusel de logos) */
     .backing-strip { background: var(--gray-50) !important; border-bottom: 1px solid var(--gray-200); padding: 28px 0; overflow: visible; }
@@ -721,104 +721,112 @@
 
           <div class="form-group">
             <label for="tipo_seguro">Póliza *</label>
+            <div class="busca-poliza" id="buscaPolizaCaja" hidden>
+              <i class="fas fa-magnifying-glass" aria-hidden="true"></i>
+              <input type="text" id="buscaPoliza" autocomplete="off"
+                     placeholder="Búsqueda rápida: moto, hogar, licitación, vida…"
+                     role="combobox" aria-expanded="false" aria-controls="buscaPolizaLista"
+                     aria-autocomplete="list" aria-label="Buscar póliza por nombre">
+              <ul class="busca-poliza-lista" id="buscaPolizaLista" role="listbox" hidden></ul>
+            </div>
             <select id="tipo_seguro" name="tipo_seguro" required>
               <option value="" disabled selected>Selecciona la póliza</option>
               <!-- POLIZAS:INICIO (generado por scripts/catalogo/generar.py) -->
                 <optgroup label="Seguros de Cumplimiento" data-rama="cumplimiento">
-                  <option value="Seguro de Cumplimiento para Entidades Estatales" data-cuestionario="cumplimiento">Seguro de Cumplimiento para Entidades Estatales</option>
-                  <option value="Seguro de Cumplimiento Particular" data-cuestionario="cumplimiento">Seguro de Cumplimiento Particular</option>
-                  <option value="Seguro de RCE Derivada de Cumplimiento" data-cuestionario="cumplimiento">Seguro de RCE Derivada de Cumplimiento</option>
-                  <option value="Seguro de Disposiciones Legales" data-cuestionario="cumplimiento">Seguro de Disposiciones Legales</option>
-                  <option value="Seguro de Cumplimiento Judicial (cauciones judiciales)" data-cuestionario="cumplimiento">Seguro de Cumplimiento Judicial (cauciones judiciales)</option>
-                  <option value="Garantía de Cumplimiento para Ecopetrol" data-cuestionario="cumplimiento">Garantía de Cumplimiento para Ecopetrol</option>
-                  <option value="Garantía ante la Agencia Nacional de Infraestructura (ANI)" data-cuestionario="cumplimiento">Garantía ante la Agencia Nacional de Infraestructura (ANI)</option>
-                  <option value="Garantía para Entidades Públicas con Régimen Privado de Contratación" data-cuestionario="cumplimiento">Garantía para Entidades Públicas con Régimen Privado de Contratación</option>
-                  <option value="Garantía para Empresas de Servicios Públicos Domiciliarios" data-cuestionario="cumplimiento">Garantía para Empresas de Servicios Públicos Domiciliarios</option>
+                  <option value="Seguro de Cumplimiento para Entidades Estatales" data-cuestionario="cumplimiento" data-buscar="seguro de cumplimiento para entidades estatales seguros de cumplimiento contratistas (personas naturales, empresas, consorcios y uniones temporales) que se presentan a procesos o firman contratos con entidades publicas regidas por la ley 80 de 1993.">Seguro de Cumplimiento para Entidades Estatales</option>
+                  <option value="Seguro de Cumplimiento Particular" data-cuestionario="cumplimiento" data-buscar="seguro de cumplimiento particular seguros de cumplimiento empresas privadas que contratan obras, suministros o servicios y quieren exigir garantia a sus proveedores, y contratistas a quienes un cliente privado les pide una poliza.">Seguro de Cumplimiento Particular</option>
+                  <option value="Seguro de RCE Derivada de Cumplimiento" data-cuestionario="cumplimiento" data-buscar="seguro de rce derivada de cumplimiento seguros de cumplimiento contratistas de obra, servicios o suministros a quienes la entidad o el contratante les exige amparar los danos a terceros durante la ejecucion.">Seguro de RCE Derivada de Cumplimiento</option>
+                  <option value="Seguro de Disposiciones Legales" data-cuestionario="cumplimiento" data-buscar="seguro de disposiciones legales seguros de cumplimiento personas y empresas a las que una autoridad les exige garantizar una obligacion legal o administrativa, por ejemplo para obtener un permiso, una licencia o una autorizacion.">Seguro de Disposiciones Legales</option>
+                  <option value="Seguro de Cumplimiento Judicial (cauciones judiciales)" data-cuestionario="cumplimiento" data-buscar="seguro de cumplimiento judicial (cauciones judiciales) seguros de cumplimiento demandantes y demandados a quienes un juez les exige prestar caucion dentro de un proceso.">Seguro de Cumplimiento Judicial (cauciones judiciales)</option>
+                  <option value="Garantía de Cumplimiento para Ecopetrol" data-cuestionario="cumplimiento" data-buscar="garantia de cumplimiento para ecopetrol seguros de cumplimiento contratistas y proveedores de ecopetrol y de las empresas de su grupo.">Garantía de Cumplimiento para Ecopetrol</option>
+                  <option value="Garantía ante la Agencia Nacional de Infraestructura (ANI)" data-cuestionario="cumplimiento" data-buscar="garantia ante la agencia nacional de infraestructura (ani) seguros de cumplimiento concesionarios y estructuras de proyecto que contratan con la ani.">Garantía ante la Agencia Nacional de Infraestructura (ANI)</option>
+                  <option value="Garantía para Entidades Públicas con Régimen Privado de Contratación" data-cuestionario="cumplimiento" data-buscar="garantia para entidades publicas con regimen privado de contratacion seguros de cumplimiento contratistas de entidades publicas que no se rigen por la ley 80 de 1993, como varias empresas industriales y comerciales del estado.">Garantía para Entidades Públicas con Régimen Privado de Contratación</option>
+                  <option value="Garantía para Empresas de Servicios Públicos Domiciliarios" data-cuestionario="cumplimiento" data-buscar="garantia para empresas de servicios publicos domiciliarios seguros de cumplimiento contratistas de empresas de acueducto, energia, gas, aseo y telecomunicaciones domiciliarias.">Garantía para Empresas de Servicios Públicos Domiciliarios</option>
                 </optgroup>
                 <optgroup label="Responsabilidad Civil" data-rama="responsabilidad-civil">
-                  <option value="Póliza de Responsabilidad Civil Extracontractual (RCE)" data-cuestionario="empresarial">Póliza de Responsabilidad Civil Extracontractual (RCE)</option>
-                  <option value="Responsabilidad Civil Profesional – Sector Salud" data-cuestionario="empresarial">Responsabilidad Civil Profesional – Sector Salud</option>
-                  <option value="Responsabilidad Civil para Directores y Administradores" data-cuestionario="empresarial">Responsabilidad Civil para Directores y Administradores</option>
-                  <option value="Responsabilidad Civil para Servidores Públicos" data-cuestionario="empresarial">Responsabilidad Civil para Servidores Públicos</option>
-                  <option value="Responsabilidad Civil Profesional para Actividades Misceláneas" data-cuestionario="empresarial">Responsabilidad Civil Profesional para Actividades Misceláneas</option>
+                  <option value="Póliza de Responsabilidad Civil Extracontractual (RCE)" data-cuestionario="empresarial" data-buscar="poliza de responsabilidad civil extracontractual (rce) responsabilidad civil empresas, comercios, industrias, conjuntos residenciales, parqueaderos, empresas de vigilancia y cualquier negocio que reciba publico o realice operaciones que puedan afectar a terceros.">Póliza de Responsabilidad Civil Extracontractual (RCE)</option>
+                  <option value="Responsabilidad Civil Profesional – Sector Salud" data-cuestionario="empresarial" data-buscar="responsabilidad civil profesional – sector salud responsabilidad civil odontologos, medicos generales y especialistas, fisioterapeutas, personal de enfermeria, tecnicos auxiliares y demas talento humano en salud. tambien clinicas y hospitales.">Responsabilidad Civil Profesional – Sector Salud</option>
+                  <option value="Responsabilidad Civil para Directores y Administradores" data-cuestionario="empresarial" data-buscar="responsabilidad civil para directores y administradores responsabilidad civil juntas directivas, gerentes y administradores de empresas y sociedades, y administradores y consejos de conjuntos de propiedad horizontal.">Responsabilidad Civil para Directores y Administradores</option>
+                  <option value="Responsabilidad Civil para Servidores Públicos" data-cuestionario="empresarial" data-buscar="responsabilidad civil para servidores publicos responsabilidad civil entidades publicas que aseguran a sus cargos directivos y de alta responsabilidad, y servidores publicos que contratan su propia proteccion.">Responsabilidad Civil para Servidores Públicos</option>
+                  <option value="Responsabilidad Civil Profesional para Actividades Misceláneas" data-cuestionario="empresarial" data-buscar="responsabilidad civil profesional para actividades miscelaneas responsabilidad civil ingenieros, arquitectos, abogados, contadores, consultores, interventores y demas profesionales y firmas fuera del sector salud.">Responsabilidad Civil Profesional para Actividades Misceláneas</option>
                 </optgroup>
                 <optgroup label="Manejo y Riesgos Financieros" data-rama="manejo-riesgos-financieros">
-                  <option value="Póliza de Manejo Global Comercial" data-cuestionario="empresarial">Póliza de Manejo Global Comercial</option>
-                  <option value="Póliza de Manejo Global para Entidades Estatales" data-cuestionario="empresarial">Póliza de Manejo Global para Entidades Estatales</option>
-                  <option value="Póliza de Infidelidad y Riesgos Financieros (IRF)" data-cuestionario="empresarial">Póliza de Infidelidad y Riesgos Financieros (IRF)</option>
-                  <option value="Póliza de Manejo Particular Individual" data-cuestionario="empresarial">Póliza de Manejo Particular Individual</option>
+                  <option value="Póliza de Manejo Global Comercial" data-cuestionario="empresarial" data-buscar="poliza de manejo global comercial manejo y riesgos financieros empresas privadas de cualquier tamano, especialmente las que manejan efectivo, inventarios o recaudo.">Póliza de Manejo Global Comercial</option>
+                  <option value="Póliza de Manejo Global para Entidades Estatales" data-cuestionario="empresarial" data-buscar="poliza de manejo global para entidades estatales manejo y riesgos financieros entidades estatales del orden nacional, departamental y municipal.">Póliza de Manejo Global para Entidades Estatales</option>
+                  <option value="Póliza de Infidelidad y Riesgos Financieros (IRF)" data-cuestionario="empresarial" data-buscar="poliza de infidelidad y riesgos financieros (irf) manejo y riesgos financieros entidades financieras, cooperativas, fondos de empleados y empresas con alto volumen de transacciones.">Póliza de Infidelidad y Riesgos Financieros (IRF)</option>
+                  <option value="Póliza de Manejo Particular Individual" data-cuestionario="empresarial" data-buscar="poliza de manejo particular individual manejo y riesgos financieros empresas que quieren amparar a una persona o un cargo puntual (cajero, tesorero, mensajero) y personas a quienes se les exige caucion de manejo.">Póliza de Manejo Particular Individual</option>
                 </optgroup>
                 <optgroup label="Transportes" data-rama="transportes">
-                  <option value="Póliza de Transporte de Mercancías" data-cuestionario="carga">Póliza de Transporte de Mercancías</option>
-                  <option value="Póliza Segurcarga Estado Empresarial" data-cuestionario="carga">Póliza Segurcarga Estado Empresarial</option>
-                  <option value="Póliza de Transporte de Valores" data-cuestionario="empresarial">Póliza de Transporte de Valores</option>
-                  <option value="Póliza Segurcarga Estado Propietarios" data-cuestionario="carga">Póliza Segurcarga Estado Propietarios</option>
+                  <option value="Póliza de Transporte de Mercancías" data-cuestionario="carga" data-buscar="poliza de transporte de mercancias transportes importadores, exportadores, comerciantes, industriales y generadores de carga.">Póliza de Transporte de Mercancías</option>
+                  <option value="Póliza Segurcarga Estado Empresarial" data-cuestionario="carga" data-buscar="poliza segurcarga estado empresarial transportes empresas de transporte terrestre de carga habilitadas en colombia.">Póliza Segurcarga Estado Empresarial</option>
+                  <option value="Póliza de Transporte de Valores" data-cuestionario="empresarial" data-buscar="poliza de transporte de valores transportes empresas de cualquier tipo que trasladan efectivo o titulos valores.">Póliza de Transporte de Valores</option>
+                  <option value="Póliza Segurcarga Estado Propietarios" data-cuestionario="carga" data-buscar="poliza segurcarga estado propietarios transportes propietarios de vehiculos de carga que trabajan vinculados o afiliados a empresas transportadoras.">Póliza Segurcarga Estado Propietarios</option>
                 </optgroup>
                 <optgroup label="Seguros Generales" data-rama="seguros-generales">
-                  <option value="Póliza de Incendio Todo Riesgo" data-cuestionario="inmueble">Póliza de Incendio Todo Riesgo</option>
-                  <option value="Póliza Hogar" data-cuestionario="inmueble">Póliza Hogar</option>
-                  <option value="Póliza Pyme Multiriesgo" data-cuestionario="empresarial">Póliza Pyme Multiriesgo</option>
-                  <option value="Póliza de Incendio Riesgos Nombrados" data-cuestionario="inmueble">Póliza de Incendio Riesgos Nombrados</option>
-                  <option value="Póliza de Copropiedades" data-cuestionario="inmueble">Póliza de Copropiedades</option>
-                  <option value="Póliza de Sustracción" data-cuestionario="inmueble">Póliza de Sustracción</option>
-                  <option value="Póliza de Lucro Cesante" data-cuestionario="empresarial">Póliza de Lucro Cesante</option>
+                  <option value="Póliza de Incendio Todo Riesgo" data-cuestionario="inmueble" data-buscar="poliza de incendio todo riesgo seguros generales empresas, comercios, industrias y propietarios de inmuebles que quieren la cobertura de danos mas amplia.">Póliza de Incendio Todo Riesgo</option>
+                  <option value="Póliza Hogar" data-cuestionario="inmueble" data-buscar="poliza hogar seguros generales familias propietarias o arrendatarias de vivienda, y quienes tienen un credito hipotecario.">Póliza Hogar</option>
+                  <option value="Póliza Pyme Multiriesgo" data-cuestionario="empresarial" data-buscar="poliza pyme multiriesgo seguros generales pequenas y medianas empresas, comercios, oficinas, consultorios, restaurantes y talleres.">Póliza Pyme Multiriesgo</option>
+                  <option value="Póliza de Incendio Riesgos Nombrados" data-cuestionario="inmueble" data-buscar="poliza de incendio riesgos nombrados seguros generales empresas y propietarios que buscan una cobertura de danos con riesgos definidos y una prima ajustada.">Póliza de Incendio Riesgos Nombrados</option>
+                  <option value="Póliza de Copropiedades" data-cuestionario="inmueble" data-buscar="poliza de copropiedades seguros generales conjuntos residenciales, edificios de apartamentos y oficinas, y centros comerciales sometidos a propiedad horizontal.">Póliza de Copropiedades</option>
+                  <option value="Póliza de Sustracción" data-cuestionario="inmueble" data-buscar="poliza de sustraccion seguros generales hogares, comercios, industrias y riesgos en licitacion.">Póliza de Sustracción</option>
+                  <option value="Póliza de Lucro Cesante" data-cuestionario="empresarial" data-buscar="poliza de lucro cesante seguros generales empresas cuya operacion se detendria ante un dano en sus instalaciones o maquinaria.">Póliza de Lucro Cesante</option>
                 </optgroup>
                 <optgroup label="Ingeniería y Todo Riesgo" data-rama="ingenieria">
-                  <option value="Póliza Todo Riesgo Construcción (Todo Riesgo Contratista)" data-cuestionario="obra">Póliza Todo Riesgo Construcción (Todo Riesgo Contratista)</option>
-                  <option value="Póliza de Todo Riesgo para Equipo y Maquinaria (maquinaria amarilla)" data-cuestionario="obra">Póliza de Todo Riesgo para Equipo y Maquinaria (maquinaria amarilla)</option>
-                  <option value="Póliza de Equipo Electrónico" data-cuestionario="empresarial">Póliza de Equipo Electrónico</option>
-                  <option value="Póliza de Todo Riesgo Montaje" data-cuestionario="obra">Póliza de Todo Riesgo Montaje</option>
-                  <option value="Póliza de Rotura de Maquinaria" data-cuestionario="empresarial">Póliza de Rotura de Maquinaria</option>
+                  <option value="Póliza Todo Riesgo Construcción (Todo Riesgo Contratista)" data-cuestionario="obra" data-buscar="poliza todo riesgo construccion (todo riesgo contratista) ingenieria y todo riesgo constructores, contratistas de obra publica y privada, y duenos de proyectos.">Póliza Todo Riesgo Construcción (Todo Riesgo Contratista)</option>
+                  <option value="Póliza de Todo Riesgo para Equipo y Maquinaria (maquinaria amarilla)" data-cuestionario="obra" data-buscar="poliza de todo riesgo para equipo y maquinaria (maquinaria amarilla) ingenieria y todo riesgo constructoras, empresas de movimiento de tierra, alquiladores de maquinaria, mineras y contratistas de obra.">Póliza de Todo Riesgo para Equipo y Maquinaria (maquinaria amarilla)</option>
+                  <option value="Póliza de Equipo Electrónico" data-cuestionario="empresarial" data-buscar="poliza de equipo electronico ingenieria y todo riesgo empresas, oficinas, consultorios, colegios y tambien propietarios y arrendatarios de vivienda.">Póliza de Equipo Electrónico</option>
+                  <option value="Póliza de Todo Riesgo Montaje" data-cuestionario="obra" data-buscar="poliza de todo riesgo montaje ingenieria y todo riesgo empresas de montaje electromecanico, contratistas industriales y duenos de proyectos de instalacion de equipos.">Póliza de Todo Riesgo Montaje</option>
+                  <option value="Póliza de Rotura de Maquinaria" data-cuestionario="empresarial" data-buscar="poliza de rotura de maquinaria ingenieria y todo riesgo industrias, plantas de produccion, hospitales, edificios con equipos criticos (ascensores, plantas electricas, calderas).">Póliza de Rotura de Maquinaria</option>
                 </optgroup>
                 <optgroup label="Autos Livianos" data-rama="autos-livianos">
-                  <option value="Seguro para Carros: planes Clásico, Integral y Élite" data-cuestionario="autos">Seguro para Carros: planes Clásico, Integral y Élite</option>
-                  <option value="FamiEstado" data-cuestionario="autos">FamiEstado</option>
-                  <option value="MotoEstado" data-cuestionario="autos">MotoEstado</option>
-                  <option value="TaxiEstado" data-cuestionario="autos">TaxiEstado</option>
-                  <option value="Genio Comercial" data-cuestionario="autos">Genio Comercial</option>
-                  <option value="Genio Pasajeros" data-cuestionario="autos">Genio Pasajeros</option>
-                  <option value="RCE para Automóviles de Servicio Particular Genial" data-cuestionario="autos">RCE para Automóviles de Servicio Particular Genial</option>
+                  <option value="Seguro para Carros: planes Clásico, Integral y Élite" data-cuestionario="autos" data-buscar="seguro para carros: planes clasico, integral y elite autos livianos propietarios de automoviles, camionetas y camperos de servicio particular.">Seguro para Carros: planes Clásico, Integral y Élite</option>
+                  <option value="FamiEstado" data-cuestionario="autos" data-buscar="famiestado autos livianos propietarios de automoviles, camionetas sw, camperos, camionetas cerradas y pick-ups de servicio y uso particular.">FamiEstado</option>
+                  <option value="MotoEstado" data-cuestionario="autos" data-buscar="motoestado autos livianos propietarios de motocicletas.">MotoEstado</option>
+                  <option value="TaxiEstado" data-cuestionario="autos" data-buscar="taxiestado autos livianos propietarios y empresas de taxis.">TaxiEstado</option>
+                  <option value="Genio Comercial" data-cuestionario="autos" data-buscar="genio comercial autos livianos propietarios de vehiculos de carga liviana de uso comercial.">Genio Comercial</option>
+                  <option value="Genio Pasajeros" data-cuestionario="autos" data-buscar="genio pasajeros autos livianos propietarios y empresas de transporte de pasajeros.">Genio Pasajeros</option>
+                  <option value="RCE para Automóviles de Servicio Particular Genial" data-cuestionario="autos" data-buscar="rce para automoviles de servicio particular genial autos livianos personas naturales propietarias de automoviles, station wagon, camionetas cerradas y camperos cabinados de uso familiar que circulen en cundinamarca, boyaca, tolima, caldas, quindio, risaralda, los santanderes, cali, tulua y popayan, y que no hayan sido taxis.">RCE para Automóviles de Servicio Particular Genial</option>
                 </optgroup>
                 <optgroup label="Autos Pesados" data-rama="autos-pesados">
-                  <option value="Póliza para Vehículos de Carga, Volquetas y Carrocerías Especiales Genio" data-cuestionario="autos">Póliza para Vehículos de Carga, Volquetas y Carrocerías Especiales Genio</option>
-                  <option value="RCE Básica para Vehículos de Carga, Volquetas y Carrocerías Especiales Genio" data-cuestionario="autos">RCE Básica para Vehículos de Carga, Volquetas y Carrocerías Especiales Genio</option>
-                  <option value="Seguro en Exceso de RCE para Vehículos de Carga, Volquetas y Carrocerías Especiales Genio" data-cuestionario="autos">Seguro en Exceso de RCE para Vehículos de Carga, Volquetas y Carrocerías Especiales Genio</option>
+                  <option value="Póliza para Vehículos de Carga, Volquetas y Carrocerías Especiales Genio" data-cuestionario="autos" data-buscar="poliza para vehiculos de carga, volquetas y carrocerias especiales genio autos pesados propietarios y administradores de camiones, tractocamiones, volquetas y vehiculos con carrocerias especiales.">Póliza para Vehículos de Carga, Volquetas y Carrocerías Especiales Genio</option>
+                  <option value="RCE Básica para Vehículos de Carga, Volquetas y Carrocerías Especiales Genio" data-cuestionario="autos" data-buscar="rce basica para vehiculos de carga, volquetas y carrocerias especiales genio autos pesados propietarios de camiones y volquetas que necesitan, o estan obligados a tener, la responsabilidad civil extracontractual.">RCE Básica para Vehículos de Carga, Volquetas y Carrocerías Especiales Genio</option>
+                  <option value="Seguro en Exceso de RCE para Vehículos de Carga, Volquetas y Carrocerías Especiales Genio" data-cuestionario="autos" data-buscar="seguro en exceso de rce para vehiculos de carga, volquetas y carrocerias especiales genio autos pesados transportadores y flotas a los que se les exigen limites de rce superiores a los de la poliza basica.">Seguro en Exceso de RCE para Vehículos de Carga, Volquetas y Carrocerías Especiales Genio</option>
                 </optgroup>
                 <optgroup label="Seguros Obligatorios" data-rama="seguros-obligatorios">
-                  <option value="Póliza de RCC para Servicio Público" data-cuestionario="empresarial">Póliza de RCC para Servicio Público</option>
-                  <option value="Póliza de RCE para Servicio Público" data-cuestionario="empresarial">Póliza de RCE para Servicio Público</option>
-                  <option value="Póliza en Exceso RCE para Servicio Público" data-cuestionario="empresarial">Póliza en Exceso RCE para Servicio Público</option>
-                  <option value="Póliza en Exceso RCC para Servicio Público" data-cuestionario="empresarial">Póliza en Exceso RCC para Servicio Público</option>
+                  <option value="Póliza de RCC para Servicio Público" data-cuestionario="empresarial" data-buscar="poliza de rcc para servicio publico seguros obligatorios empresas de servicio publico de transporte de pasajeros, para las que es requisito de operacion.">Póliza de RCC para Servicio Público</option>
+                  <option value="Póliza de RCE para Servicio Público" data-cuestionario="empresarial" data-buscar="poliza de rce para servicio publico seguros obligatorios empresas de servicio publico de transporte de pasajeros, para las que es requisito de operacion.">Póliza de RCE para Servicio Público</option>
+                  <option value="Póliza en Exceso RCE para Servicio Público" data-cuestionario="empresarial" data-buscar="poliza en exceso rce para servicio publico seguros obligatorios empresas de servicio publico de transporte de pasajeros que quieren limites mayores.">Póliza en Exceso RCE para Servicio Público</option>
+                  <option value="Póliza en Exceso RCC para Servicio Público" data-cuestionario="empresarial" data-buscar="poliza en exceso rcc para servicio publico seguros obligatorios empresas de servicio publico de transporte de pasajeros que quieren limites mayores.">Póliza en Exceso RCC para Servicio Público</option>
                 </optgroup>
                 <optgroup label="Vida Individual" data-rama="vida-individual">
-                  <option value="Vida Fácil" data-cuestionario="personas">Vida Fácil</option>
-                  <option value="Vida Fácil Deudores" data-cuestionario="personas">Vida Fácil Deudores</option>
-                  <option value="Siempre Vida" data-cuestionario="personas">Siempre Vida</option>
-                  <option value="Vida Fácil con Ahorro" data-cuestionario="personas">Vida Fácil con Ahorro</option>
+                  <option value="Vida Fácil" data-cuestionario="personas" data-buscar="vida facil vida individual personas que quieren proteger a su familia con un seguro de vida flexible y economico.">Vida Fácil</option>
+                  <option value="Vida Fácil Deudores" data-cuestionario="personas" data-buscar="vida facil deudores vida individual personas naturales entre 18 y 69 anos que tienen creditos.">Vida Fácil Deudores</option>
+                  <option value="Siempre Vida" data-cuestionario="personas" data-buscar="siempre vida vida individual personas que buscan una proteccion permanente y un componente de ahorro de largo plazo.">Siempre Vida</option>
+                  <option value="Vida Fácil con Ahorro" data-cuestionario="personas" data-buscar="vida facil con ahorro vida individual personas que quieren combinar proteccion y ahorro.">Vida Fácil con Ahorro</option>
                 </optgroup>
                 <optgroup label="Vida Grupo y Colectivos" data-rama="vida-grupo">
-                  <option value="Vida Grupo Tradicional" data-cuestionario="personas">Vida Grupo Tradicional</option>
-                  <option value="Vida Grupo Deudores" data-cuestionario="personas">Vida Grupo Deudores</option>
-                  <option value="Vida Grupo Servidores Públicos" data-cuestionario="personas">Vida Grupo Servidores Públicos</option>
-                  <option value="Vida Grupo Familiar Gastos Emergentes" data-cuestionario="personas">Vida Grupo Familiar Gastos Emergentes</option>
-                  <option value="Vida Grupo Plan Protección Vida Estado" data-cuestionario="personas">Vida Grupo Plan Protección Vida Estado</option>
-                  <option value="Vida Colectivo Laboral" data-cuestionario="personas">Vida Colectivo Laboral</option>
-                  <option value="Colectivo Convenio USO" data-cuestionario="personas">Colectivo Convenio USO</option>
+                  <option value="Vida Grupo Tradicional" data-cuestionario="personas" data-buscar="vida grupo tradicional vida grupo y colectivos empresas, fondos de empleados, cooperativas, asociaciones y agremiaciones que quieren dar un beneficio de vida a su grupo.">Vida Grupo Tradicional</option>
+                  <option value="Vida Grupo Deudores" data-cuestionario="personas" data-buscar="vida grupo deudores vida grupo y colectivos entidades financieras, cooperativas, fondos de empleados y empresas que otorgan credito.">Vida Grupo Deudores</option>
+                  <option value="Vida Grupo Servidores Públicos" data-cuestionario="personas" data-buscar="vida grupo servidores publicos vida grupo y colectivos gobernaciones, distritos, municipios y alcaldias locales, que actuan como tomadores para asegurar a concejales, ediles, personeros, diputados y alcaldes.">Vida Grupo Servidores Públicos</option>
+                  <option value="Vida Grupo Familiar Gastos Emergentes" data-cuestionario="personas" data-buscar="vida grupo familiar gastos emergentes vida grupo y colectivos empresas, asociaciones y grupos que quieren ofrecer a sus integrantes y familias un respaldo para gastos funerarios y emergentes.">Vida Grupo Familiar Gastos Emergentes</option>
+                  <option value="Vida Grupo Plan Protección Vida Estado" data-cuestionario="personas" data-buscar="vida grupo plan proteccion vida estado vida grupo y colectivos personas juridicas: empresas, fondos de empleados, asociaciones de padres de familia, juntas de conjuntos residenciales, entre otras.">Vida Grupo Plan Protección Vida Estado</option>
+                  <option value="Vida Colectivo Laboral" data-cuestionario="personas" data-buscar="vida colectivo laboral vida grupo y colectivos empresas y profesionales independientes que contratan personal que aun no cumple el periodo minimo de cotizacion al sistema general de pensiones.">Vida Colectivo Laboral</option>
+                  <option value="Colectivo Convenio USO" data-cuestionario="personas" data-buscar="colectivo convenio uso vida grupo y colectivos contratistas de ecopetrol que deben asegurar a todos sus trabajadores segun la convencion colectiva uso.">Colectivo Convenio USO</option>
                 </optgroup>
                 <optgroup label="Accidentes Personales" data-rama="accidentes-personales">
-                  <option value="Póliza Integral Estudiantil (Accidentes Personales Integrales Estudiantiles)" data-cuestionario="personas">Póliza Integral Estudiantil (Accidentes Personales Integrales Estudiantiles)</option>
-                  <option value="Accidentes Personales Colectivo Tradicional" data-cuestionario="personas">Accidentes Personales Colectivo Tradicional</option>
-                  <option value="Accidentes Personales Individual" data-cuestionario="personas">Accidentes Personales Individual</option>
-                  <option value="Accidentes Personales en Accidente de Tránsito – Vehículos Livianos" data-cuestionario="personas">Accidentes Personales en Accidente de Tránsito – Vehículos Livianos</option>
-                  <option value="Accidentes Personales en Accidente de Tránsito – Vehículos Pesados" data-cuestionario="personas">Accidentes Personales en Accidente de Tránsito – Vehículos Pesados</option>
+                  <option value="Póliza Integral Estudiantil (Accidentes Personales Integrales Estudiantiles)" data-cuestionario="personas" data-buscar="poliza integral estudiantil (accidentes personales integrales estudiantiles) accidentes personales colegios, jardines, universidades e instituciones educativas, y asociaciones de padres de familia.">Póliza Integral Estudiantil (Accidentes Personales Integrales Estudiantiles)</option>
+                  <option value="Accidentes Personales Colectivo Tradicional" data-cuestionario="personas" data-buscar="accidentes personales colectivo tradicional accidentes personales empresas, asociaciones, clubes deportivos, cooperativas y cualquier grupo que quiera proteger a sus integrantes frente a accidentes.">Accidentes Personales Colectivo Tradicional</option>
+                  <option value="Accidentes Personales Individual" data-cuestionario="personas" data-buscar="accidentes personales individual accidentes personales personas que quieren un respaldo economico frente a accidentes: independientes, deportistas, motociclistas.">Accidentes Personales Individual</option>
+                  <option value="Accidentes Personales en Accidente de Tránsito – Vehículos Livianos" data-cuestionario="personas" data-buscar="accidentes personales en accidente de transito – vehiculos livianos accidentes personales conductores y propietarios de vehiculos livianos, y empresas con flotas o conductores.">Accidentes Personales en Accidente de Tránsito – Vehículos Livianos</option>
+                  <option value="Accidentes Personales en Accidente de Tránsito – Vehículos Pesados" data-cuestionario="personas" data-buscar="accidentes personales en accidente de transito – vehiculos pesados accidentes personales conductores de vehiculos de carga y empresas transportadoras.">Accidentes Personales en Accidente de Tránsito – Vehículos Pesados</option>
                 </optgroup>
                 <optgroup label="Salud" data-rama="salud">
-                  <option value="Póliza de Hospitalización y Cirugía" data-cuestionario="personas">Póliza de Hospitalización y Cirugía</option>
-                  <option value="Póliza de Salud – Diagnóstico de Cáncer" data-cuestionario="personas">Póliza de Salud – Diagnóstico de Cáncer</option>
-                  <option value="Seguro Cuida+" data-cuestionario="personas">Seguro Cuida+</option>
-                  <option value="Seguro Salud Mental" data-cuestionario="personas">Seguro Salud Mental</option>
-                  <option value="Gastos Médicos por Complicaciones Médico Quirúrgicas" data-cuestionario="personas">Gastos Médicos por Complicaciones Médico Quirúrgicas</option>
-                  <option value="Contractura Mamaria y/o Ruptura de Prótesis Mamarias" data-cuestionario="personas">Contractura Mamaria y/o Ruptura de Prótesis Mamarias</option>
+                  <option value="Póliza de Hospitalización y Cirugía" data-cuestionario="personas" data-buscar="poliza de hospitalizacion y cirugia salud empresas, fondos de empleados y asociaciones que quieren dar un beneficio de salud a su grupo.">Póliza de Hospitalización y Cirugía</option>
+                  <option value="Póliza de Salud – Diagnóstico de Cáncer" data-cuestionario="personas" data-buscar="poliza de salud – diagnostico de cancer salud personas naturales y empresas, cooperativas, asociaciones, colegios e instituciones de educacion superior que quieren asegurar a su grupo.">Póliza de Salud – Diagnóstico de Cáncer</option>
+                  <option value="Seguro Cuida+" data-cuestionario="personas" data-buscar="seguro cuida+ salud personas y empresas que quieren un respaldo economico de salud a bajo costo para si mismas o sus colaboradores.">Seguro Cuida+</option>
+                  <option value="Seguro Salud Mental" data-cuestionario="personas" data-buscar="seguro salud mental salud personas y empresas que quieren respaldar el bienestar mental y emocional de sus colaboradores.">Seguro Salud Mental</option>
+                  <option value="Gastos Médicos por Complicaciones Médico Quirúrgicas" data-cuestionario="personas" data-buscar="gastos medicos por complicaciones medico quirurgicas salud profesionales de la salud de areas quirurgicas y clinicas u hospitales, que toman la poliza a favor de sus pacientes.">Gastos Médicos por Complicaciones Médico Quirúrgicas</option>
+                  <option value="Contractura Mamaria y/o Ruptura de Prótesis Mamarias" data-cuestionario="personas" data-buscar="contractura mamaria y/o ruptura de protesis mamarias salud pacientes que van a someterse a una cirugia de implantes mamarios.">Contractura Mamaria y/o Ruptura de Prótesis Mamarias</option>
                 </optgroup>
                 <option value="Otro">No sé cuál necesito: quiero asesoría</option>
               <!-- POLIZAS:FIN -->
@@ -976,6 +984,6 @@
     <i class="fas fa-chevron-up"></i>
   </button>
 
-  <script src="js/main.js?v=7"></script>
+  <script src="js/main.js?v=8"></script>
 </body>
 </html>
