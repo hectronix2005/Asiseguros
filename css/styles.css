@@ -2273,3 +2273,32 @@ p {
   .cart-drawer { max-width: 100%; }
   .nav-cart-item { display: none; }
 }
+
+/* ========================================
+   PORTAFOLIO POR FAMILIAS Y SECTOR PÚBLICO
+   ======================================== */
+.service-card { display: flex; flex-direction: column; }
+.service-card .btn-sm { margin-top: auto; align-self: center; }
+.service-ramas { list-style: none; text-align: left; margin: 0 0 22px; padding: 14px 0 0; border-top: 1px solid var(--gray-200); }
+.service-ramas li { font-size: 0.86rem; line-height: 1.4; margin-bottom: 8px; padding-left: 16px; position: relative; }
+.service-ramas li::before { content: "›"; position: absolute; left: 2px; color: var(--accent); font-weight: 700; }
+.service-ramas a { color: var(--primary); font-weight: 600; }
+.service-ramas a:hover { color: var(--accent); }
+.portafolio-acciones { display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; margin-top: 40px; }
+.portafolio-guias { margin-top: 18px; font-size: 0.88rem; color: var(--gray-500); }
+.portafolio-guias a { color: var(--primary); font-weight: 600; }
+.product-acciones { display: flex; gap: 12px; flex-wrap: wrap; }
+.estatal-section { background: var(--gray-50); }
+.estatal-grid { grid-template-columns: repeat(4, 1fr); gap: 20px; }
+a.why-card { display: block; background: var(--white); border: 1px solid var(--gray-200); color: inherit; }
+a.why-card:hover { border-color: var(--accent); box-shadow: var(--shadow-md); transform: translateY(-3px); }
+a.why-card p { color: var(--gray-500); }
+.form-ayuda { font-size: 0.8rem; color: var(--gray-500); margin-top: 6px; line-height: 1.5; }
+.form-ayuda a { color: var(--accent); font-weight: 600; }
+@media (max-width: 1024px) {
+  .estatal-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 600px) {
+  .estatal-grid { grid-template-columns: 1fr; }
+  .portafolio-acciones .btn { width: 100%; justify-content: center; }
+}

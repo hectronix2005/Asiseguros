@@ -55,6 +55,7 @@ WordPress se apartó a `/wp-anterior` sin borrarse.
 ```
 public_html/
 ├── index.html                       portada
+├── seguros.html                     catálogo de 71 pólizas con filtros y preguntas (14-oct)
 ├── poliza-de-cumplimiento.html      guía (nicho de mayor margen)
 ├── todo-riesgo-contratista.html     guía
 ├── responsabilidad-civil-extracontractual.html  guía (25-sep, sin revisión de legal)
@@ -70,6 +71,30 @@ public_html/
 ├── assets/ · css/ · js/
 └── (fuera) ../asiseguros-datos/     registros de autorización
 ```
+
+### Catálogo de seguros — `seguros.html`
+
+13 ramas, 71 pólizas y 436 preguntas frecuentes de Seguros del Estado y Seguros
+de Vida del Estado, con buscador (tolera tildes y sinónimos como «licitación» →
+pliego) y filtros por tipo de cliente, familia, rama, tema de la pregunta,
+aseguradora y «más solicitadas». Los filtros quedan en la URL, así que la
+portada enlaza vistas ya filtradas (`seguros.html?familia=movilidad`) y cada
+póliza tiene ancla propia (`seguros.html#hogar`).
+
+**No se edita a mano.** El contenido vive en `scripts/catalogo/catalogo.json` y
+se genera con `python3 scripts/catalogo/generar.py`, que escribe `seguros.html`
+y las opciones del formulario de la portada (entre las marcas `RAMAS` y
+`POLIZAS` de `index.html`). Ahí también se define a quién sirve cada póliza y
+qué cuestionario del paso 2 le toca.
+
+Reglas que trae el catálogo: el SOAT no se cotiza aquí (solo canales oficiales
+de Seguros del Estado), no se agregan precios distintos a los de Cuida+ y Salud
+Mental, y la ARL no se incluye. Las respuestas que citan normas tienen revisión
+jurídica pendiente: se publicó el 14-oct-2026 por decisión del cliente.
+
+El formulario de la portada pide primero la rama y luego la póliza. El valor
+guardado en cada solicitud es el nombre de la póliza. El brochure en PDF se
+descarga desde `assets/docs/portafolio-asiseguros-2026.pdf`.
 
 ### Cuidado al desplegar: tres páginas las manda el panel, no el repositorio
 

@@ -459,11 +459,57 @@ document.addEventListener('DOMContentLoaded', () => {
   if (contactForm) {
     const aviso = document.querySelector('#formAviso');
 
-    // Las guías enlazan con ?seguro=<producto> para llegar con el producto ya elegido.
+    // Selector en dos pasos: la rama filtra las pólizas. El HTML trae todas
+    // las pólizas agrupadas, así que sin JavaScript el formulario funciona igual.
+    const selRama = contactForm.querySelector('#rama_seguro');
+    const selPoliza = contactForm.querySelector('#tipo_seguro');
+    const originales = selPoliza ? Array.from(selPoliza.children).map(n => n.cloneNode(true)) : [];
+
+    const mostrarPolizas = (rama) => {
+      if (!selPoliza) return;
+      selPoliza.innerHTML = '';
+      originales.forEach(n => {
+        const esGrupo = n.tagName === 'OPTGROUP';
+        if (!rama) { selPoliza.appendChild(n.cloneNode(true)); return; }
+        if (!esGrupo && (n.value === '' || (rama === 'otro' && n.value === 'Otro'))) {
+          selPoliza.appendChild(n.cloneNode(true));
+        } else if (esGrupo && n.dataset.rama === rama) {
+          Array.from(n.children).forEach(o => selPoliza.appendChild(o.cloneNode(true)));
+        }
+      });
+      selPoliza.value = rama === 'otro' ? 'Otro' : '';
+    };
+
+    if (selRama && selPoliza) {
+      selRama.addEventListener('change', () => mostrarPolizas(selRama.value));
+      // Si eligen la póliza sin pasar por la rama, la rama se ajusta sola.
+      selPoliza.addEventListener('change', () => {
+        const grupo = selPoliza.selectedOptions[0] && selPoliza.selectedOptions[0].parentElement;
+        if (!selRama.value && grupo && grupo.tagName === 'OPTGROUP') {
+          const valor = selPoliza.value;
+          selRama.value = grupo.dataset.rama;
+          mostrarPolizas(grupo.dataset.rama);
+          selPoliza.value = valor;
+        }
+      });
+      contactForm.addEventListener('reset', () => setTimeout(() => mostrarPolizas(''), 0));
+    }
+
+    // El catálogo y las guías enlazan con ?seguro=<póliza> para llegar con la
+    // póliza ya elegida.
     try {
       const pedido = new URLSearchParams(location.search).get('seguro');
-      const sel = contactForm.querySelector('#tipo_seguro');
-      if (pedido && sel && [...sel.options].some(o => o.value === pedido)) sel.value = pedido;
+      if (pedido && selPoliza) {
+        const opcion = originales.flatMap(n => n.tagName === 'OPTGROUP' ? Array.from(n.children) : [n])
+                                 .find(o => o.value === pedido);
+        if (opcion) {
+          const grupo = originales.find(n => n.tagName === 'OPTGROUP' && Array.from(n.children).some(o => o.value === pedido));
+          const rama = grupo ? grupo.dataset.rama : (pedido === 'Otro' ? 'otro' : '');
+          if (selRama) selRama.value = rama;
+          mostrarPolizas(rama);
+          selPoliza.value = pedido;
+        }
+      }
     } catch (err) { /* sin preselección */ }
 
     const mostrarAviso = (tipo, titulo, texto) => {
@@ -535,7 +581,8 @@ document.addEventListener('DOMContentLoaded', () => {
           // Si el producto necesita datos técnicos, se pide el paso 2 en lugar
           // del mensaje de cierre. El registro ya está hecho: lo que siga es
           // opcional y no condiciona la autorización.
-          const clave = CUESTIONARIO_POR_TIPO[datos.tipo_seguro];
+          const opcion = selPoliza && selPoliza.selectedOptions[0];
+          const clave = (opcion && opcion.dataset.cuestionario) || CUESTIONARIO_POR_TIPO[datos.tipo_seguro];
           const paso2 = clave ? construirPaso2(clave, res.radicado, datos.tipo_seguro) : null;
 
           if (paso2) {

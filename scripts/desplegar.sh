@@ -56,7 +56,7 @@ fi
 cp -f index.html 404.html asesoria-juridica.html \
       poliza-de-cumplimiento.html todo-riesgo-contratista.html \
       responsabilidad-civil-extracontractual.html poliza-de-manejo.html \
-      seguro-transporte-de-carga.html "$DESTINO/"
+      seguro-transporte-de-carga.html seguros.html "$DESTINO/"
 
 # Servidor e indexación
 cp -f .htaccess robots.txt sitemap.xml "$DESTINO/"
@@ -74,6 +74,10 @@ cp -f assets/img/logo.png assets/img/banner2.jpg assets/img/site-11.png \
       assets/img/card-personas.jpg assets/img/card-automoviles.jpg \
       assets/img/card-generales.jpg assets/img/card-empresariales.jpg \
       assets/img/seguros-del-estado.png "$DESTINO/assets/img/"
+
+# Portafolio en PDF para descargar desde la portada y el catálogo
+mkdir -p "$DESTINO/assets/docs"
+cp -f assets/docs/portafolio-asiseguros-2026.pdf "$DESTINO/assets/docs/"
 
 # Formulario y correos
 mkdir -p "$DESTINO/api"
