@@ -465,34 +465,32 @@ document.addEventListener('DOMContentLoaded', () => {
     const selPoliza = contactForm.querySelector('#tipo_seguro');
     const originales = selPoliza ? Array.from(selPoliza.children).map(n => n.cloneNode(true)) : [];
 
+    // Sin tipo de seguro elegido no se muestra la lista completa: el selector
+    // de póliza queda desactivado hasta que se escoja la rama.
     const mostrarPolizas = (rama) => {
       if (!selPoliza) return;
       selPoliza.innerHTML = '';
+      const aviso = document.createElement('option');
+      aviso.value = '';
+      aviso.disabled = true;
+      aviso.textContent = rama ? 'Selecciona la póliza' : 'Primero elige el tipo de seguro';
+      selPoliza.appendChild(aviso);
       originales.forEach(n => {
-        const esGrupo = n.tagName === 'OPTGROUP';
-        if (!rama) { selPoliza.appendChild(n.cloneNode(true)); return; }
-        if (!esGrupo && (n.value === '' || (rama === 'otro' && n.value === 'Otro'))) {
-          selPoliza.appendChild(n.cloneNode(true));
-        } else if (esGrupo && n.dataset.rama === rama) {
+        if (n.tagName !== 'OPTGROUP') {
+          if (rama === 'otro' && n.value === 'Otro') selPoliza.appendChild(n.cloneNode(true));
+        } else if (n.dataset.rama === rama) {
           Array.from(n.children).forEach(o => selPoliza.appendChild(o.cloneNode(true)));
         }
       });
+      selPoliza.disabled = !rama;
       selPoliza.value = rama === 'otro' ? 'Otro' : '';
     };
 
     if (selRama && selPoliza) {
+      selRama.required = true;
       selRama.addEventListener('change', () => mostrarPolizas(selRama.value));
-      // Si eligen la póliza sin pasar por la rama, la rama se ajusta sola.
-      selPoliza.addEventListener('change', () => {
-        const grupo = selPoliza.selectedOptions[0] && selPoliza.selectedOptions[0].parentElement;
-        if (!selRama.value && grupo && grupo.tagName === 'OPTGROUP') {
-          const valor = selPoliza.value;
-          selRama.value = grupo.dataset.rama;
-          mostrarPolizas(grupo.dataset.rama);
-          selPoliza.value = valor;
-        }
-      });
       contactForm.addEventListener('reset', () => setTimeout(() => mostrarPolizas(''), 0));
+      mostrarPolizas('');
     }
 
     // El catálogo y las guías enlazan con ?seguro=<póliza> para llegar con la

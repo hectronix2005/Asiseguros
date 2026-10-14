@@ -430,7 +430,7 @@ pagina = f'''<!DOCTYPE html>
     <i class="fab fa-whatsapp"></i>
   </a>
 
-  <script src="js/main.js?v=6"></script>
+  <script src="js/main.js?v=7"></script>
   <script src="js/catalogo.js?v=1"></script>
 </body>
 </html>
