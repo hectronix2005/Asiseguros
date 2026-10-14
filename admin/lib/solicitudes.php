@@ -12,6 +12,8 @@
 
 declare(strict_types=1);
 
+require_once __DIR__ . '/seguimiento.php';
+
 function dir_datos(): string
 {
     $fuera = dirname(__DIR__, 3) . '/asiseguros-datos';
@@ -45,7 +47,7 @@ function leer_csv(string $ruta): array
  * Devuelve las solicitudes, de la más reciente a la más antigua, con el detalle
  * del segundo formulario ya incorporado.
  */
-function solicitudes(string $busca = ''): array
+function solicitudes(string $busca = '', string $estado = ''): array
 {
     $dir = dir_datos();
     $sol = leer_csv($dir . '/autorizaciones.csv');
@@ -70,7 +72,13 @@ function solicitudes(string $busca = ''): array
     }
     unset($s);
 
-    $sol = array_reverse($sol);
+    $sol = array_reverse(con_seguimiento($sol));
+
+    if ($estado === 'sin_atender') {
+        $sol = array_values(array_filter($sol, fn($s) => $s['sin_atender']));
+    } elseif (isset(ESTADOS[$estado])) {
+        $sol = array_values(array_filter($sol, fn($s) => $s['estado'] === $estado));
+    }
 
     if ($busca !== '') {
         $q = mb_strtolower($busca);
@@ -112,7 +120,8 @@ function resumen_solicitudes(array $sol): array
 {
     $hoy = date('Y-m-d');
     $mes = date('Y-m');
-    $r = ['total' => count($sol), 'hoy' => 0, 'mes' => 0, 'pendientes' => 0, 'productos' => [], 'canales' => []];
+    $r = ['total' => count($sol), 'hoy' => 0, 'mes' => 0, 'pendientes' => 0, 'sin_atender' => 0,
+          'estados' => array_fill_keys(array_keys(ESTADOS), 0), 'productos' => [], 'canales' => []];
     foreach ($sol as $s) {
         $f = substr((string)($s['fecha_hora'] ?? ''), 0, 10);
         if ($f === $hoy) $r['hoy']++;
@@ -120,6 +129,8 @@ function resumen_solicitudes(array $sol): array
         $p = (string)($s['tipo_seguro'] ?? '');
         if ($p !== '') $r['productos'][$p] = ($r['productos'][$p] ?? 0) + 1;
         if (empty($s['detalle'])) $r['pendientes']++;
+        if (!empty($s['sin_atender'])) $r['sin_atender']++;
+        $r['estados'][$s['estado'] ?? 'nueva']++;
         $c = (string)($s['canal'] ?? 'Sin dato');
         $r['canales'][$c] = ($r['canales'][$c] ?? 0) + 1;
     }
@@ -128,8 +139,8 @@ function resumen_solicitudes(array $sol): array
     return $r;
 }
 
-/** Exporta a CSV lo que se esté viendo, con el detalle en columnas. */
-function exportar_csv(array $sol): void
+/** CSV de las solicitudes, con el detalle del paso 2 en columnas. */
+function csv_solicitudes(array $sol): string
 {
     $claves = [];
     foreach ($sol as $s) {
@@ -137,24 +148,25 @@ function exportar_csv(array $sol): void
     }
     $claves = array_keys($claves);
 
-    header('Content-Type: text/csv; charset=utf-8');
-    header('Content-Disposition: attachment; filename="solicitudes-' . date('Y-m-d') . '.csv"');
-
-    $out = fopen('php://output', 'w');
+    $out = fopen('php://temp', 'w+');
     fwrite($out, "\xEF\xBB\xBF");
     fputcsv($out, array_merge(
         ['Radicado','Fecha','Nombre','Teléfono','Correo','Producto','Mensaje',
+         'Estado','Último cambio de estado','Atendió','Nota del seguimiento','Horas desde la llegada',
          'Autoriza','Versión autorización','Texto de la autorización',
          'Paso 2','Canal','Fuente (utm)','Medio (utm)','Campaña (utm)','Página de llegada','Sitio de origen'],
         array_map(fn($k) => ucfirst(str_replace('_',' ',$k)), $claves)
     ), ',', '"', '\\');
 
     foreach ($sol as $s) {
+        $ultimo = $s['historial'] ? end($s['historial']) : [];
         $fila = [
             $s['radicado'] ?? '', $s['fecha_hora'] ?? '', $s['nombre'] ?? '',
             $s['telefono'] ?? '', $s['email'] ?? '', $s['tipo_seguro'] ?? '',
-            $s['mensaje'] ?? '', $s['autoriza'] ?? '',
-            $s['version_autorizacion'] ?? '', $s['texto_autorizacion'] ?? '',
+            $s['mensaje'] ?? '',
+            ESTADOS[$s['estado'] ?? 'nueva'] ?? '', $s['estado_fecha'] ?? '', $s['estado_quien'] ?? '',
+            $ultimo['nota'] ?? '', $s['horas_espera'] ?? '',
+            $s['autoriza'] ?? '', $s['version_autorizacion'] ?? '', $s['texto_autorizacion'] ?? '',
             empty($s['detalle']) ? 'Pendiente' : 'Completo',
             $s['canal'] ?? '', $s['procedencia']['fuente'] ?? '', $s['procedencia']['medio'] ?? '',
             $s['procedencia']['campana'] ?? '', $s['procedencia']['pagina_llegada'] ?? '',
@@ -163,6 +175,17 @@ function exportar_csv(array $sol): void
         foreach ($claves as $k) $fila[] = $s['detalle'][$k] ?? '';
         fputcsv($out, $fila, ',', '"', '\\');
     }
+    rewind($out);
+    $csv = (string)stream_get_contents($out);
     fclose($out);
+    return $csv;
+}
+
+/** Descarga a CSV lo que se esté viendo en el panel. */
+function exportar_csv(array $sol): void
+{
+    header('Content-Type: text/csv; charset=utf-8');
+    header('Content-Disposition: attachment; filename="solicitudes-' . date('Y-m-d') . '.csv"');
+    echo csv_solicitudes($sol);
     exit;
 }

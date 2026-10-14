@@ -18,6 +18,7 @@ date_default_timezone_set('America/Bogota');
 require __DIR__ . '/lib/docx.php';
 require __DIR__ . '/lib/paginas.php';
 require __DIR__ . '/lib/solicitudes.php';
+require __DIR__ . '/lib/reporte.php';
 
 const ARCHIVO_CLAVE = __DIR__ . '/.clave.php';
 const ARCHIVO_INTENTOS = __DIR__ . '/.intentos.json';
@@ -28,6 +29,13 @@ session_set_cookie_params(['httponly' => true, 'samesite' => 'Strict',
     'secure' => (($_SERVER['HTTPS'] ?? '') === 'on' || ($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https')]);
 session_name('asiadmin');
 session_start();
+
+// Token contra envíos de formularios desde otros sitios. La cookie ya es
+// SameSite=Strict; esto es una segunda barrera para las acciones que escriben.
+if (empty($_SESSION['csrf'])) $_SESSION['csrf'] = bin2hex(random_bytes(32));
+function token_valido(): bool {
+    return hash_equals((string)($_SESSION['csrf'] ?? ''), (string)($_POST['csrf'] ?? ''));
+}
 
 $aviso = null;
 $tipoAviso = 'error';
@@ -123,8 +131,48 @@ $dentro = !empty($_SESSION['ok']);
 $vista = in_array($_GET['ver'] ?? '', ['solicitudes', 'internos'], true) ? $_GET['ver'] : 'documentos';
 $busca = trim((string)($_GET['q'] ?? ''));
 
+$estadoFiltro = (string)($_GET['estado'] ?? '');
+if ($estadoFiltro !== 'sin_atender' && !isset(ESTADOS[$estadoFiltro])) $estadoFiltro = '';
+
 if ($dentro && ($_GET['exportar'] ?? '') === '1') {
-    exportar_csv(solicitudes($busca));
+    exportar_csv(solicitudes($busca, $estadoFiltro));
+}
+
+// Cambio de estado de una solicitud. Se redirige después de guardar para que
+// recargar la página no repita el registro.
+if ($accion === 'estado' && $dentro) {
+    if (!token_valido()) {
+        $aviso = 'La sesión caducó. Vuelve a intentarlo.';
+    } else {
+        $rad = (string)($_POST['radicado'] ?? '');
+        $quien = (string)($_POST['quien'] ?? '');
+        $r = registrar_estado($rad, (string)($_POST['estado'] ?? ''), $quien, (string)($_POST['nota'] ?? ''));
+        if ($r['ok']) {
+            $_SESSION['quien'] = mb_substr(trim($quien), 0, 60);
+            $_SESSION['aviso_ok'] = 'Seguimiento guardado para la solicitud ' . $rad . '.';
+            header('Location: index.php?ver=solicitudes&q=' . urlencode($busca) . '&estado=' . urlencode($estadoFiltro) . '#s-' . $rad);
+            exit;
+        }
+        $aviso = $r['error'];
+    }
+}
+
+if ($accion === 'reporte_ahora' && $dentro) {
+    if (!token_valido()) {
+        $aviso = 'La sesión caducó. Vuelve a intentarlo.';
+    } else {
+        $r = enviar_reporte(DESTINOS_REPORTE);
+        $aviso = $r['enviados']
+            ? 'Reporte enviado a ' . htmlspecialchars(implode(' y ', $r['enviados'])) . '.'
+            : 'No se pudo enviar el reporte. Revisa el correo del hosting.';
+        $tipoAviso = $r['enviados'] ? 'ok' : 'error';
+    }
+}
+
+if (!empty($_SESSION['aviso_ok'])) {
+    $aviso = htmlspecialchars($_SESSION['aviso_ok']);
+    $tipoAviso = 'ok';
+    unset($_SESSION['aviso_ok']);
 }
 
 if ($accion === 'publicar' && $dentro) {
@@ -259,6 +307,30 @@ function estadoDocumento(array $doc): array {
   .documento .tabla-wrap, .documento table { max-width:100%; overflow-x:auto; }
   .documento table { border-collapse:collapse; display:block; margin-bottom:14px; }
   .documento td, .documento th { border:1px solid var(--gray-200); padding:6px 10px; vertical-align:top; }
+  a.cifra { text-decoration:none; }
+  .cifra-alerta { border-color:#f5b44b; background:#fff8ec; }
+  .cifra-alerta b { color:#b45309; }
+  .filtro-estados { display:flex; flex-wrap:wrap; gap:6px; margin:0 0 14px; }
+  .filtro-estados a { font-size:.8rem; font-weight:600; color:var(--gray-600); text-decoration:none; border:1px solid var(--gray-200); background:#fff; border-radius:999px; padding:5px 12px; }
+  .filtro-estados a.activo { background:var(--primary); border-color:var(--primary); color:#fff; }
+  .reporte-ahora { display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; font-size:.8rem; color:var(--gray-500); margin:-6px 0 18px; }
+  .sol-alerta { border-color:#f5b44b; box-shadow:inset 4px 0 0 #f5b44b; }
+  .sol-estado { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:8px; font-size:.8rem; }
+  .estado-chip { border-radius:999px; padding:2px 10px; font-size:.75rem; font-weight:700; }
+  .estado-nueva { background:#eef2f7; color:var(--gray-600); }
+  .estado-contactada { background:#e6f4ff; color:#1d4ed8; }
+  .estado-cotizada { background:#efe9ff; color:#6d28d9; }
+  .estado-cerrada { background:#e6f7ec; color:#1f7a3f; }
+  .sin-atender { color:#b45309; }
+  .estado-desde { color:var(--gray-500); }
+  .seguimiento { margin-top:14px; border-top:1px dashed var(--gray-200); padding-top:10px; }
+  .seguimiento summary { cursor:pointer; font-size:.82rem; font-weight:700; color:var(--primary); }
+  .seguimiento-form { display:grid; grid-template-columns:150px 1fr; gap:8px; margin:10px 0 6px; }
+  .seguimiento-form select, .seguimiento-form input { margin:0; }
+  .seguimiento-form select { font:inherit; font-size:.88rem; padding:10px; border:1px solid var(--gray-200); border-radius:8px; background:#fff; color:var(--gray-600); }
+  .seguimiento-form input[name="nota"] { grid-column:1 / -1; }
+  .seguimiento-form .btn { grid-column:1 / -1; justify-self:start; }
+  .historial { margin:8px 0 0 18px; font-size:.8rem; color:var(--gray-600); line-height:1.6; }
   .paso-chip { display:inline-block; border-radius:999px; padding:2px 10px; font-size:.75rem; margin-left:4px; }
   .paso-chip.pendiente { background:#fff4e0; color:#8a5a00; }
   .paso-chip.completo { background:#e6f7ec; color:#1f7a3f; }
@@ -378,10 +450,14 @@ function estadoDocumento(array $doc): array {
   <?php endforeach; ?>
 
 <?php elseif ($vista === 'solicitudes'):
-      $lista = solicitudes($busca);
-      $res   = resumen_solicitudes(solicitudes()); ?>
+      $lista = solicitudes($busca, $estadoFiltro);
+      $res   = resumen_solicitudes(solicitudes());
+      $quienPrevio = (string)($_SESSION['quien'] ?? '');
+      $enlace = fn(string $e) => '?ver=solicitudes&amp;estado=' . $e . ($busca !== '' ? '&amp;q=' . urlencode($busca) : ''); ?>
 
   <div class="cifras">
+    <a class="cifra <?= $res['sin_atender'] ? 'cifra-alerta' : '' ?>" href="<?= $enlace('sin_atender') ?>">
+      <b><?= $res['sin_atender'] ?></b><span>sin atender +<?= HORAS_SIN_ATENDER ?> h</span></a>
     <div class="cifra"><b><?= $res['total'] ?></b><span>en total</span></div>
     <div class="cifra"><b><?= $res['mes'] ?></b><span>este mes</span></div>
     <div class="cifra"><b><?= $res['hoy'] ?></b><span>hoy</span></div>
@@ -397,25 +473,53 @@ function estadoDocumento(array $doc): array {
     </p>
   <?php endif; ?>
 
+  <div class="filtro-estados">
+    <a href="<?= $enlace('') ?>" class="<?= $estadoFiltro === '' ? 'activo' : '' ?>">Todas</a>
+    <a href="<?= $enlace('sin_atender') ?>" class="<?= $estadoFiltro === 'sin_atender' ? 'activo' : '' ?>">Sin atender (<?= $res['sin_atender'] ?>)</a>
+    <?php foreach (ESTADOS as $k => $v): ?>
+      <a href="<?= $enlace($k) ?>" class="<?= $estadoFiltro === $k ? 'activo' : '' ?>"><?= $v ?> (<?= $res['estados'][$k] ?>)</a>
+    <?php endforeach; ?>
+  </div>
+
   <form method="get" class="barra-busca">
     <input type="hidden" name="ver" value="solicitudes">
+    <input type="hidden" name="estado" value="<?= htmlspecialchars($estadoFiltro) ?>">
     <input type="text" name="q" value="<?= htmlspecialchars($busca) ?>"
            placeholder="Buscar por nombre, radicado, correo o producto…">
     <button class="btn">Buscar</button>
-    <?php if ($busca !== ''): ?><a href="?ver=solicitudes" class="btn-sec">Limpiar</a><?php endif; ?>
+    <?php if ($busca !== '' || $estadoFiltro !== ''): ?><a href="?ver=solicitudes" class="btn-sec">Limpiar</a><?php endif; ?>
     <?php if ($lista): ?>
-      <a href="?ver=solicitudes&amp;q=<?= urlencode($busca) ?>&amp;exportar=1" class="btn-sec">Descargar Excel</a>
+      <a href="?ver=solicitudes&amp;q=<?= urlencode($busca) ?>&amp;estado=<?= urlencode($estadoFiltro) ?>&amp;exportar=1" class="btn-sec">Descargar Excel</a>
     <?php endif; ?>
+  </form>
+
+  <form method="post" class="reporte-ahora">
+    <input type="hidden" name="accion" value="reporte_ahora">
+    <input type="hidden" name="csrf" value="<?= htmlspecialchars($_SESSION['csrf']) ?>">
+    <span>El reporte con las pendientes y el Excel llega cada día a las <?= HORA_REPORTE ?>:00 a. m. a
+      <?= htmlspecialchars(implode(' y ', DESTINOS_REPORTE)) ?>.</span>
+    <button class="btn-sec">Enviar reporte ahora</button>
   </form>
 
   <?php if (!$lista): ?>
     <div class="vacio">
-      <?= $busca !== '' ? 'No hay solicitudes que coincidan con esa búsqueda.'
+      <?= ($busca !== '' || $estadoFiltro !== '') ? 'No hay solicitudes que coincidan con ese filtro.'
                         : 'Todavía no hay solicitudes. Aparecerán aquí en cuanto alguien use el formulario del sitio.' ?>
     </div>
   <?php else: foreach ($lista as $s):
         $f = strtotime((string)($s['fecha_hora'] ?? '')); ?>
-    <div class="sol">
+    <div class="sol <?= $s['sin_atender'] ? 'sol-alerta' : '' ?>" id="s-<?= htmlspecialchars($s['radicado'] ?? '') ?>">
+      <div class="sol-estado">
+        <span class="estado-chip estado-<?= $s['estado'] ?>"><?= ESTADOS[$s['estado']] ?></span>
+        <?php if ($s['sin_atender']): ?>
+          <strong class="sin-atender">Sin atender · llegó <?= hace($s['horas_espera']) ?></strong>
+        <?php elseif ($s['estado'] !== 'nueva'): ?>
+          <span class="estado-desde">por <?= htmlspecialchars($s['estado_quien']) ?> ·
+            <?= date('d/m/Y H:i', strtotime($s['estado_fecha']) ?: time()) ?></span>
+        <?php else: ?>
+          <span class="estado-desde">llegó <?= hace($s['horas_espera']) ?></span>
+        <?php endif; ?>
+      </div>
       <div class="sol-cab">
         <b><?= htmlspecialchars($s['nombre'] ?? '') ?></b>
         <span>
@@ -457,6 +561,32 @@ function estadoDocumento(array $doc): array {
           </div>
         </div>
       <?php endif; ?>
+      <details class="seguimiento" <?= $s['sin_atender'] ? 'open' : '' ?>>
+        <summary>Actualizar seguimiento<?= $s['historial'] ? ' · ' . count($s['historial']) . ' cambio' . (count($s['historial']) === 1 ? '' : 's') : '' ?></summary>
+        <form method="post" class="seguimiento-form">
+          <input type="hidden" name="accion" value="estado">
+          <input type="hidden" name="csrf" value="<?= htmlspecialchars($_SESSION['csrf']) ?>">
+          <input type="hidden" name="radicado" value="<?= htmlspecialchars($s['radicado'] ?? '') ?>">
+          <select name="estado" aria-label="Nuevo estado">
+            <?php foreach (ESTADOS as $k => $v): ?>
+              <option value="<?= $k ?>" <?= $k === ($s['estado'] === 'nueva' ? 'contactada' : $s['estado']) ? 'selected' : '' ?>><?= $v ?></option>
+            <?php endforeach; ?>
+          </select>
+          <input type="text" name="quien" required minlength="2" maxlength="60" placeholder="Quién la atendió *"
+                 value="<?= htmlspecialchars($quienPrevio) ?>" aria-label="Quién la atendió">
+          <input type="text" name="nota" maxlength="300" placeholder="Nota (opcional): qué se habló, próximo paso…" aria-label="Nota">
+          <button class="btn">Guardar</button>
+        </form>
+        <?php if ($s['historial']): ?>
+          <ol class="historial">
+            <?php foreach (array_reverse($s['historial']) as $h): ?>
+              <li><b><?= ESTADOS[$h['estado']] ?></b> · <?= htmlspecialchars($h['quien']) ?> ·
+                <?= date('d/m/Y H:i', strtotime($h['fecha_hora']) ?: time()) ?>
+                <?php if (trim($h['nota']) !== ''): ?> — <?= htmlspecialchars($h['nota']) ?><?php endif; ?></li>
+            <?php endforeach; ?>
+          </ol>
+        <?php endif; ?>
+      </details>
       <p class="sol-aut">
         Autorización de tratamiento de datos: <strong><?= htmlspecialchars($s['autoriza'] ?? '') ?></strong>
         · versión <?= htmlspecialchars($s['version_autorizacion'] ?? '') ?>

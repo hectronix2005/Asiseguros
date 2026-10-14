@@ -144,6 +144,21 @@ Para que una campaña se distinga, sus enlaces deben llevar
 `?utm_source=…&utm_medium=…&utm_campaign=…` (por ejemplo
 `utm_source=facebook&utm_medium=social&utm_campaign=cumplimiento-oct`).
 
+**Seguimiento comercial.** Cada solicitud tiene estado (Nueva, Contactada,
+Cotizada, Cerrada). Al cambiarlo se exige el nombre de quien la atendió y se
+puede dejar una nota; todo queda en `../asiseguros-datos/seguimiento.csv`, que
+solo crece (el historial no se edita ni se borra). Las solicitudes nuevas con
+más de 24 h sin contacto salen resaltadas como «sin atender» y tienen su filtro.
+
+**Reporte diario, 7:00 a. m.** Llega a hectorn.personal@gmail.com y a
+comercial1@asiseguros.com con las solicitudes sin atender, las de las últimas
+24 h y el Excel completo adjunto, que sirve también de copia de seguridad fuera
+del servidor. Lo dispara `scripts/desplegar.sh` (cron cada 10 min) llamando a
+`admin/lib/reporte-diario.php`, que solo envía después de las 7:00 y una vez por
+día (marca `.reporte-AAAA-MM-DD` en la carpeta de datos). El resultado de cada
+envío queda en `~/despliegue.log`. Desde el panel se puede enviar a mano con
+«Enviar reporte ahora».
+
 Protegido con contraseña, bloqueo tras cinco intentos, y el firewall del hosting
 como segunda capa.
 

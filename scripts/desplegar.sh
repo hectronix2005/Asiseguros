@@ -41,6 +41,18 @@ if [ "${1:-}" != "--actualizado" ]; then
   exec /bin/sh "$0" --actualizado
 fi
 
+# Reporte diario de solicitudes (7:00 a. m.) a gerencia y al comercial. Va
+# antes de la comparación de commits porque debe correr aunque no haya nada
+# que desplegar. El propio script decide si ya es hora y si ya se envió hoy;
+# un fallo aquí no detiene el despliegue.
+PHP=""
+for candidato in /opt/cpanel/ea-php81/root/usr/bin/php /usr/local/bin/php /usr/bin/php; do
+  if [ -x "$candidato" ]; then PHP="$candidato"; break; fi
+done
+if [ -n "$PHP" ] && [ -f "$DESTINO/admin/lib/reporte-diario.php" ]; then
+  "$PHP" "$DESTINO/admin/lib/reporte-diario.php" >> "$REGISTRO" 2>&1 || true
+fi
+
 AHORA=$(git rev-parse HEAD)
 
 # Se compara contra el último commit DESPLEGADO, no contra el que había antes de
@@ -102,7 +114,9 @@ done
 mkdir -p "$DESTINO/admin/lib"
 cp -f admin/.htaccess admin/index.php "$DESTINO/admin/"
 cp -f admin/lib/.htaccess admin/lib/docx.php admin/lib/paginas.php \
-      admin/lib/solicitudes.php admin/lib/zip.php "$DESTINO/admin/lib/"
+      admin/lib/solicitudes.php admin/lib/zip.php \
+      admin/lib/seguimiento.php admin/lib/reporte.php admin/lib/reporte-diario.php \
+      "$DESTINO/admin/lib/"
 
 echo "$AHORA" > "$MARCA"
 echo "$(date '+%Y-%m-%d %H:%M:%S') desplegado $AHORA" >> "$REGISTRO"
