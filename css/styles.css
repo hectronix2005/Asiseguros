@@ -399,6 +399,16 @@ p {
   margin-left: 12px;
 }
 
+/* El botón hereda el relleno de los enlaces del menú (26px arriba y abajo),
+   que lo estiraba hasta el alto de la barra. Se le devuelve el de .btn-sm. */
+.nav-menu > li.nav-cta > a.btn {
+  padding: 10px 24px;
+  color: var(--primary);
+}
+.nav-menu > li.nav-cta > a.btn::after {
+  display: none;
+}
+
 /* Mobile menu toggle */
 .menu-toggle {
   display: none;
@@ -1599,6 +1609,13 @@ p {
   .nav-menu > li > a {
     padding: 14px 0;
     border-bottom: 1px solid rgba(255,255,255,0.06);
+    color: rgba(255,255,255,0.88);
+  }
+
+  /* Sobre el fondo azul del menú abierto, el gris y el azul de escritorio no se leían. */
+  .nav-menu > li > a:hover,
+  .nav-menu > li.active > a {
+    color: var(--secondary);
   }
 
   .nav-menu > li > a::after {
