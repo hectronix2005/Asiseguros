@@ -112,13 +112,14 @@ function resumen_solicitudes(array $sol): array
 {
     $hoy = date('Y-m-d');
     $mes = date('Y-m');
-    $r = ['total' => count($sol), 'hoy' => 0, 'mes' => 0, 'productos' => [], 'canales' => []];
+    $r = ['total' => count($sol), 'hoy' => 0, 'mes' => 0, 'pendientes' => 0, 'productos' => [], 'canales' => []];
     foreach ($sol as $s) {
         $f = substr((string)($s['fecha_hora'] ?? ''), 0, 10);
         if ($f === $hoy) $r['hoy']++;
         if (str_starts_with($f, $mes)) $r['mes']++;
         $p = (string)($s['tipo_seguro'] ?? '');
         if ($p !== '') $r['productos'][$p] = ($r['productos'][$p] ?? 0) + 1;
+        if (empty($s['detalle'])) $r['pendientes']++;
         $c = (string)($s['canal'] ?? 'Sin dato');
         $r['canales'][$c] = ($r['canales'][$c] ?? 0) + 1;
     }
@@ -144,7 +145,7 @@ function exportar_csv(array $sol): void
     fputcsv($out, array_merge(
         ['Radicado','Fecha','Nombre','Teléfono','Correo','Producto','Mensaje',
          'Autoriza','Versión autorización','Texto de la autorización',
-         'Canal','Fuente (utm)','Medio (utm)','Campaña (utm)','Página de llegada','Sitio de origen'],
+         'Paso 2','Canal','Fuente (utm)','Medio (utm)','Campaña (utm)','Página de llegada','Sitio de origen'],
         array_map(fn($k) => ucfirst(str_replace('_',' ',$k)), $claves)
     ), ',', '"', '\\');
 
@@ -154,6 +155,7 @@ function exportar_csv(array $sol): void
             $s['telefono'] ?? '', $s['email'] ?? '', $s['tipo_seguro'] ?? '',
             $s['mensaje'] ?? '', $s['autoriza'] ?? '',
             $s['version_autorizacion'] ?? '', $s['texto_autorizacion'] ?? '',
+            empty($s['detalle']) ? 'Pendiente' : 'Completo',
             $s['canal'] ?? '', $s['procedencia']['fuente'] ?? '', $s['procedencia']['medio'] ?? '',
             $s['procedencia']['campana'] ?? '', $s['procedencia']['pagina_llegada'] ?? '',
             $s['procedencia']['sitio_referente'] ?? '',

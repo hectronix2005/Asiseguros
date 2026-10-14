@@ -244,7 +244,7 @@ function estadoDocumento(array $doc): array {
   .pestanas a { padding:10px 18px; font-size:.88rem; font-weight:600; color:var(--gray-500);
                 text-decoration:none; border-bottom:2px solid transparent; margin-bottom:-1px; }
   .pestanas a.activa { color:var(--primary); border-bottom-color:var(--accent); }
-  .cifras { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:22px; }
+  .cifras { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:12px; margin-bottom:22px; }
   .cifra { background:#fff; border:1px solid var(--gray-200); border-radius:12px; padding:16px; text-align:center; }
   .cifra b { display:block; font-size:1.6rem; color:var(--primary); line-height:1.2; }
   .cifra span { font-size:.75rem; color:var(--gray-400); text-transform:uppercase; letter-spacing:.5px; }
@@ -259,6 +259,9 @@ function estadoDocumento(array $doc): array {
   .documento .tabla-wrap, .documento table { max-width:100%; overflow-x:auto; }
   .documento table { border-collapse:collapse; display:block; margin-bottom:14px; }
   .documento td, .documento th { border:1px solid var(--gray-200); padding:6px 10px; vertical-align:top; }
+  .paso-chip { display:inline-block; border-radius:999px; padding:2px 10px; font-size:.75rem; margin-left:4px; }
+  .paso-chip.pendiente { background:#fff4e0; color:#8a5a00; }
+  .paso-chip.completo { background:#e6f7ec; color:#1f7a3f; }
   .sol-origen { font-size:.8rem; color:var(--gray-400); margin-top:6px; }
   .barra-busca { display:flex; gap:10px; margin-bottom:18px; flex-wrap:wrap; }
   .barra-busca input { flex:1; min-width:200px; margin:0; }
@@ -382,6 +385,7 @@ function estadoDocumento(array $doc): array {
     <div class="cifra"><b><?= $res['total'] ?></b><span>en total</span></div>
     <div class="cifra"><b><?= $res['mes'] ?></b><span>este mes</span></div>
     <div class="cifra"><b><?= $res['hoy'] ?></b><span>hoy</span></div>
+    <div class="cifra"><b><?= $res['pendientes'] ?></b><span>sin datos del riesgo</span></div>
   </div>
 
   <?php if ($res['canales']): ?>
@@ -421,6 +425,11 @@ function estadoDocumento(array $doc): array {
       </div>
       <div class="sol-prod"><?= htmlspecialchars($s['tipo_seguro'] ?? '') ?></div>
       <span class="canal-chip"><?= htmlspecialchars($s['canal'] ?? '') ?></span>
+      <?php if (empty($s['detalle'])): ?>
+        <span class="paso-chip pendiente" title="La persona envió sus datos de contacto pero no completó el segundo paso">Datos del riesgo pendientes</span>
+      <?php else: ?>
+        <span class="paso-chip completo">Datos del riesgo completos</span>
+      <?php endif; ?>
       <?php $pr = $s['procedencia'] ?? []; if (($pr['campana'] ?? '') !== '' || ($pr['pagina_llegada'] ?? '') !== ''): ?>
         <div class="sol-origen">
           <?php if (($pr['campana'] ?? '') !== ''): ?>Campaña: <?= htmlspecialchars($pr['campana']) ?> · <?php endif; ?>
