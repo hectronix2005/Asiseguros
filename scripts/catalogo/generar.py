@@ -265,6 +265,7 @@ pagina = f'''<!DOCTYPE html>
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
+  <meta property="og:url" content="https://www.asiseguros.com/seguros.html">
   <link rel="canonical" href="https://www.asiseguros.com/seguros.html">
   <title>Tipos de seguros y preguntas frecuentes | AsiSeguros</title>
 
@@ -275,10 +276,13 @@ pagina = f'''<!DOCTYPE html>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link rel="stylesheet" href="css/styles.css?v=8">
-  <link rel="stylesheet" href="css/articulo.css?v=3">
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="preload" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap"></noscript></noscript>
+  <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"></noscript>
+  <link rel="stylesheet" href="css/styles.css?v=9">
+  <link rel="stylesheet" href="css/articulo.css?v=4">
   <link rel="stylesheet" href="css/catalogo.css?v=2">
   <script>document.documentElement.classList.add('js')</script>
   <script type="application/ld+json">
@@ -290,7 +294,7 @@ pagina = f'''<!DOCTYPE html>
   <header class="header" id="header">
     <div class="container">
       <a href="index.html" class="logo">
-        <img src="assets/img/logo-web.png" alt="AsiSeguros" height="55">
+        <img src="assets/img/logo-web.png" alt="AsiSeguros" width="90" height="55">
       </a>
       <nav>
         <ul class="nav-menu">

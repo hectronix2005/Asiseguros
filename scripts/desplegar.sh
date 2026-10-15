@@ -85,6 +85,9 @@ cp -f assets/img/logo.png assets/img/logo-web.png assets/img/og-asiseguros.jpg a
       assets/img/autos.jpg assets/img/nosotros.jpg assets/img/proceso.jpg \
       assets/img/card-personas.jpg assets/img/card-automoviles.jpg \
       assets/img/card-generales.jpg assets/img/card-empresariales.jpg \
+      assets/img/banner2.webp assets/img/nosotros.webp assets/img/proceso.webp assets/img/autos.webp \
+      assets/img/card-personas.webp assets/img/card-automoviles.webp \
+      assets/img/card-generales.webp assets/img/card-empresariales.webp \
       assets/img/seguros-del-estado.png "$DESTINO/assets/img/"
 
 # Portafolio en PDF para descargar desde la portada y el catálogo

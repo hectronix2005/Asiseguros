@@ -16,7 +16,7 @@
 .art-cta { background: var(--primary); border-radius: var(--radius-lg); padding: 36px; text-align: center; margin-top: 48px; }
 .art-cta h3 { color: #fff; font-size: 1.25rem; margin-bottom: 10px; }
 .art-cta p { color: rgba(255,255,255,.75); margin-bottom: 22px; font-size: 0.92rem; }
-.footer-legal-note { font-size: 0.72rem; line-height: 1.6; color: rgba(255,255,255,0.45); margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.08); }
+.footer-legal-note { font-size: 0.72rem; line-height: 1.6; color: rgba(255,255,255,0.65); margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.08); }
 .art-mas { margin-top: 32px; font-size: 0.92rem; }
 .art-mas a { color: var(--accent); font-weight: 600; }
 
@@ -50,3 +50,15 @@
 .art-relacionadas ul { margin-bottom: 0; }
 .art-relacionadas a { color: var(--primary); font-weight: 600; }
 
+
+/* Fecha de actualización visible (Google la usa como señal de vigencia) */
+.art-fecha { font-size: .8rem; color: var(--gray-500); margin-top: -24px; margin-bottom: 28px; }
+
+/* Enlaces dentro del texto: subrayados y en color de alto contraste (WCAG AA) */
+.art p a, .art li a, .art td a { color: var(--primary); text-decoration: underline; text-underline-offset: 2px; }
+.art-mas a { color: var(--primary); text-decoration: underline; }
+
+/* Fuentes oficiales y autoría: señales de confianza para temas legales y financieros */
+.art-fuentes { font-size: .88rem; }
+.art-fuentes li { font-size: .88rem; }
+.art-autor { font-size: .85rem; color: var(--gray-500); border-top: 1px solid var(--gray-200); padding-top: 14px; margin-top: 18px; }

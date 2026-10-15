@@ -21,7 +21,7 @@
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="canonical" href="https://www.asiseguros.com/">
-  <title>Agencia de seguros en Bogotá: pólizas de cumplimiento | AsiSeguros</title>
+  <title>Agencia de seguros en Bogotá: cumplimiento | AsiSeguros</title>
 
   <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
@@ -30,14 +30,17 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link rel="stylesheet" href="css/styles.css?v=8">
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="preload" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap"></noscript></noscript>
+  <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"></noscript>
+  <link rel="stylesheet" href="css/styles.css?v=9">
   <style>
     /* Franja de respaldo (reemplaza el carrusel de logos) */
     .backing-strip { background: var(--gray-50) !important; border-bottom: 1px solid var(--gray-200); padding: 28px 0; overflow: visible; }
     .backing-strip .container { display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; }
-    .backing-eyebrow { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; color: var(--gray-400); font-weight: 600; }
+    .backing-eyebrow { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; color: var(--gray-500); font-weight: 600; }
     .backing-name { font-size: 1.35rem; font-weight: 700; color: var(--primary, #0f2f5e); }
     .backing-note { font-size: 0.8rem; color: var(--gray-500, #6b7280); }
     /* 40 px y no más: el logo oficial solo existe a 226x60, y mostrarlo cerca de
@@ -136,7 +139,7 @@
     .paso2-acciones .btn { flex: 1; justify-content: center; min-width: 170px; }
 
     /* Aviso legal del intermediario */
-    .footer-legal-note { font-size: 0.72rem; line-height: 1.6; color: rgba(255,255,255,0.45); margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.08); }
+    .footer-legal-note { font-size: 0.72rem; line-height: 1.6; color: rgba(255,255,255,0.65); margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.08); }
 
     /* Stats grid layout for 4 counters */
     .stats-section .stats-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 32px; }
@@ -217,7 +220,7 @@
   <header class="header" id="header">
     <div class="container">
       <a href="/" class="logo">
-        <img src="assets/img/logo-web.png" alt="AsiSeguros" height="55">
+        <img src="assets/img/logo-web.png" alt="AsiSeguros" width="90" height="55">
       </a>
 
       <nav>
@@ -244,7 +247,7 @@
         </ul>
       </nav>
 
-      <div class="menu-toggle" id="menuToggle" aria-label="Abrir menú">
+      <div class="menu-toggle" id="menuToggle" role="button" aria-label="Abrir menú">
         <span></span><span></span><span></span>
       </div>
     </div>
@@ -255,7 +258,7 @@
     <div class="container">
       <div class="hero-content">
         <div class="hero-badge">
-          <i class="fas fa-shield-halved"></i> Agencia de Seguros en Colombia
+          <i class="fas fa-shield-halved"></i> Agencia de seguros en Bogotá
         </div>
         <h1>
           Protegemos <span class="highlight">lo que más importa</span> para ti
@@ -290,10 +293,10 @@
 
       <div class="hero-image">
         <div class="hero-image-wrapper">
-          <img src="assets/img/banner2.jpg"
+          <img src="assets/img/banner2.webp"
                alt="Familia protegida con seguros AsiSeguros"
-               width="600" height="500"
-               loading="eager">
+               width="600" height="400"
+               loading="eager" fetchpriority="high">
           <div class="hero-float-card card-1">
             <i class="fas fa-shield-check"></i>
             <div class="card-info">
@@ -319,7 +322,7 @@
       <span class="backing-eyebrow">Con el respaldo de</span>
       <!-- El logo se muestra solo si el archivo existe; si falta, queda el nombre
            en texto. Uso autorizado por Seguros del Estado. Ver docs/FOTOS.md -->
-      <img src="assets/img/seguros-del-estado.png" alt="Seguros del Estado S.A."
+      <img src="assets/img/seguros-del-estado.png" alt="Seguros del Estado S.A." width="151" height="40"
            class="backing-logo" onerror="this.remove()">
       <strong class="backing-name">Seguros del Estado S.A.</strong>
       <span class="backing-note">Compañía vigilada por la Superintendencia Financiera de Colombia</span>
@@ -330,7 +333,7 @@
   <section class="about-section" id="nosotros">
     <div class="container">
       <div class="about-image reveal">
-        <img src="assets/img/nosotros.jpg"
+        <img src="assets/img/nosotros.webp"
              onerror="this.onerror=null; this.src='assets/img/site-11.png';"
              alt="Equipo AsiSeguros asesoría en seguros"
              width="600" height="450"
@@ -382,7 +385,7 @@
 
       <div class="services-grid">
         <div class="service-card reveal">
-          <div class="service-media" data-photo="assets/img/card-empresariales.jpg"></div>
+          <div class="service-media" data-photo="assets/img/card-empresariales.webp"></div>
           <div class="service-icon"><i class="fas fa-building-shield"></i></div>
           <h3>Empresas y contratación</h3>
           <p>Las garantías que exige la contratación estatal y privada, y la protección frente a daños a terceros, fraude interno y pérdida de mercancía.</p>
@@ -396,7 +399,7 @@
         </div>
 
         <div class="service-card reveal">
-          <div class="service-media" data-photo="assets/img/card-generales.jpg"></div>
+          <div class="service-media" data-photo="assets/img/card-generales.webp"></div>
           <div class="service-icon"><i class="fas fa-house-chimney"></i></div>
           <h3>Patrimonio</h3>
           <p>Tu casa, tu negocio y tu obra frente a incendio, eventos de la naturaleza, hurto y daños de maquinaria y equipos.</p>
@@ -408,7 +411,7 @@
         </div>
 
         <div class="service-card reveal">
-          <div class="service-media" data-photo="assets/img/card-automoviles.jpg"></div>
+          <div class="service-media" data-photo="assets/img/card-automoviles.webp"></div>
           <div class="service-icon"><i class="fas fa-car-side"></i></div>
           <h3>Movilidad</h3>
           <p>Del carro de la familia a la flota de carga: carros, motos, taxis, camiones y transporte de pasajeros.</p>
@@ -421,7 +424,7 @@
         </div>
 
         <div class="service-card reveal">
-          <div class="service-media" data-photo="assets/img/card-personas.jpg"></div>
+          <div class="service-media" data-photo="assets/img/card-personas.webp"></div>
           <div class="service-icon"><i class="fas fa-heart-pulse"></i></div>
           <h3>Personas</h3>
           <p>Vida, accidentes y salud para ti, tu familia o tu equipo de trabajo, con Seguros de Vida del Estado.</p>
@@ -509,7 +512,7 @@
   </section>
 
   <!-- ========== PRODUCTO DESTACADO: AUTOS ========== -->
-  <section class="product-highlight" id="seguro-autos" data-photo="assets/img/autos.jpg">
+  <section class="product-highlight" id="seguro-autos" data-photo="assets/img/autos.webp">
     <div class="container">
       <div class="product-content reveal">
         <span class="section-subtitle">Movilidad</span>
@@ -599,7 +602,7 @@
   </section>
 
   <!-- ========== CÓMO TRABAJAMOS ========== -->
-  <section class="testimonials-section" id="como-trabajamos" data-photo="assets/img/proceso.jpg">
+  <section class="testimonials-section" id="como-trabajamos" data-photo="assets/img/proceso.webp">
     <div class="container text-center">
       <span class="section-subtitle reveal">Cómo trabajamos</span>
       <h2 class="section-title reveal">De la necesidad a la póliza en cuatro pasos</h2>
@@ -640,7 +643,7 @@
           <a href="#contacto" class="btn btn-primary">
             <i class="fas fa-file-signature"></i> Cotiza tu seguro ahora
           </a>
-          <a href="https://wa.me/573185231290?text=Hola%2C%20quiero%20cotizar%20un%20seguro" target="_blank" class="btn btn-secondary">
+          <a href="https://wa.me/573185231290?text=Hola%2C%20quiero%20cotizar%20un%20seguro" target="_blank" rel="noopener" class="btn btn-secondary">
             <i class="fab fa-whatsapp"></i> Escríbenos por WhatsApp
           </a>
         </div>
@@ -886,7 +889,7 @@
     <div class="container">
       <div class="footer-grid">
         <div class="footer-brand">
-          <img src="assets/img/logo-web.png" alt="AsiSeguros" class="footer-logo">
+          <img src="assets/img/logo-web.png" alt="AsiSeguros" class="footer-logo" width="82" height="50" loading="lazy">
           <p>
             Agencia de seguros comprometida con la protección integral de personas, familias
             y empresas en Colombia. Tu tranquilidad es nuestro compromiso.

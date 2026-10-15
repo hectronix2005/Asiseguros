@@ -2333,4 +2333,4 @@ a.why-card p { color: var(--gray-500); }
 
 /* Nombre, dirección y teléfono en el pie de todas las páginas */
 .footer-nap { font-size: 0.8rem; line-height: 1.6; color: rgba(255,255,255,0.7); margin-top: 16px; }
-.footer-nap a { color: rgba(255,255,255,0.85); }
+.footer-nap a { color: rgba(255,255,255,0.9); text-decoration: underline; }
