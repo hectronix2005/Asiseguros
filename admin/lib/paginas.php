@@ -96,7 +96,7 @@ function construir_pagina(string $titulo, string $metaDescripcion, string $conte
   <header class="header" id="header">
     <div class="container">
       <a href="index.html" class="logo">
-        <img src="assets/img/logo.png" alt="AsiSeguros" height="55">
+        <img src="assets/img/logo-web.png" alt="AsiSeguros" height="55">
       </a>
       <nav>
         <ul class="nav-menu">

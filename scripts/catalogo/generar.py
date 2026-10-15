@@ -105,6 +105,18 @@ TEMAS = {
 }
 
 
+
+# Pólizas que tienen una guía propia: el catálogo las enlaza para que Google
+# y el visitante lleguen a la página que trata cada producto en profundidad.
+GUIAS = {
+    'cumplimiento-estatal': ('poliza-de-cumplimiento.html', 'Guía: póliza de cumplimiento, qué es y cómo tramitarla'),
+    'todo-riesgo-construccion': ('todo-riesgo-contratista.html', 'Guía: todo riesgo contratista, qué cubre y cómo se cotiza'),
+    'rce': ('responsabilidad-civil-extracontractual.html', 'Guía: responsabilidad civil extracontractual'),
+    'manejo-global-comercial': ('poliza-de-manejo.html', 'Guía: póliza de manejo para empresas y entidades'),
+    'manejo-entidades-estatales': ('poliza-de-manejo.html', 'Guía: póliza de manejo para empresas y entidades'),
+    'transporte-mercancias': ('seguro-transporte-de-carga.html', 'Guía: seguro de transporte de mercancías'),
+}
+
 def tema(pregunta: str) -> str:
     q = pregunta.lower()
     if re.search(r'siniestro|reclam|aviso|indemniz|radic|qué hago si|queja|tiempos de respuesta', q):
@@ -159,6 +171,8 @@ for n, r in enumerate(DATOS['ramas'], 1):
     tarjetas = []
     for p in r['polizas']:
         segs = SEGMENTO_POR_POLIZA[p['slug']]
+        guia = (f'<p class="cat-guia"><a href="{GUIAS[p["slug"]][0]}"><i class="fas fa-book-open"></i> '
+                f'{e(GUIAS[p["slug"]][1])}</a></p>' if p['slug'] in GUIAS else '')
         buscable = plano(' '.join([p['nombre'], r['nombre'], p['resumen'], p['para_quien'],
                                    ' '.join(p.get('coberturas', []))]))
         cob = ''.join(f'<li>{e(c)}</li>' for c in p.get('coberturas', []))
@@ -186,6 +200,7 @@ for n, r in enumerate(DATOS['ramas'], 1):
       </div>
       <p class="cat-resumen">{e(p['resumen'])}</p>
       <p class="cat-para"><strong>Para:</strong> {e(p['para_quien'])}</p>
+      {guia}
       <div class="cat-tags">{etiquetas}</div>
       <details class="cat-detalle">
         <summary><span class="cat-abrir">Ver coberturas y {len(p['faq'])} preguntas frecuentes</span>
@@ -241,13 +256,17 @@ pagina = f'''<!DOCTYPE html>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Catálogo de {total_polizas} pólizas de Seguros del Estado y Seguros de Vida del Estado con preguntas frecuentes: cumplimiento, responsabilidad civil, autos, hogar, vida y salud. Filtra por tu necesidad y cotiza con AsiSeguros.">
+  <meta name="description" content="{total_polizas} pólizas de Seguros del Estado explicadas en lenguaje claro: cumplimiento, responsabilidad civil, autos, hogar, vida y salud. Filtra y cotiza.">
   <meta name="robots" content="index, follow">
   <meta property="og:title" content="Seguros y preguntas frecuentes | AsiSeguros">
   <meta property="og:description" content="{total_polizas} pólizas explicadas en lenguaje claro, con filtros por tipo de cliente y necesidad.">
   <meta property="og:type" content="website">
+  <meta property="og:image" content="https://www.asiseguros.com/assets/img/og-asiseguros.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="canonical" href="https://www.asiseguros.com/seguros.html">
-  <title>Seguros y preguntas frecuentes | AsiSeguros</title>
+  <title>Tipos de seguros y preguntas frecuentes | AsiSeguros</title>
 
   <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
@@ -258,9 +277,9 @@ pagina = f'''<!DOCTYPE html>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link rel="stylesheet" href="css/styles.css?v=7">
-  <link rel="stylesheet" href="css/articulo.css?v=2">
-  <link rel="stylesheet" href="css/catalogo.css?v=1">
+  <link rel="stylesheet" href="css/styles.css?v=8">
+  <link rel="stylesheet" href="css/articulo.css?v=3">
+  <link rel="stylesheet" href="css/catalogo.css?v=2">
   <script>document.documentElement.classList.add('js')</script>
   <script type="application/ld+json">
 {jsonld}
@@ -271,7 +290,7 @@ pagina = f'''<!DOCTYPE html>
   <header class="header" id="header">
     <div class="container">
       <a href="index.html" class="logo">
-        <img src="assets/img/logo.png" alt="AsiSeguros" height="55">
+        <img src="assets/img/logo-web.png" alt="AsiSeguros" height="55">
       </a>
       <nav>
         <ul class="nav-menu">
@@ -413,6 +432,11 @@ pagina = f'''<!DOCTYPE html>
           <a href="terminos-y-condiciones.html">Términos y Condiciones</a>
         </div>
       </div>
+      <p class="footer-nap">
+        ASISEGUROS LTDA · Calle 106 No. 51-19, piso 2, Bogotá D.C. ·
+        <a href="tel:+573185231290">+57 318 523 1290</a> · Lunes a viernes, 8:00 a.&nbsp;m. a 6:00 p.&nbsp;m.
+      </p>
+
       <p class="footer-legal-note">
         AsiSeguros es el nombre comercial de ASISEGUROS LTDA, NIT 901.483.323-4, agencia de seguros
         que actúa como intermediario y no asume la calidad de aseguradora. Las pólizas son expedidas

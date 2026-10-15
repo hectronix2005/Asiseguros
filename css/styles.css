@@ -2330,3 +2330,7 @@ a.why-card p { color: var(--gray-500); }
 .busca-poliza-lista li span { font-size: 0.75rem; color: var(--gray-500); }
 .busca-poliza-lista li[aria-selected="true"], .busca-poliza-lista li:hover { background: var(--gray-100); }
 .busca-poliza-lista .busca-poliza-vacio { font-size: 0.82rem; color: var(--gray-500); cursor: default; }
+
+/* Nombre, dirección y teléfono en el pie de todas las páginas */
+.footer-nap { font-size: 0.8rem; line-height: 1.6; color: rgba(255,255,255,0.7); margin-top: 16px; }
+.footer-nap a { color: rgba(255,255,255,0.85); }

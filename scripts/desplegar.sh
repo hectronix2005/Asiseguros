@@ -81,7 +81,7 @@ cp -Rf css js "$DESTINO/"
 
 # Imágenes en uso
 mkdir -p "$DESTINO/assets/img"
-cp -f assets/img/logo.png assets/img/banner2.jpg assets/img/site-11.png \
+cp -f assets/img/logo.png assets/img/logo-web.png assets/img/og-asiseguros.jpg assets/img/banner2.jpg assets/img/site-11.png \
       assets/img/autos.jpg assets/img/nosotros.jpg assets/img/proceso.jpg \
       assets/img/card-personas.jpg assets/img/card-automoviles.jpg \
       assets/img/card-generales.jpg assets/img/card-empresariales.jpg \
