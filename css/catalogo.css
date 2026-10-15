@@ -43,8 +43,8 @@
 
 .cat-rama { margin: 28px 0 44px; scroll-margin-top: 100px; }
 .cat-rama-cab { display: flex; gap: 18px; align-items: flex-start; border-bottom: 3px solid var(--primary); padding-bottom: 16px; margin-bottom: 18px; }
-.cat-rama-num { font-size: 2.2rem; font-weight: 800; color: var(--secondary-dark); line-height: 1; min-width: 52px; font-variant-numeric: tabular-nums; }
-.cat-rama-fam { font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); margin-bottom: 2px; }
+.cat-rama-num { font-size: 2.2rem; font-weight: 800; color: #1e7f45; line-height: 1; min-width: 52px; font-variant-numeric: tabular-nums; }
+.cat-rama-fam { font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #2b7d7a; margin-bottom: 2px; }
 .cat-rama h2 { font-size: 1.45rem; color: var(--primary); line-height: 1.25; }
 .cat-rama-lema { font-weight: 600; color: var(--gray-700); margin: 4px 0 6px; }
 .cat-rama-intro { font-size: .9rem; color: var(--gray-600); line-height: 1.65; max-width: 70ch; }
@@ -61,7 +61,7 @@
 .cat-para { font-size: .86rem; color: var(--gray-600); line-height: 1.6; margin-bottom: 10px; max-width: 75ch; }
 .cat-para strong { color: var(--primary); }
 .cat-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
-.cat-tag { font-size: .7rem; font-weight: 600; color: var(--accent); border: 1px solid rgba(77,183,179,.45); border-radius: 999px; padding: 2px 9px; }
+.cat-tag { font-size: .7rem; font-weight: 600; color: #2b7d7a; border: 1px solid rgba(77,183,179,.45); border-radius: 999px; padding: 2px 9px; }
 
 .cat-detalle > summary { list-style: none; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; font-size: .86rem; font-weight: 700; color: var(--primary); padding: 6px 0; }
 .cat-detalle > summary::-webkit-details-marker { display: none; }
@@ -137,3 +137,5 @@ html:not(.js) .cat-cuerpo { grid-template-columns: minmax(0, 1fr); }
 .cat-guia { margin: 4px 0 10px; font-size: .88rem; }
 .cat-guia a { color: var(--primary); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
 .cat-guia i { color: var(--accent); margin-right: 4px; }
+
+/* Verde y verde agua más oscuros donde el texto va sobre blanco: contraste AA (4,5:1). */

@@ -278,7 +278,7 @@ pagina = f'''<!DOCTYPE html>
   <link rel="stylesheet" href="css/iconos.css?v=1">
   <link rel="stylesheet" href="css/styles.css?v=11">
   <link rel="stylesheet" href="css/articulo.css?v=4">
-  <link rel="stylesheet" href="css/catalogo.css?v=2">
+  <link rel="stylesheet" href="css/catalogo.css?v=3">
   <script>document.documentElement.classList.add('js')</script>
   <script type="application/ld+json">
 {jsonld}
