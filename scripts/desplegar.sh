@@ -90,6 +90,10 @@ cp -f assets/img/logo.png assets/img/logo-web.png assets/img/og-asiseguros.jpg a
       assets/img/card-generales.webp assets/img/card-empresariales.webp \
       assets/img/seguros-del-estado.png "$DESTINO/assets/img/"
 
+# Fuentes alojadas en el sitio: Montserrat y el subconjunto de íconos
+mkdir -p "$DESTINO/assets/fonts"
+cp -f assets/fonts/*.woff2 "$DESTINO/assets/fonts/"
+
 # Portafolio en PDF para descargar desde la portada y el catálogo
 mkdir -p "$DESTINO/assets/docs"
 cp -f assets/docs/portafolio-asiseguros-2026.pdf "$DESTINO/assets/docs/"

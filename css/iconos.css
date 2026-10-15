@@ -1,0 +1,93 @@
+/* Íconos alojados en el sitio: subconjunto de Font Awesome Free 6.5.1
+   (íconos CC BY 4.0, fuentes SIL OFL 1.1, https://fontawesome.com/license/free).
+   Solo incluye los íconos que usa el sitio; generado por un script a partir del
+   CSS oficial. Si se agrega un ícono nuevo, hay que regenerar este archivo y las
+   fuentes de assets/fonts. */
+@font-face { font-family: "Font Awesome 6 Free"; font-style: normal; font-weight: 900; font-display: block;
+  src: url("../assets/fonts/fa-solid-900-sub.woff2") format("woff2"); }
+@font-face { font-family: "Font Awesome 6 Brands"; font-style: normal; font-weight: 400; font-display: block;
+  src: url("../assets/fonts/fa-brands-400-sub.woff2") format("woff2"); }
+.fa,.fas,.fa-solid,.fab,.fa-brands{-moz-osx-font-smoothing:grayscale;-webkit-font-smoothing:antialiased;display:var(--fa-display,inline-block);font-style:normal;font-variant:normal;line-height:1;text-rendering:auto}
+.fa,.fas,.fa-solid{font-family:"Font Awesome 6 Free";font-weight:900}
+.fab,.fa-brands{font-family:"Font Awesome 6 Brands";font-weight:400}
+.fa-spin{animation:fa-spin 2s linear infinite}
+@keyframes fa-spin{0%{transform:rotate(0deg)}to{transform:rotate(1turn)}}
+@media (prefers-reduced-motion:reduce){.fa-spin{animation:none}}
+.fa-1:before{content:"\31"}
+.fa-2:before{content:"\32"}
+.fa-3:before{content:"\33"}
+.fa-arrow-left:before{content:"\f060"}
+.fa-arrow-right:before{content:"\f061"}
+.fa-arrow-up-right-from-square:before{content:"\f08e"}
+.fa-bars:before{content:"\f0c9"}
+.fa-book-open:before{content:"\f518"}
+.fa-building:before{content:"\f1ad"}
+.fa-building-shield:before{content:"\e4d8"}
+.fa-bullhorn:before{content:"\f0a1"}
+.fa-car:before{content:"\f1b9"}
+.fa-car-side:before{content:"\f5e4"}
+.fa-chart-bar:before{content:"\f080"}
+.fa-check:before{content:"\f00c"}
+.fa-chevron-down:before{content:"\f078"}
+.fa-chevron-right:before{content:"\f054"}
+.fa-chevron-up:before{content:"\f077"}
+.fa-circle-check:before{content:"\f058"}
+.fa-circle-notch:before{content:"\f1ce"}
+.fa-circle-question:before{content:"\f059"}
+.fa-clock:before{content:"\f017"}
+.fa-comments:before{content:"\f086"}
+.fa-edit:before{content:"\f044"}
+.fa-envelope:before{content:"\f0e0"}
+.fa-external-link-alt:before{content:"\f35d"}
+.fa-eye:before{content:"\f06e"}
+.fa-facebook:before{content:"\f09a"}
+.fa-facebook-f:before{content:"\f39e"}
+.fa-file-contract:before{content:"\f56c"}
+.fa-file-pdf:before{content:"\f1c1"}
+.fa-file-signature:before{content:"\f573"}
+.fa-gauge-high:before{content:"\f625"}
+.fa-gavel:before{content:"\f0e3"}
+.fa-globe:before{content:"\f0ac"}
+.fa-handshake:before{content:"\f2b5"}
+.fa-handshake-angle:before{content:"\f4c4"}
+.fa-hashtag:before{content:"\23"}
+.fa-heart-pulse:before{content:"\f21e"}
+.fa-house:before{content:"\f015"}
+.fa-house-chimney:before{content:"\e3af"}
+.fa-image:before{content:"\f03e"}
+.fa-info-circle:before{content:"\f05a"}
+.fa-instagram:before{content:"\f16d"}
+.fa-landmark:before{content:"\f66f"}
+.fa-life-ring:before{content:"\f1cd"}
+.fa-linkedin:before{content:"\f08c"}
+.fa-linkedin-in:before{content:"\f0e1"}
+.fa-list:before{content:"\f03a"}
+.fa-list-check:before{content:"\f0ae"}
+.fa-location-dot:before{content:"\f3c5"}
+.fa-magnifying-glass:before{content:"\f002"}
+.fa-map-marker-alt:before{content:"\f3c5"}
+.fa-paper-plane:before{content:"\f1d8"}
+.fa-people-group:before{content:"\e533"}
+.fa-phone-alt:before{content:"\f879"}
+.fa-plus:before{content:"\2b"}
+.fa-puzzle-piece:before{content:"\f12e"}
+.fa-quote-right:before{content:"\f10e"}
+.fa-rocket:before{content:"\f135"}
+.fa-save:before{content:"\f0c7"}
+.fa-scale-balanced:before{content:"\f24e"}
+.fa-share-alt:before{content:"\f1e0"}
+.fa-shield-halved:before{content:"\f3ed"}
+.fa-sliders:before{content:"\f1de"}
+.fa-star:before{content:"\f005"}
+.fa-th-large:before{content:"\f009"}
+.fa-tiktok:before{content:"\e07b"}
+.fa-toggle-on:before{content:"\f205"}
+.fa-tractor:before{content:"\f722"}
+.fa-trash-can:before{content:"\f2ed"}
+.fa-truck:before{content:"\f0d1"}
+.fa-undo:before{content:"\f0e2"}
+.fa-user-doctor:before{content:"\f0f0"}
+.fa-user-tie:before{content:"\f508"}
+.fa-vault:before{content:"\e2c5"}
+.fa-whatsapp:before{content:"\f232"}
+.fa-youtube:before{content:"\f167"}
