@@ -89,6 +89,10 @@ def revisar(f, en_sitemap, todas):
     titulo = html.unescape(m.group(1)).strip() if (m := re.search(r'<title>([^<]*)</title>', s)) else ''
     desc = p.metas.get('description', '')
 
+    # --- HTML bien formado en lo que Google lee primero (el <head>)
+    if re.search(r'<noscript>(?:(?!</noscript>).)*<noscript>', s, re.S): err.append('<noscript> anidado')
+    if s.count('<noscript') != s.count('</noscript>'): err.append('<noscript> sin cerrar')
+
     # --- Rastreo e indexación
     canon = [l.get('href') for l in p.links if l.get('rel') == 'canonical']
     if canon != [url]: err.append(f'canonical {canon} debería ser [{url}]')
