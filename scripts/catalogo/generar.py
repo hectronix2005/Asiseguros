@@ -254,6 +254,14 @@ jsonld = json.dumps({
 pagina = f'''<!DOCTYPE html>
 <html lang="es">
 <head>
+  <!-- Google tag (gtag.js): Google Ads AW-18515961236 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18515961236"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){{dataLayer.push(arguments);}}
+    gtag('js', new Date());
+    gtag('config', 'AW-18515961236');
+  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="{total_polizas} pólizas de Seguros del Estado explicadas en lenguaje claro: cumplimiento, responsabilidad civil, autos, hogar, vida y salud. Filtra y cotiza.">
@@ -453,8 +461,9 @@ pagina = f'''<!DOCTYPE html>
     <i class="fab fa-whatsapp"></i>
   </a>
 
-  <script src="js/main.js?v=8"></script>
+  <script src="js/main.js?v=9"></script>
   <script src="js/catalogo.js?v=1"></script>
+  <script src="js/conversiones.js?v=1"></script>
 </body>
 </html>
 '''

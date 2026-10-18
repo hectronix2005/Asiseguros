@@ -45,6 +45,14 @@ function construir_pagina(string $titulo, string $metaDescripcion, string $conte
 <!DOCTYPE html>
 <html lang="es">
 <head>
+  <!-- Google tag (gtag.js): Google Ads AW-18515961236 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18515961236"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'AW-18515961236');
+  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="{$m}">
@@ -129,6 +137,7 @@ function construir_pagina(string $titulo, string $metaDescripcion, string $conte
     </div>
   </footer>
 
+  <script src="js/conversiones.js?v=1"></script>
 </body>
 </html>
 
