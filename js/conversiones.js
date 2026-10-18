@@ -32,6 +32,10 @@
   document.addEventListener('click', e => {
     const a = e.target.closest && e.target.closest('a');
     if (!a) return;
+    // La primera vez por sesión, main.js detiene el enlace de WhatsApp y muestra
+    // el aviso de privacidad (#waModal). Ese clic no abre WhatsApp: se cuenta el
+    // de «Continuar», que sí lo abre. Así no hay conversiones dobles ni falsas.
+    if (e.defaultPrevented) return;
     const href = a.getAttribute('href') || '';
     if (href.indexOf('wa.me/573185231290') > -1 || href.indexOf('api.whatsapp.com') > -1) {
       window.asiConversion('whatsapp');

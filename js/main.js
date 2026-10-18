@@ -167,7 +167,9 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
       const targetId = this.getAttribute('href');
-      if (targetId === '#') return;
+      // El botón «Continuar» del aviso de WhatsApp nace con href="#" y luego
+      // apunta a wa.me: solo se desplazan las anclas internas.
+      if (!targetId || targetId === '#' || targetId.charAt(0) !== '#') return;
 
       const targetEl = document.querySelector(targetId);
       if (targetEl) {
@@ -401,6 +403,7 @@ document.addEventListener('DOMContentLoaded', () => {
           body: JSON.stringify({ accion: 'detalle', radicado: radicado, tipo_seguro: tipo, respuestas: respuestas })
         });
         const res = await r.json().catch(() => ({}));
+        if (r.ok && res.ok) avisarSolicitud(2, tipo);
         caja.innerHTML = (r.ok && res.ok)
           ? '<h3>Listo, ya tenemos todo</h3><p class="paso2-intro">Recibimos los datos de tu '
             + 'solicitud <strong>' + radicado + '</strong>. Un asesor te contactará con la cotización.</p>'
@@ -418,6 +421,16 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     return caja;
+  }
+
+  /* ---------- Aviso de solicitud registrada ----------
+     Evento del propio sitio para la medición (js/cookies.js, que solo actúa con
+     el consentimiento del visitante). Lleva el paso y el tipo de seguro elegido;
+     nunca datos personales. */
+  function avisarSolicitud(paso, tipoSeguro) {
+    document.dispatchEvent(new CustomEvent('asi:solicitud', {
+      detail: { paso: paso, tipo_seguro: String(tipoSeguro || '').slice(0, 100) }
+    }));
   }
 
   /* ---------- Contact Form ----------
@@ -660,6 +673,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (r.ok && res.ok) {
           // Conversión de Google Ads: solo con el registro confirmado por el servidor
           if (window.asiConversion) window.asiConversion('formulario');
+          avisarSolicitud(1, datos.tipo_seguro);
           const wa = contactForm.getAttribute('data-whatsapp') || '573185231290';
           const msg = encodeURIComponent(
             `Hola, acabo de enviar una solicitud de cotización por la página web.\n` +

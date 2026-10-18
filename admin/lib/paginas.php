@@ -137,7 +137,7 @@ function construir_pagina(string $titulo, string $metaDescripcion, string $conte
     </div>
   </footer>
 
-  <script src="js/conversiones.js?v=1"></script>
+  <script src="js/conversiones.js?v=2"></script>
 </body>
 </html>
 

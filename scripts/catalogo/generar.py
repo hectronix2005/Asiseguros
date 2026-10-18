@@ -461,9 +461,9 @@ pagina = f'''<!DOCTYPE html>
     <i class="fab fa-whatsapp"></i>
   </a>
 
-  <script src="js/main.js?v=9"></script>
+  <script src="js/main.js?v=10"></script>
   <script src="js/catalogo.js?v=1"></script>
-  <script src="js/conversiones.js?v=1"></script>
+  <script src="js/conversiones.js?v=2"></script>
 </body>
 </html>
 '''
