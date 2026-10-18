@@ -112,6 +112,12 @@ Redirect gone /checkout/
 Redirect gone /my-account/
 RedirectMatch gone ^/product/.*$
 RedirectMatch gone ^/product-category/.*$
+Redirect gone /track-order/
+
+# Páginas de demostración de la plantilla de WordPress que Google llegó a rastrear
+# (Search Console, 18-oct-2026): con 410 salen del índice antes que con 404.
+RedirectMatch gone ^/elements/.*$
+Redirect gone /grid-style-1/
 
 # Blog, taxonomías y restos de WordPress: ver el bloque mod_rewrite de arriba.
 # No se usan RedirectMatch aquí porque en LiteSpeed mod_alias se impone sobre
