@@ -463,7 +463,7 @@ pagina = f'''<!DOCTYPE html>
 
   <script src="js/main.js?v=10"></script>
   <script src="js/catalogo.js?v=1"></script>
-  <script src="js/conversiones.js?v=2"></script>
+  <script src="js/conversiones.js?v=3"></script>
 </body>
 </html>
 '''

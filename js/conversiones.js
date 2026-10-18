@@ -9,8 +9,8 @@
      api.whatsapp.com o tel:, incluidos los botones flotantes.
    - Envío del formulario de cotización: main.js llama a
      asiConversion('formulario') solo cuando el servidor confirma el registro.
-     Falta crear esa acción de conversión en Google Ads y pegar aquí su etiqueta;
-     mientras esté vacía, el formulario queda con la detección automática.
+     La acción «Formulario de cotización» del 15-oct usa la detección automática
+     de Google, que no capta este envío porque el formulario no recarga la página.
 
    No se envían datos personales (nombre, correo, teléfono): el documento lo
    prohíbe sin autorización del Área Jurídica.
@@ -20,7 +20,8 @@
   const CONVERSIONES = {
     whatsapp: 'AW-18515961236/WfOfCMyJup4dEJTLjP1E',
     llamada: 'AW-18515961236/m_TQCM-Jup4dEJTLjP1E',
-    formulario: '' // p. ej. 'AW-18515961236/xxxxxxxxxxxx'
+    // «Solicitud de cotización confirmada» (creada el 18-oct-2026, acción manual)
+    formulario: 'AW-18515961236/qv5-CMSOyaEdEJTLjP1E'
   };
 
   window.asiConversion = function (tipo) {
