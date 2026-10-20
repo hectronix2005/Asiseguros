@@ -264,7 +264,7 @@ pagina = f'''<!DOCTYPE html>
   </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="{total_polizas} pólizas de Seguros del Estado explicadas en lenguaje claro: cumplimiento, responsabilidad civil, autos, hogar, vida y salud. Filtra y cotiza.">
+  <meta name="description" content="{total_polizas} pólizas de Seguros del Estado explicadas en lenguaje claro: cumplimiento, responsabilidad civil, autos, hogar, vida y salud. Cotiza desde toda Colombia.">
   <meta name="robots" content="index, follow">
   <meta property="og:title" content="Seguros y preguntas frecuentes | AsiSeguros">
   <meta property="og:description" content="{total_polizas} pólizas explicadas en lenguaje claro, con filtros por tipo de cliente y necesidad.">
