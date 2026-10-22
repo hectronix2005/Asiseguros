@@ -2,8 +2,9 @@
    AsiSeguros - Conversiones de Google Ads
    ========================================
    Instrucciones del 15-oct-2026 (cuenta de Google Ads 477-175-2639, etiqueta
-   AW-18515961236). La etiqueta de Google va en el <head> de cada página; este
-   archivo solo envía los eventos de conversión.
+   AW-18515961236). La etiqueta de Google la carga js/cookies.js solo cuando el
+   visitante acepta las cookies; sin aceptar, window.gtag no existe y este
+   archivo no envía nada. Este archivo solo envía los eventos de conversión.
 
    - Clic en WhatsApp y clic para llamar: cualquier enlace wa.me/573185231290,
      api.whatsapp.com o tel:, incluidos los botones flotantes.
