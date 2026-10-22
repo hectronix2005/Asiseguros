@@ -68,7 +68,15 @@ fi
 cp -f index.html 404.html asesoria-juridica.html \
       poliza-de-cumplimiento.html todo-riesgo-contratista.html \
       responsabilidad-civil-extracontractual.html poliza-de-manejo.html \
-      seguro-transporte-de-carga.html seguros.html "$DESTINO/"
+      seguro-transporte-de-carga.html seguros.html \
+      amparo-de-pago-de-salarios-y-prestaciones.html cuanto-cuesta-una-poliza-de-cumplimiento.html \
+      poliza-de-cumplimiento-entre-particulares.html poliza-de-cumplimiento-prestacion-de-servicios.html \
+      poliza-de-cumplimiento-secop-ii.html poliza-de-estabilidad-y-calidad-de-la-obra.html \
+      poliza-de-seriedad-de-la-oferta.html poliza-dyo-directores-y-administradores.html \
+      poliza-judicial.html poliza-responsabilidad-civil-medica.html \
+      poliza-responsabilidad-civil-servidores-publicos.html poliza-responsabilidad-del-transportador.html \
+      rce-para-contratos-estatales.html requisitos-poliza-de-cumplimiento.html \
+      seguro-areas-comunes-propiedad-horizontal.html seguro-maquinaria-amarilla.html "$DESTINO/"
 
 # Servidor e indexación
 cp -f .htaccess robots.txt sitemap.xml "$DESTINO/"

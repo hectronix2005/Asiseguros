@@ -115,6 +115,16 @@ GUIAS = {
     'manejo-global-comercial': ('poliza-de-manejo.html', 'Guía: póliza de manejo para empresas y entidades'),
     'manejo-entidades-estatales': ('poliza-de-manejo.html', 'Guía: póliza de manejo para empresas y entidades'),
     'transporte-mercancias': ('seguro-transporte-de-carga.html', 'Guía: seguro de transporte de mercancías'),
+    'cumplimiento-particular': ('poliza-de-cumplimiento-entre-particulares.html', 'Guía: póliza de cumplimiento entre particulares'),
+    'judiciales': ('poliza-judicial.html', 'Guía: póliza judicial, la caución para medidas cautelares'),
+    'rce-derivada-cumplimiento': ('rce-para-contratos-estatales.html', 'Guía: responsabilidad civil extracontractual para contratos estatales'),
+    'rc-profesional-salud': ('poliza-responsabilidad-civil-medica.html', 'Guía: póliza de responsabilidad civil médica'),
+    'rc-directores-administradores': ('poliza-dyo-directores-y-administradores.html', 'Guía: póliza D&O para directores y administradores'),
+    'rc-servidores-publicos': ('poliza-responsabilidad-civil-servidores-publicos.html', 'Guía: responsabilidad civil para servidores públicos'),
+    'copropiedades': ('seguro-areas-comunes-propiedad-horizontal.html', 'Guía: seguro de áreas comunes en propiedad horizontal'),
+    'todo-riesgo-equipo-maquinaria': ('seguro-maquinaria-amarilla.html', 'Guía: seguro para maquinaria amarilla'),
+    'segurcarga-empresarial': ('poliza-responsabilidad-del-transportador.html', 'Guía: responsabilidad del transportador de carga'),
+    'segurcarga-propietarios': ('poliza-responsabilidad-del-transportador.html', 'Guía: responsabilidad del transportador de carga'),
 }
 
 def tema(pregunta: str) -> str:
