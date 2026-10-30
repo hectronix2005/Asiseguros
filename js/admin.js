@@ -11,7 +11,7 @@ var DEFAULT_CONFIG = {
   site: {
     name: 'AsiSeguros',
     phone: '+57 318 523 1290',
-    email: 'comercial1@asiseguros.com',
+    email: 'ventas@asiseguros.com',
     whatsapp: '573185231290',
     schedule: 'Lun - Vie: 8:00 AM - 6:00 PM',
     location: 'Cobertura nacional - Colombia',

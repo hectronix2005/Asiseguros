@@ -25,7 +25,7 @@ date_default_timezone_set('America/Bogota');
 
 require_once __DIR__ . '/correo.php';
 
-const CORREO_DESTINO    = 'comercial1@asiseguros.com';
+const CORREO_DESTINO    = 'ventas@asiseguros.com';
 const LIMITE_POR_HORA   = 20;   // por IP
 const VERSION_ESPERADA  = '2026-08-19';
 

@@ -16,7 +16,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/solicitudes.php';
 require_once dirname(__DIR__, 2) . '/api/correo.php';
 
-const DESTINOS_REPORTE = ['hectorn.personal@gmail.com', 'comercial1@asiseguros.com'];
+const DESTINOS_REPORTE = ['hectorn.personal@gmail.com', 'ventas@asiseguros.com'];
 const HORA_REPORTE = 7;   // 7:00 a. m., hora de Bogotá
 
 function marca_reporte(string $fecha): string

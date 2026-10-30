@@ -14,7 +14,7 @@ declare(strict_types=1);
 
 const COLOR_PRIMARIO = '#0f2441';
 const COLOR_ACENTO   = '#4db7b3';
-const CORREO_CONTACTO = 'comercial1@asiseguros.com';
+const CORREO_CONTACTO = 'ventas@asiseguros.com';
 
 /**
  * Remitente de sobre (Return-Path).
@@ -29,7 +29,7 @@ const CORREO_CONTACTO = 'comercial1@asiseguros.com';
  * rebotes vuelven a este buzón, y algunos servidores rechazan el correo si el
  * remitente de sobre no acepta entregas.
  */
-const REMITENTE_SOBRE = 'comercial1@asiseguros.com';
+const REMITENTE_SOBRE = 'ventas@asiseguros.com';
 
 function esc(string $t): string {
     return htmlspecialchars($t, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
