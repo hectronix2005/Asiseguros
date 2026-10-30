@@ -17,6 +17,26 @@ const COLOR_ACENTO   = '#4db7b3';
 const CORREO_CONTACTO = 'ventas@asiseguros.com';
 
 /**
+ * Copia oculta de cada aviso de cotización; el destinatario principal es ventas@.
+ *
+ * Las direcciones no van en el código porque el repositorio es público: se leen
+ * de copias-ocultas.txt (una por línea) en la carpeta de datos, fuera de git.
+ * Sin el archivo, el aviso sale solo al destinatario principal.
+ */
+function copias_ocultas(): array
+{
+    if (!defined('DIR_DATOS')) return [];
+    $ruta = DIR_DATOS . '/copias-ocultas.txt';
+    if (!is_file($ruta)) return [];
+    $validas = [];
+    foreach (file($ruta, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [] as $linea) {
+        $linea = trim($linea);
+        if (filter_var($linea, FILTER_VALIDATE_EMAIL)) $validas[] = $linea;
+    }
+    return $validas;
+}
+
+/**
  * Remitente de sobre (Return-Path).
  *
  * Importa más de lo que parece: SPF valida este valor, no la cabecera From.
@@ -185,8 +205,10 @@ function enviar_aviso(string $para, array $s, array $det = []): bool
     // El asunto lleva acentos: hay que codificarlo o llega ilegible.
     $asunto = '=?UTF-8?B?' . base64_encode("Cotización {$rad} — {$tipo}") . '?=';
 
+    $copias = copias_ocultas();
     $cabeceras = "From: Sitio web AsiSeguros <" . REMITENTE_SOBRE . ">\r\n"
                . ($mail !== '' ? "Reply-To: " . $mail . "\r\n" : '')
+               . ($copias ? "Bcc: " . implode(', ', $copias) . "\r\n" : '')
                . "MIME-Version: 1.0\r\n"
                . "Content-Type: multipart/alternative; boundary=\"{$sep}\"\r\n";
 
