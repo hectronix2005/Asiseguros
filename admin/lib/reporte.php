@@ -30,7 +30,11 @@ function reporte_enviado_hoy(): bool
     return is_file(marca_reporte(date('Y-m-d')));
 }
 
-function enviar_reporte(array $destinos): array
+/**
+ * @param array  $copias  Direcciones en copia oculta (solo el reenvío del historial las usa).
+ * @param string $prefijo Texto que antecede al asunto, para distinguir un reenvío del reporte diario.
+ */
+function enviar_reporte(array $destinos, array $copias = [], string $prefijo = ''): array
 {
     $todas = solicitudes();
     $res = resumen_solicitudes($todas);
@@ -38,7 +42,7 @@ function enviar_reporte(array $destinos): array
     $recientes = array_values(array_filter($todas, fn($s) => ($s['horas_espera'] ?? 999) < 24));
 
     $hoy = date('d/m/Y');
-    $asunto = 'Solicitudes AsiSeguros · ' . $hoy . ' · '
+    $asunto = $prefijo . 'Solicitudes AsiSeguros · ' . $hoy . ' · '
         . ($res['sin_atender'] ? $res['sin_atender'] . ' sin atender' : 'todas atendidas');
 
     $fila = function (array $s, bool $espera): string {
@@ -98,6 +102,7 @@ function enviar_reporte(array $destinos): array
         . "--{$mixto}--\r\n";
 
     $cabeceras = "From: Sitio web AsiSeguros <" . REMITENTE_SOBRE . ">\r\n"
+               . ($copias ? "Bcc: " . implode(', ', $copias) . "\r\n" : '')
                . "MIME-Version: 1.0\r\n"
                . "Content-Type: multipart/mixed; boundary=\"{$mixto}\"\r\n";
     $asuntoMime = '=?UTF-8?B?' . base64_encode($asunto) . '?=';
@@ -108,4 +113,17 @@ function enviar_reporte(array $destinos): array
     }
     return ['ok' => count($enviados) === count($destinos), 'enviados' => $enviados,
             'sin_atender' => count($sinAtender), 'total' => $res['total']];
+}
+
+/**
+ * Reenvía el historial completo (resumen y Excel con todas las solicitudes) a
+ * ventas@ como destinatario visible, con copia oculta a las cuentas de
+ * copias-ocultas.txt y a hectorn.personal@gmail.com.
+ */
+function reenviar_historial(): array
+{
+    $copias = array_values(array_unique(array_merge(copias_ocultas(), ['hectorn.personal@gmail.com'])));
+    $r = enviar_reporte([CORREO_CONTACTO], $copias, 'Reenvío del historial · ');
+    $r['copias'] = count($copias);
+    return $r;
 }

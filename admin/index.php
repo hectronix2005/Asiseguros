@@ -169,6 +169,19 @@ if ($accion === 'reporte_ahora' && $dentro) {
     }
 }
 
+if ($accion === 'reenviar_historial' && $dentro) {
+    if (!token_valido()) {
+        $aviso = 'La sesión caducó. Vuelve a intentarlo.';
+    } else {
+        $r = reenviar_historial();
+        $aviso = $r['enviados']
+            ? 'Historial de ' . (int)$r['total'] . ' solicitudes enviado a ' . htmlspecialchars(implode(' y ', $r['enviados']))
+              . ' con ' . (int)$r['copias'] . ' copias ocultas.'
+            : 'No se pudo enviar el historial. Revisa el correo del hosting.';
+        $tipoAviso = $r['enviados'] ? 'ok' : 'error';
+    }
+}
+
 if (!empty($_SESSION['aviso_ok'])) {
     $aviso = htmlspecialchars($_SESSION['aviso_ok']);
     $tipoAviso = 'ok';
@@ -499,6 +512,13 @@ function estadoDocumento(array $doc): array {
     <span>El reporte con las pendientes y el Excel llega cada día a las <?= HORA_REPORTE ?>:00 a. m. a
       <?= htmlspecialchars(implode(' y ', DESTINOS_REPORTE)) ?>.</span>
     <button class="btn-sec">Enviar reporte ahora</button>
+  </form>
+
+  <form method="post" class="reporte-ahora">
+    <input type="hidden" name="accion" value="reenviar_historial">
+    <input type="hidden" name="csrf" value="<?= htmlspecialchars($_SESSION['csrf']) ?>">
+    <span>Reenvía el Excel con todas las solicitudes a <?= htmlspecialchars(CORREO_CONTACTO) ?>, con copia oculta a las cuentas configuradas y a hectorn.personal@gmail.com.</span>
+    <button class="btn-sec">Reenviar historial</button>
   </form>
 
   <?php if (!$lista): ?>
