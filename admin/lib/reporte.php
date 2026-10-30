@@ -123,7 +123,9 @@ function enviar_reporte(array $destinos, array $copias = [], string $prefijo = '
 function reenviar_historial(): array
 {
     $copias = array_values(array_unique(array_merge(copias_ocultas(), ['hectorn.personal@gmail.com'])));
-    $r = enviar_reporte([CORREO_CONTACTO], $copias, 'Reenvío del historial · ');
+    // Un envío directo por destinatario: el Cco del hosting no llegó a Gmail,
+    // y así ninguna copia ve las direcciones de las demás.
+    $r = enviar_reporte(array_merge([CORREO_CONTACTO], $copias), [], 'Reenvío del historial · ');
     $r['copias'] = count($copias);
     return $r;
 }
