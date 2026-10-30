@@ -205,12 +205,16 @@ function enviar_aviso(string $para, array $s, array $det = []): bool
     // El asunto lleva acentos: hay que codificarlo o llega ilegible.
     $asunto = '=?UTF-8?B?' . base64_encode("Cotización {$rad} — {$tipo}") . '?=';
 
-    $copias = copias_ocultas();
     $cabeceras = "From: Sitio web AsiSeguros <" . REMITENTE_SOBRE . ">\r\n"
                . ($mail !== '' ? "Reply-To: " . $mail . "\r\n" : '')
-               . ($copias ? "Bcc: " . implode(', ', $copias) . "\r\n" : '')
                . "MIME-Version: 1.0\r\n"
                . "Content-Type: multipart/alternative; boundary=\"{$sep}\"\r\n";
+
+    // Las copias ocultas van como envíos directos: el Cco no llegó a Gmail desde el hosting,
+    // y así cada copia ve solo su propia dirección.
+    foreach (copias_ocultas() as $copia) {
+        @mail($copia, $asunto, $cuerpo, $cabeceras, '-f ' . REMITENTE_SOBRE);
+    }
 
     // El quinto parámetro fija el Return-Path; sin él, SPF no alinea con DMARC.
     return @mail($para, $asunto, $cuerpo, $cabeceras, '-f ' . REMITENTE_SOBRE);
