@@ -129,3 +129,8 @@ function reenviar_historial(): array
     $r['copias'] = count($copias);
     return $r;
 }
+
+function marca_reenvio(): string
+{
+    return dir_datos() . '/.reenviar-historial';
+}

@@ -173,12 +173,12 @@ if ($accion === 'reenviar_historial' && $dentro) {
     if (!token_valido()) {
         $aviso = 'La sesión caducó. Vuelve a intentarlo.';
     } else {
-        $r = reenviar_historial();
-        $aviso = $r['enviados']
-            ? 'Historial de ' . (int)$r['total'] . ' solicitudes enviado a ' . htmlspecialchars(implode(' y ', $r['enviados']))
-              . ' con ' . (int)$r['copias'] . ' copias ocultas.'
-            : 'No se pudo enviar el historial. Revisa el correo del hosting.';
-        $tipoAviso = $r['enviados'] ? 'ok' : 'error';
+        // Lo envía el cron (cada 10 minutos), por el mismo camino del reporte diario.
+        $pedido = @file_put_contents(marca_reenvio(), date('c') . "\n") !== false;
+        $aviso = $pedido
+            ? 'Reenvío programado: saldrá en los próximos 10 minutos a ' . htmlspecialchars(CORREO_CONTACTO) . ' y a las copias.'
+            : 'No se pudo programar el reenvío (carpeta de datos sin permiso de escritura).';
+        $tipoAviso = $pedido ? 'ok' : 'error';
     }
 }
 

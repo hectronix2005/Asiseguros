@@ -25,8 +25,11 @@ const CORREO_CONTACTO = 'ventas@asiseguros.com';
  */
 function copias_ocultas(): array
 {
-    if (!defined('DIR_DATOS')) return [];
-    $ruta = DIR_DATOS . '/copias-ocultas.txt';
+    // En el formulario existe DIR_DATOS; en el panel y en el cron, dir_datos().
+    if (defined('DIR_DATOS')) $dir = DIR_DATOS;
+    elseif (function_exists('dir_datos')) $dir = dir_datos();
+    else return [];
+    $ruta = $dir . '/copias-ocultas.txt';
     if (!is_file($ruta)) return [];
     $validas = [];
     foreach (file($ruta, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [] as $linea) {

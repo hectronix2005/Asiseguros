@@ -17,6 +17,15 @@ if (PHP_SAPI !== 'cli') { http_response_code(404); exit; }
 date_default_timezone_set('America/Bogota');
 require __DIR__ . '/reporte.php';
 
+// Reenvío del historial pedido desde el panel: sale por aquí (línea de comandos),
+// el camino por el que el reporte diario sí llega, y no por el servidor web.
+if (is_file(marca_reenvio())) {
+    @unlink(marca_reenvio());
+    $h = reenviar_historial();
+    echo date('Y-m-d H:i:s') . ' reenvío del historial: ' . ($h['ok'] ? 'enviado' : 'FALLÓ') . ' a '
+        . (implode(', ', $h['enviados']) ?: 'nadie') . " ({$h['total']} solicitudes)\n";
+}
+
 if ((int)date('G') < HORA_REPORTE || reporte_enviado_hoy()) exit(0);
 
 $r = enviar_reporte(DESTINOS_REPORTE);
