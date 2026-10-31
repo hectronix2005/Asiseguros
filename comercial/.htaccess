@@ -1,0 +1,8 @@
+# El panel escribe archivos en el sitio: solo se sirve index.php.
+Options -Indexes
+<FilesMatch "^\.">
+  Require all denied
+</FilesMatch>
+<FilesMatch "\.(docx|json|log|bak)$">
+  Require all denied
+</FilesMatch>

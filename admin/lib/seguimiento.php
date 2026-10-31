@@ -16,7 +16,9 @@ const ESTADOS = [
     'nueva'      => 'Nueva',
     'contactada' => 'Contactada',
     'cotizada'   => 'Cotizada',
-    'cerrada'    => 'Cerrada',
+    'negociacion' => 'Negociación',
+    'ganada'     => 'Ganada',
+    'perdida'    => 'Perdida',
 ];
 
 /** Horas sin contacto a partir de las cuales una solicitud cuenta como «sin atender». */

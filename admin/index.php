@@ -19,6 +19,7 @@ require __DIR__ . '/lib/docx.php';
 require __DIR__ . '/lib/paginas.php';
 require __DIR__ . '/lib/solicitudes.php';
 require __DIR__ . '/lib/reporte.php';
+require __DIR__ . '/lib/crm.php';
 
 const ARCHIVO_CLAVE = __DIR__ . '/.clave.php';
 const ARCHIVO_INTENTOS = __DIR__ . '/.intentos.json';
@@ -128,7 +129,7 @@ if ($accion === 'salir') {
 $dentro = !empty($_SESSION['ok']);
 
 // Pestaña activa: documentos (por defecto), internos o solicitudes
-$vista = in_array($_GET['ver'] ?? '', ['solicitudes', 'internos'], true) ? $_GET['ver'] : 'documentos';
+$vista = in_array($_GET['ver'] ?? '', ['solicitudes', 'internos', 'equipo'], true) ? $_GET['ver'] : 'documentos';
 $busca = trim((string)($_GET['q'] ?? ''));
 
 $estadoFiltro = (string)($_GET['estado'] ?? '');
@@ -154,6 +155,31 @@ if ($accion === 'estado' && $dentro) {
             exit;
         }
         $aviso = $r['error'];
+    }
+}
+
+// Equipo comercial: solo un administrador con sesión crea, desactiva o restablece usuarios.
+if (in_array($accion, ['crear_comercial', 'activar_comercial', 'clave_comercial', 'guardar_motivos'], true) && $dentro) {
+    if (!token_valido()) {
+        $aviso = 'La sesión caducó. Vuelve a intentarlo.';
+    } else {
+        $usuarioCom = strtolower(trim((string)($_POST['usuario'] ?? '')));
+        if ($accion === 'crear_comercial') {
+            $r = crm_crear_usuario($usuarioCom, (string)($_POST['nombre'] ?? ''), (string)($_POST['clave'] ?? ''));
+            $aviso = $r['ok'] ? 'Usuario «' . htmlspecialchars($usuarioCom) . '» creado. Debe cambiar la contraseña al entrar.' : $r['error'];
+        } elseif ($accion === 'clave_comercial') {
+            $r = crm_restablecer_clave($usuarioCom, (string)($_POST['clave'] ?? ''));
+            $aviso = $r['ok'] ? 'Contraseña temporal fijada. La persona deberá cambiarla al entrar.' : $r['error'];
+        } elseif ($accion === 'activar_comercial') {
+            $activar = ($_POST['activo'] ?? '') === '1';
+            $r = ['ok' => crm_actualizar_usuario($usuarioCom, ['activo' => $activar])];
+            $aviso = $r['ok'] ? ($activar ? 'Usuario activado.' : 'Usuario desactivado: su sesión se cierra en su próxima acción.') : 'No se pudo guardar.';
+        } else {
+            $r = crm_guardar_motivos(preg_split('/\R/', (string)($_POST['motivos'] ?? '')) ?: []);
+            $aviso = $r['ok'] ? 'Motivos guardados.' : $r['error'];
+        }
+        $tipoAviso = $r['ok'] ? 'ok' : 'error';
+        $vista = 'equipo';
     }
 }
 
@@ -366,7 +392,9 @@ function estadoDocumento(array $doc): array {
   .estado-nueva { background:#eef2f7; color:var(--gray-600); }
   .estado-contactada { background:#e6f4ff; color:#1d4ed8; }
   .estado-cotizada { background:#efe9ff; color:#6d28d9; }
-  .estado-cerrada { background:#e6f7ec; color:#1f7a3f; }
+  .estado-negociacion { background:#fff4e0; color:#b45309; }
+  .estado-ganada { background:#e6f7ec; color:#1f7a3f; }
+  .estado-perdida { background:#fdeaea; color:#b42318; }
   .sin-atender { color:#b45309; }
   .estado-desde { color:var(--gray-500); }
   .seguimiento { margin-top:14px; border-top:1px dashed var(--gray-200); padding-top:10px; }
@@ -457,6 +485,7 @@ function estadoDocumento(array $doc): array {
     <a href="?ver=documentos" class="<?= $vista==='documentos'?'activa':'' ?>">Documentos legales</a>
     <a href="?ver=internos" class="<?= $vista==='internos'?'activa':'' ?>">Documentos internos</a>
     <a href="?ver=solicitudes" class="<?= $vista==='solicitudes'?'activa':'' ?>">Solicitudes de cotización</a>
+    <a href="?ver=equipo" class="<?= $vista==='equipo'?'activa':'' ?>">Equipo comercial</a>
   </div>
 
 <?php if ($vista === 'internos'): ?>
@@ -500,6 +529,76 @@ function estadoDocumento(array $doc): array {
       <article class="documento"><?= $int['html'] ?></article>
     <?php endif; ?>
   <?php endforeach; ?>
+
+<?php elseif ($vista === 'equipo'):
+      $equipo = crm_usuarios(); ?>
+  <p class="intro">
+    Personas que entran al <strong>modo comercial</strong>
+    (<a href="/comercial/" target="_blank" rel="noopener">asiseguros.com/comercial</a>) para llevar el
+    seguimiento de las solicitudes. Defines una contraseña temporal y la persona la cambia al entrar.
+    Desactivar un usuario le corta el acceso al instante.
+  </p>
+
+  <div class="tarjeta">
+    <h2>Usuarios</h2>
+    <?php if (!$equipo): ?>
+      <p class="ayuda">Todavía no hay usuarios.</p>
+    <?php else: foreach ($equipo as $usr => $d): ?>
+      <div class="fila" style="align-items:center;border-bottom:1px solid var(--gray-200);padding:8px 0">
+        <div style="flex:1;min-width:180px">
+          <b><?= htmlspecialchars($d['nombre']) ?></b> · <code><?= htmlspecialchars($usr) ?></code><br>
+          <small>
+            <?= !empty($d['activo']) ? 'Activo' : '<b>Desactivado</b>' ?>
+            <?= !empty($d['debe_cambiar']) ? ' · aún no cambia la contraseña temporal' : '' ?>
+            <?= !empty($d['ultimo_acceso']) ? ' · último acceso ' . date('d/m/Y H:i', strtotime($d['ultimo_acceso']) ?: time()) : ' · nunca ha entrado' ?>
+            <?= (int)($d['bloqueo_hasta'] ?? 0) > time() ? ' · <b>bloqueado por intentos</b>' : '' ?>
+          </small>
+        </div>
+        <form method="post" style="display:flex;gap:6px;align-items:center">
+          <input type="hidden" name="accion" value="clave_comercial">
+          <input type="hidden" name="csrf" value="<?= htmlspecialchars($_SESSION['csrf']) ?>">
+          <input type="hidden" name="usuario" value="<?= htmlspecialchars($usr) ?>">
+          <input type="text" name="clave" minlength="10" required placeholder="Nueva temporal" autocomplete="off" style="margin:0;width:150px">
+          <button class="btn btn-sec">Restablecer</button>
+        </form>
+        <form method="post">
+          <input type="hidden" name="accion" value="activar_comercial">
+          <input type="hidden" name="csrf" value="<?= htmlspecialchars($_SESSION['csrf']) ?>">
+          <input type="hidden" name="usuario" value="<?= htmlspecialchars($usr) ?>">
+          <input type="hidden" name="activo" value="<?= !empty($d['activo']) ? '0' : '1' ?>">
+          <button class="btn btn-sec"><?= !empty($d['activo']) ? 'Desactivar' : 'Activar' ?></button>
+        </form>
+      </div>
+    <?php endforeach; endif; ?>
+  </div>
+
+  <div class="tarjeta">
+    <h2>Nuevo usuario</h2>
+    <form method="post">
+      <input type="hidden" name="accion" value="crear_comercial">
+      <input type="hidden" name="csrf" value="<?= htmlspecialchars($_SESSION['csrf']) ?>">
+      <div class="fila">
+        <div style="flex:1;min-width:150px"><label>Usuario (minúsculas)</label>
+          <input type="text" name="usuario" required pattern="[a-z0-9._-]{3,30}" maxlength="30" autocomplete="off" placeholder="paola.serrato"></div>
+        <div style="flex:1;min-width:150px"><label>Nombre</label>
+          <input type="text" name="nombre" required maxlength="60" autocomplete="off" placeholder="Paola Serrato"></div>
+        <div style="flex:1;min-width:150px"><label>Contraseña temporal (mín. 10)</label>
+          <input type="text" name="clave" required minlength="10" autocomplete="off"></div>
+      </div>
+      <button class="btn">Crear usuario</button>
+    </form>
+  </div>
+
+  <div class="tarjeta">
+    <h2>Motivos de pérdida</h2>
+    <p class="ayuda">Lista que ve el equipo al marcar una solicitud como «Perdida». Un motivo por línea (mínimo 2, máximo 20).</p>
+    <form method="post">
+      <input type="hidden" name="accion" value="guardar_motivos">
+      <input type="hidden" name="csrf" value="<?= htmlspecialchars($_SESSION['csrf']) ?>">
+      <textarea name="motivos" rows="8" style="width:100%;padding:10px 12px;border:1px solid var(--gray-200);border-radius:8px;font-family:inherit;font-size:.9rem;margin-bottom:14px"><?= htmlspecialchars(implode("\n", crm_motivos())) ?></textarea>
+      <button class="btn">Guardar motivos</button>
+    </form>
+  </div>
 
 <?php elseif ($vista === 'solicitudes'):
       $lista = solicitudes($busca, $estadoFiltro);

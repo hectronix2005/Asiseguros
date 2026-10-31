@@ -131,7 +131,12 @@ cp -f admin/.htaccess admin/index.php "$DESTINO/admin/"
 cp -f admin/lib/.htaccess admin/lib/docx.php admin/lib/paginas.php \
       admin/lib/solicitudes.php admin/lib/zip.php \
       admin/lib/seguimiento.php admin/lib/reporte.php admin/lib/reporte-diario.php \
+      admin/lib/crm.php \
       "$DESTINO/admin/lib/"
+
+# Modo comercial (CRM): solo el código; los datos viven fuera de public_html
+mkdir -p "$DESTINO/comercial"
+cp -f comercial/.htaccess comercial/index.php "$DESTINO/comercial/"
 
 echo "$AHORA" > "$MARCA"
 echo "$(date '+%Y-%m-%d %H:%M:%S') desplegado $AHORA" >> "$REGISTRO"

@@ -3,6 +3,7 @@ Allow: /
 
 # El panel de documentos no debe indexarse
 Disallow: /admin/
+Disallow: /comercial/
 Disallow: /api/
 Disallow: /datos/
 
