@@ -106,6 +106,15 @@ if ($yo && !$obligadoCambiar && $accion === 'registrar') {
     $aviso = $r['error']; $tipoAviso = 'error';
 }
 
+if ($yo && !$obligadoCambiar && $accion === 'asignar') {
+    $rad = (string)($_POST['radicado'] ?? '');
+    if (!token_valido()) {
+        volver('/comercial/?r=' . urlencode($rad), 'La página caducó. Vuelve a intentarlo.', 'error');
+    }
+    $r = crm_asignar($rad, (string)($_POST['responsable'] ?? ''), $miUsuario, (string)$yo['nombre']);
+    volver('/comercial/?r=' . urlencode($rad), $r['ok'] ? 'Responsable actualizado.' : $r['error'], $r['ok'] ? 'ok' : 'error');
+}
+
 /* ---------------- Datos de la vista ---------------- */
 $vista = 'lista'; $s = null;
 if ($yo && !$obligadoCambiar) {
@@ -117,6 +126,10 @@ if ($yo && !$obligadoCambiar) {
         $vista = 'resumen';
     }
 }
+$equipo = $yo ? crm_usuarios() : [];
+$asignadas = $yo ? crm_asignaciones() : [];
+$resp = (string)($_GET['resp'] ?? '');
+if ($resp !== 'mias' && $resp !== 'sin') $resp = '';
 $busca = trim((string)($_GET['q'] ?? ''));
 $filtro = (string)($_GET['estado'] ?? '');
 if ($filtro !== 'sin_atender' && !isset(ESTADOS[$filtro])) $filtro = '';
@@ -251,6 +264,12 @@ if ($filtro !== 'sin_atender' && !isset(ESTADOS[$filtro])) $filtro = '';
     <div class="tile"><b><?= $rs['cierre'] === null ? '—' : $rs['cierre'] . '%' ?></b><span>Cierre (ganadas / cerradas)</span></div>
     <div class="tile"><b><?= $rs['valor_ganado'] ? pesos($rs['valor_ganado']) : '—' ?></b><span>Valor ganado declarado</span></div>
   </div>
+  <div class="tarjeta" style="margin-bottom:16px"><h2>Por responsable</h2>
+    <table><tr><td><b>Persona</b></td><td class="n"><b>Asignadas</b></td><td class="n"><b>Ganadas</b></td><td class="n"><b>Perdidas</b></td></tr>
+      <?php foreach ($rs['equipo'] as $u => $c): ?>
+        <tr><td><?= $u === '' ? '<i>Sin responsable</i>' : e($equipo[$u]['nombre'] ?? $u) ?></td><td class="n"><?= $c['asignadas'] ?></td><td class="n"><?= $c['ganadas'] ?></td><td class="n"><?= $c['perdidas'] ?></td></tr>
+      <?php endforeach; ?></table>
+  </div>
   <div class="pareja">
     <div class="tarjeta"><h2>Embudo</h2>
       <table><?php foreach (ESTADOS as $k => $v): ?>
@@ -301,6 +320,22 @@ if ($filtro !== 'sin_atender' && !isset(ESTADOS[$filtro])) $filtro = '';
     <?php if (trim((string)($s['mensaje'] ?? '')) !== ''): ?><div class="msg"><?= nl2br(e($s['mensaje'])) ?></div><?php endif; ?>
     <?php if (empty($s['detalle'])): ?><p class="meta" style="margin-top:10px">No completó el segundo paso: faltan los datos del riesgo.</p><?php endif; ?>
   </div>
+
+  <form method="post" class="tarjeta" style="margin-bottom:16px">
+    <h2>Responsable</h2>
+    <input type="hidden" name="accion" value="asignar">
+    <input type="hidden" name="csrf" value="<?= e($_SESSION['csrf']) ?>">
+    <input type="hidden" name="radicado" value="<?= e($s['radicado']) ?>">
+    <?php $resActual = $asignadas[$s['radicado']] ?? ''; ?>
+    <label for="resp">Quién lleva esta solicitud</label>
+    <select id="resp" name="responsable">
+      <option value="">Sin responsable</option>
+      <?php foreach ($equipo as $u => $d): if (empty($d['activo']) && $u !== $resActual) continue; ?>
+        <option value="<?= e($u) ?>" <?= $u === $resActual ? 'selected' : '' ?>><?= e($d['nombre']) ?><?= $u === $miUsuario ? ' (yo)' : '' ?></option>
+      <?php endforeach; ?>
+    </select>
+    <button class="btn btn-sec">Guardar responsable</button>
+  </form>
 
   <div class="pareja">
     <form method="post" class="tarjeta" id="f-estado">
@@ -381,14 +416,29 @@ if ($filtro !== 'sin_atender' && !isset(ESTADOS[$filtro])) $filtro = '';
 
 <?php else:
     $lista = solicitudes($busca, $filtro);
+    $nMias = $nSin = 0;
+    foreach ($todas as $t) {
+        $u = $asignadas[$t['radicado'] ?? ''] ?? '';
+        if ($u === $miUsuario) $nMias++;
+        if ($u === '') $nSin++;
+    }
+    if ($resp === 'mias') $lista = array_values(array_filter($lista, fn($x) => ($asignadas[$x['radicado']] ?? '') === $miUsuario));
+    if ($resp === 'sin')  $lista = array_values(array_filter($lista, fn($x) => ($asignadas[$x['radicado']] ?? '') === ''));
     $res = resumen_solicitudes($todas);
     $ultimas = crm_notas();
-    $enlace = fn(string $est) => '/comercial/?estado=' . $est . ($busca !== '' ? '&q=' . urlencode($busca) : ''); ?>
+    $enlace = fn(string $est) => '/comercial/?estado=' . $est . ($resp !== '' ? '&resp=' . $resp : '') . ($busca !== '' ? '&q=' . urlencode($busca) : '');
+    $enlaceResp = fn(string $r) => '/comercial/?' . ($r !== '' ? 'resp=' . $r . '&' : '') . 'estado=' . $filtro . ($busca !== '' ? '&q=' . urlencode($busca) : ''); ?>
   <form method="get" class="buscar">
     <?php if ($filtro !== ''): ?><input type="hidden" name="estado" value="<?= e($filtro) ?>"><?php endif; ?>
+    <?php if ($resp !== ''): ?><input type="hidden" name="resp" value="<?= e($resp) ?>"><?php endif; ?>
     <input name="q" value="<?= e($busca) ?>" maxlength="80" placeholder="Buscar por nombre, radicado, teléfono, correo o producto…">
     <button class="btn">Buscar</button>
   </form>
+  <div class="filtros">
+    <a href="<?= e($enlaceResp('')) ?>" class="<?= $resp === '' ? 'activo' : '' ?>">Todos</a>
+    <a href="<?= e($enlaceResp('mias')) ?>" class="<?= $resp === 'mias' ? 'activo' : '' ?>">Mis solicitudes (<?= $nMias ?>)</a>
+    <a href="<?= e($enlaceResp('sin')) ?>" class="<?= $resp === 'sin' ? 'activo' : '' ?>">Sin responsable (<?= $nSin ?>)</a>
+  </div>
   <div class="filtros">
     <a href="<?= e($enlace('')) ?>" class="<?= $filtro === '' ? 'activo' : '' ?>">Todas (<?= $res['total'] ?>)</a>
     <a href="<?= e($enlace('sin_atender')) ?>" class="<?= $filtro === 'sin_atender' ? 'activo' : '' ?>">Sin atender (<?= $res['sin_atender'] ?>)</a>
@@ -406,6 +456,7 @@ if ($filtro !== 'sin_atender' && !isset(ESTADOS[$filtro])) $filtro = '';
         <span class="chip estado-<?= e($x['estado']) ?>"><?= e(ESTADOS[$x['estado']]) ?></span>
       </div>
       <div class="meta"><?= e($x['tipo_seguro'] ?? '') ?> · <?= e($x['canal'] ?? '') ?> · llegó <?= e(hace($x['horas_espera'])) ?>
+        · <?= isset($asignadas[$x['radicado']]) ? 'Responsable: <b>' . e($equipo[$asignadas[$x['radicado']]]['nombre'] ?? $asignadas[$x['radicado']]) . '</b>' : '<i>sin responsable</i>' ?>
         <?= $x['sin_atender'] ? ' · <b style="color:#b45309">sin atender</b>' : '' ?></div>
       <?php if ($ult && trim($ult['comentario']) !== ''): ?>
         <div class="ultima"><b><?= e($ult['nombre']) ?>:</b> <?= e(mb_strimwidth($ult['comentario'], 0, 140, '…')) ?></div>

@@ -239,6 +239,11 @@ function crm_registrar(string $radicado, string $usuario, string $nombre, string
         if (!$r['ok']) return $r;
     }
 
+    return crm_agregar_fila([$radicado, date('c'), $usuario, mb_substr($nombre, 0, 60), $tipo, $estado, $motivo, $valorNum, $comentario]);
+}
+
+function crm_agregar_fila(array $fila): array
+{
     $ruta = crm_archivo_notas();
     $nuevo = !is_file($ruta);
     $fh = @fopen($ruta, 'a');
@@ -248,13 +253,61 @@ function crm_registrar(string $radicado, string $usuario, string $nombre, string
             fwrite($fh, "\xEF\xBB\xBF");
             fputcsv($fh, CRM_COLUMNAS, ',', '"', '\\');
         }
-        fputcsv($fh, [$radicado, date('c'), $usuario, mb_substr($nombre, 0, 60), $tipo, $estado, $motivo, $valorNum, $comentario], ',', '"', '\\');
+        fputcsv($fh, $fila, ',', '"', '\\');
         fflush($fh);
         flock($fh, LOCK_UN);
     }
     fclose($fh);
     @chmod($ruta, 0640);
     return ['ok' => true];
+}
+
+/* ---------------- Asignación de responsable ---------------- */
+
+function crm_archivo_asignaciones(): string { return dir_datos() . '/crm-asignaciones.csv'; }
+
+/** Responsable vigente por radicado: la última asignación gana ('' = sin responsable). */
+function crm_asignaciones(): array
+{
+    $a = [];
+    foreach (leer_csv(crm_archivo_asignaciones()) as $f) {
+        if (($f['radicado'] ?? '') !== '') $a[$f['radicado']] = $f['responsable'] ?? '';
+    }
+    return array_filter($a, fn($r) => $r !== '');
+}
+
+/** Asigna la solicitud a un usuario activo del equipo, o la deja sin responsable (''). */
+function crm_asignar(string $radicado, string $responsable, string $porUsuario, string $porNombre): array
+{
+    if (!preg_match('/^[A-F0-9]{8}$/', $radicado)) return ['ok' => false, 'error' => 'Radicado no válido.'];
+    $equipo = crm_usuarios();
+    if ($responsable !== '' && empty($equipo[$responsable]['activo'])) return ['ok' => false, 'error' => 'Esa persona no está activa en el equipo.'];
+    $existe = false;
+    foreach (leer_csv(dir_datos() . '/autorizaciones.csv') as $x) {
+        if (($x['radicado'] ?? '') === $radicado) { $existe = true; break; }
+    }
+    if (!$existe) return ['ok' => false, 'error' => 'No existe una solicitud con ese radicado.'];
+    if ((crm_asignaciones()[$radicado] ?? '') === $responsable) return ['ok' => true];
+
+    $ruta = crm_archivo_asignaciones();
+    $nuevo = !is_file($ruta);
+    $fh = @fopen($ruta, 'a');
+    if ($fh === false) return ['ok' => false, 'error' => 'No se pudo guardar la asignación.'];
+    if (flock($fh, LOCK_EX)) {
+        if ($nuevo) {
+            fwrite($fh, "\xEF\xBB\xBF");
+            fputcsv($fh, ['radicado', 'fecha_hora', 'por', 'responsable'], ',', '"', '\\');
+        }
+        fputcsv($fh, [$radicado, date('c'), $porUsuario, $responsable], ',', '"', '\\');
+        fflush($fh);
+        flock($fh, LOCK_UN);
+    }
+    fclose($fh);
+    @chmod($ruta, 0640);
+
+    $texto = $responsable === '' ? 'Dejó la solicitud sin responsable.'
+        : ($responsable === $porUsuario ? 'Tomó la solicitud.' : 'Asignó la solicitud a ' . $equipo[$responsable]['nombre'] . '.');
+    return crm_agregar_fila([$radicado, date('c'), $porUsuario, mb_substr($porNombre, 0, 60), 'nota', '', '', '', $texto]);
 }
 
 /** Cifras del embudo: estados, cierre, motivos de pérdida y valor ganado. */
@@ -275,6 +328,16 @@ function crm_resumen(array $sol): array
         }
     }
     arsort($r['motivos']);
+    $asig = crm_asignaciones();
+    $r['equipo'] = [];
+    foreach ($sol as $x) {
+        $u = $asig[$x['radicado'] ?? ''] ?? '';
+        $k = $u === '' ? '' : $u;
+        $r['equipo'][$k] ??= ['asignadas' => 0, 'ganadas' => 0, 'perdidas' => 0];
+        $r['equipo'][$k]['asignadas']++;
+        if (($x['estado'] ?? '') === 'ganada')  $r['equipo'][$k]['ganadas']++;
+        if (($x['estado'] ?? '') === 'perdida') $r['equipo'][$k]['perdidas']++;
+    }
     $cerradas = $r['estados']['ganada'] + $r['estados']['perdida'];
     $r['cierre'] = $cerradas ? round($r['estados']['ganada'] * 100 / $cerradas) : null;
     return $r;
