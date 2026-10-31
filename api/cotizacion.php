@@ -25,7 +25,6 @@ date_default_timezone_set('America/Bogota');
 
 require_once __DIR__ . '/correo.php';
 
-const CORREO_DESTINO    = 'ventas@asiseguros.com';
 const LIMITE_POR_HORA   = 20;   // por IP
 const VERSION_ESPERADA  = '2026-08-19';
 
@@ -146,7 +145,7 @@ if (($datos['accion'] ?? '') === 'detalle') {
     foreach (leer_solicitud($radicado) as $k => $v) {
         if (($base[$k] ?? '') === '') $base[$k] = $v;
     }
-    enviar_aviso(CORREO_DESTINO, $base, $limpias);
+    enviar_aviso(destino_principal(), $base, $limpias);
 
     responder(200, ['ok' => true, 'radicado' => $radicado]);
 }
@@ -287,7 +286,7 @@ $datosAviso = [
     'texto_autorizacion'   => $textoAut,
     'version_autorizacion' => $versionAut !== '' ? $versionAut : VERSION_ESPERADA,
 ];
-enviar_aviso(CORREO_DESTINO, $datosAviso);
+enviar_aviso(destino_principal(), $datosAviso);
 
 // Acuse al titular. Va después del registro y del aviso interno: si fallara el
 // envío, la solicitud y su autorización ya están guardadas.

@@ -161,11 +161,44 @@ if ($accion === 'reporte_ahora' && $dentro) {
     if (!token_valido()) {
         $aviso = 'La sesión caducó. Vuelve a intentarlo.';
     } else {
-        $r = enviar_reporte(DESTINOS_REPORTE);
+        $r = enviar_reporte(destinos_reporte());
         $aviso = $r['enviados']
             ? 'Reporte enviado a ' . htmlspecialchars(implode(' y ', $r['enviados'])) . '.'
             : 'No se pudo enviar el reporte. Revisa el correo del hosting.';
         $tipoAviso = $r['enviados'] ? 'ok' : 'error';
+    }
+}
+
+if ($accion === 'guardar_correos' && $dentro) {
+    if (!token_valido()) {
+        $aviso = 'La sesión caducó. Vuelve a intentarlo.';
+        $tipoAviso = 'error';
+    } else {
+        $trozos = fn(string $t): array => preg_split('/[\s,;]+/', trim($t), -1, PREG_SPLIT_NO_EMPTY) ?: [];
+        $principal = limpiar_correos([(string)($_POST['principal'] ?? '')]);
+        $copias    = $trozos((string)($_POST['copias'] ?? ''));
+        $reporte   = $trozos((string)($_POST['reporte'] ?? ''));
+        $malas = array_values(array_filter(array_merge($copias, $reporte, [trim((string)($_POST['principal'] ?? ''))]),
+            fn($c) => $c !== '' && !filter_var($c, FILTER_VALIDATE_EMAIL)));
+        if (!$principal) {
+            $aviso = 'El destino principal debe ser una dirección de correo válida.';
+            $tipoAviso = 'error';
+        } elseif ($malas) {
+            $aviso = 'Direcciones no válidas: ' . htmlspecialchars(implode(', ', array_slice($malas, 0, 5))) . '. No se guardó nada.';
+            $tipoAviso = 'error';
+        } elseif (count($copias) > 10 || count($reporte) > 10) {
+            $aviso = 'Máximo 10 direcciones por lista.';
+            $tipoAviso = 'error';
+        } elseif (!limpiar_correos($reporte)) {
+            $aviso = 'El reporte diario necesita al menos una dirección.';
+            $tipoAviso = 'error';
+        } elseif (guardar_config_correos($principal[0], limpiar_correos($copias), limpiar_correos($reporte))) {
+            $aviso = 'Correos guardados. Valen desde ya para los avisos nuevos.';
+            $tipoAviso = 'ok';
+        } else {
+            $aviso = 'No se pudo guardar (la carpeta de datos no permite escribir).';
+            $tipoAviso = 'error';
+        }
     }
 }
 
@@ -176,7 +209,7 @@ if ($accion === 'reenviar_historial' && $dentro) {
         // Lo envía el cron (cada 10 minutos), por el mismo camino del reporte diario.
         $pedido = @file_put_contents(marca_reenvio(), date('c') . "\n") !== false;
         $aviso = $pedido
-            ? 'Reenvío programado: saldrá en los próximos 10 minutos a ' . htmlspecialchars(CORREO_CONTACTO) . ' y a las copias.'
+            ? 'Reenvío programado: saldrá en los próximos 10 minutos a ' . htmlspecialchars(destino_principal()) . ' y a las copias.'
             : 'No se pudo programar el reenvío (carpeta de datos sin permiso de escritura).';
         $tipoAviso = $pedido ? 'ok' : 'error';
     }
@@ -350,6 +383,12 @@ function estadoDocumento(array $doc): array {
   .sol-origen { font-size:.8rem; color:var(--gray-400); margin-top:6px; }
   .barra-busca { display:flex; gap:10px; margin-bottom:18px; flex-wrap:wrap; }
   .barra-busca input { flex:1; min-width:200px; margin:0; }
+  .correos-config { margin:0 0 18px; font-size:.85rem; }
+  .correos-config summary { cursor:pointer; color:var(--primary); font-weight:600; }
+  .correos-config form { display:grid; gap:10px; margin-top:10px; max-width:520px; }
+  .correos-config label { display:grid; gap:4px; color:var(--gray-500); }
+  .correos-config input, .correos-config textarea { font:inherit; padding:8px 10px; border:1px solid var(--gray-200); border-radius:8px; }
+  .correos-config small { color:var(--gray-500); }
   .btn-sec { background:#fff; color:var(--primary); border:1px solid var(--gray-200);
              padding:11px 18px; border-radius:8px; font-family:inherit; font-weight:600;
              font-size:.85rem; cursor:pointer; text-decoration:none; display:inline-block; }
@@ -510,16 +549,33 @@ function estadoDocumento(array $doc): array {
     <input type="hidden" name="accion" value="reporte_ahora">
     <input type="hidden" name="csrf" value="<?= htmlspecialchars($_SESSION['csrf']) ?>">
     <span>El reporte con las pendientes y el Excel llega cada día a las <?= HORA_REPORTE ?>:00 a. m. a
-      <?= htmlspecialchars(implode(' y ', DESTINOS_REPORTE)) ?>.</span>
+      <?= htmlspecialchars(implode(' y ', destinos_reporte())) ?>.</span>
     <button class="btn-sec">Enviar reporte ahora</button>
   </form>
 
   <form method="post" class="reporte-ahora">
     <input type="hidden" name="accion" value="reenviar_historial">
     <input type="hidden" name="csrf" value="<?= htmlspecialchars($_SESSION['csrf']) ?>">
-    <span>Reenvía el Excel con todas las solicitudes a <?= htmlspecialchars(CORREO_CONTACTO) ?>, con copia oculta a las cuentas configuradas y a hectorn.personal@gmail.com.</span>
+    <span>Reenvía el Excel con todas las solicitudes a <?= htmlspecialchars(destino_principal()) ?>, a las copias ocultas configuradas y a hectorn.personal@gmail.com.</span>
     <button class="btn-sec">Reenviar historial</button>
   </form>
+
+  <?php $cfgCorreos = config_correos(); ?>
+  <details class="correos-config">
+    <summary>Correos de avisos y reporte</summary>
+    <form method="post">
+      <input type="hidden" name="accion" value="guardar_correos">
+      <input type="hidden" name="csrf" value="<?= htmlspecialchars($_SESSION['csrf']) ?>">
+      <label>Destino principal de cada solicitud
+        <input type="email" name="principal" required value="<?= htmlspecialchars($cfgCorreos['principal']) ?>"></label>
+      <label>Copias ocultas de cada solicitud (una por línea)
+        <textarea name="copias" rows="3"><?= htmlspecialchars(implode("\n", $cfgCorreos['copias'])) ?></textarea></label>
+      <label>Reporte diario de las <?= HORA_REPORTE ?>:00 a. m. (una por línea)
+        <textarea name="reporte" rows="3"><?= htmlspecialchars(implode("\n", $cfgCorreos['reporte'])) ?></textarea></label>
+      <small>Cada copia recibe su propio correo y no ve las demás. Máximo 10 por lista.</small>
+      <button class="btn">Guardar correos</button>
+    </form>
+  </details>
 
   <?php if (!$lista): ?>
     <div class="vacio">

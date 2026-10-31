@@ -16,7 +16,6 @@ declare(strict_types=1);
 require_once __DIR__ . '/solicitudes.php';
 require_once dirname(__DIR__, 2) . '/api/correo.php';
 
-const DESTINOS_REPORTE = ['hectorn.personal@gmail.com', 'ventas@asiseguros.com'];
 const HORA_REPORTE = 7;   // 7:00 a. m., hora de Bogotá
 
 function marca_reporte(string $fecha): string
@@ -125,7 +124,7 @@ function reenviar_historial(): array
     $copias = array_values(array_unique(array_merge(copias_ocultas(), ['hectorn.personal@gmail.com'])));
     // Un envío directo por destinatario: el Cco del hosting no llegó a Gmail,
     // y así ninguna copia ve las direcciones de las demás.
-    $r = enviar_reporte(array_merge([CORREO_CONTACTO], $copias), [], 'Reenvío del historial · ');
+    $r = enviar_reporte(array_values(array_unique(array_merge([destino_principal()], $copias))), [], 'Reenvío del historial · ');
     $r['copias'] = count($copias);
     return $r;
 }

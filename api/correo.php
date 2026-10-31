@@ -17,27 +17,70 @@ const COLOR_ACENTO   = '#4db7b3';
 const CORREO_CONTACTO = 'ventas@asiseguros.com';
 
 /**
- * Copia oculta de cada aviso de cotización; el destinatario principal es ventas@.
+ * Destinatarios editables desde el panel (/admin, Solicitudes).
  *
- * Las direcciones no van en el código porque el repositorio es público: se leen
- * de copias-ocultas.txt (una por línea) en la carpeta de datos, fuera de git.
- * Sin el archivo, el aviso sale solo al destinatario principal.
+ * Se guardan en correos.json dentro de la carpeta de datos, fuera de git: el
+ * repositorio es público y esas direcciones no deben estar en el código. Sin el
+ * archivo, valen los predeterminados y, para las copias, el antiguo
+ * copias-ocultas.txt (una dirección por línea).
  */
-function copias_ocultas(): array
+const REPORTE_PREDETERMINADO = ['hectorn.personal@gmail.com', 'ventas@asiseguros.com'];
+
+function carpeta_correos(): ?string
 {
-    // En el formulario existe DIR_DATOS; en el panel y en el cron, dir_datos().
-    if (defined('DIR_DATOS')) $dir = DIR_DATOS;
-    elseif (function_exists('dir_datos')) $dir = dir_datos();
-    else return [];
-    $ruta = $dir . '/copias-ocultas.txt';
-    if (!is_file($ruta)) return [];
+    if (defined('DIR_DATOS')) return DIR_DATOS;
+    if (function_exists('dir_datos')) return dir_datos();
+    return null;
+}
+
+/** Solo direcciones válidas, sin repetir y sin saltos de línea. */
+function limpiar_correos(array $lista): array
+{
     $validas = [];
-    foreach (file($ruta, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [] as $linea) {
-        $linea = trim($linea);
-        if (filter_var($linea, FILTER_VALIDATE_EMAIL)) $validas[] = $linea;
+    foreach ($lista as $c) {
+        $c = strtolower(trim((string)$c));
+        if ($c !== '' && filter_var($c, FILTER_VALIDATE_EMAIL) && !in_array($c, $validas, true)) $validas[] = $c;
     }
     return $validas;
 }
+
+/** @return array{principal:string,copias:array,reporte:array} */
+function config_correos(): array
+{
+    $cfg = ['principal' => CORREO_CONTACTO, 'copias' => [], 'reporte' => REPORTE_PREDETERMINADO];
+    $dir = carpeta_correos();
+    if ($dir === null) return $cfg;
+
+    $json = is_file($dir . '/correos.json') ? json_decode((string)@file_get_contents($dir . '/correos.json'), true) : null;
+    if (is_array($json)) {
+        $p = limpiar_correos([$json['principal'] ?? '']);
+        if ($p) $cfg['principal'] = $p[0];
+        $cfg['copias'] = limpiar_correos((array)($json['copias'] ?? []));
+        $r = limpiar_correos((array)($json['reporte'] ?? []));
+        if ($r) $cfg['reporte'] = $r;
+    } elseif (is_file($dir . '/copias-ocultas.txt')) {
+        $cfg['copias'] = limpiar_correos(file($dir . '/copias-ocultas.txt', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: []);
+    }
+    return $cfg;
+}
+
+/** Guarda la configuración (ya limpia). Devuelve false si no se pudo escribir. */
+function guardar_config_correos(string $principal, array $copias, array $reporte): bool
+{
+    $dir = carpeta_correos();
+    if ($dir === null) return false;
+    $ruta = $dir . '/correos.json';
+    $tmp = $ruta . '.tmp';
+    $json = json_encode(['principal' => $principal, 'copias' => array_values($copias), 'reporte' => array_values($reporte)],
+        JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+    if (@file_put_contents($tmp, $json, LOCK_EX) === false) return false;
+    @chmod($tmp, 0640);
+    return @rename($tmp, $ruta);
+}
+
+function destino_principal(): string { return config_correos()['principal']; }
+function copias_ocultas(): array     { return config_correos()['copias']; }
+function destinos_reporte(): array   { return config_correos()['reporte']; }
 
 /**
  * Remitente de sobre (Return-Path).

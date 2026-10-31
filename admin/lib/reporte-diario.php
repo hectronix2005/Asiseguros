@@ -28,7 +28,7 @@ if (is_file(marca_reenvio())) {
 
 if ((int)date('G') < HORA_REPORTE || reporte_enviado_hoy()) exit(0);
 
-$r = enviar_reporte(DESTINOS_REPORTE);
+$r = enviar_reporte(destinos_reporte());
 if ($r['enviados']) {
     @file_put_contents(marca_reporte(date('Y-m-d')), date('c') . ' ' . implode(',', $r['enviados']) . "\n");
 }
