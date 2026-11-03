@@ -129,7 +129,7 @@ if ($accion === 'salir') {
 $dentro = !empty($_SESSION['ok']);
 
 // Pestaña activa: documentos (por defecto), internos o solicitudes
-$vista = in_array($_GET['ver'] ?? '', ['solicitudes', 'internos', 'equipo'], true) ? $_GET['ver'] : 'documentos';
+$vista = in_array($_GET['ver'] ?? '', ['solicitudes', 'internos', 'equipo', 'comercial'], true) ? $_GET['ver'] : 'documentos';
 $busca = trim((string)($_GET['q'] ?? ''));
 
 $estadoFiltro = (string)($_GET['estado'] ?? '');
@@ -137,25 +137,6 @@ if ($estadoFiltro !== 'sin_atender' && !isset(ESTADOS[$estadoFiltro])) $estadoFi
 
 if ($dentro && ($_GET['exportar'] ?? '') === '1') {
     exportar_csv(solicitudes($busca, $estadoFiltro));
-}
-
-// Cambio de estado de una solicitud. Se redirige después de guardar para que
-// recargar la página no repita el registro.
-if ($accion === 'estado' && $dentro) {
-    if (!token_valido()) {
-        $aviso = 'La sesión caducó. Vuelve a intentarlo.';
-    } else {
-        $rad = (string)($_POST['radicado'] ?? '');
-        $quien = (string)($_POST['quien'] ?? '');
-        $r = registrar_estado($rad, (string)($_POST['estado'] ?? ''), $quien, (string)($_POST['nota'] ?? ''));
-        if ($r['ok']) {
-            $_SESSION['quien'] = mb_substr(trim($quien), 0, 60);
-            $_SESSION['aviso_ok'] = 'Seguimiento guardado para la solicitud ' . $rad . '.';
-            header('Location: index.php?ver=solicitudes&q=' . urlencode($busca) . '&estado=' . urlencode($estadoFiltro) . '#s-' . $rad);
-            exit;
-        }
-        $aviso = $r['error'];
-    }
 }
 
 // Equipo comercial: solo un administrador con sesión crea, desactiva o restablece usuarios.
@@ -485,6 +466,7 @@ function estadoDocumento(array $doc): array {
     <a href="?ver=documentos" class="<?= $vista==='documentos'?'activa':'' ?>">Documentos legales</a>
     <a href="?ver=internos" class="<?= $vista==='internos'?'activa':'' ?>">Documentos internos</a>
     <a href="?ver=solicitudes" class="<?= $vista==='solicitudes'?'activa':'' ?>">Solicitudes de cotización</a>
+    <a href="?ver=comercial" class="<?= $vista==='comercial'?'activa':'' ?>">Comercial (lectura)</a>
     <a href="?ver=equipo" class="<?= $vista==='equipo'?'activa':'' ?>">Equipo comercial</a>
   </div>
 
@@ -599,6 +581,71 @@ function estadoDocumento(array $doc): array {
       <button class="btn">Guardar motivos</button>
     </form>
   </div>
+
+<?php elseif ($vista === 'comercial'):
+    // Vista de solo lectura del CRM: no hay formularios ni acciones.
+    $todas = solicitudes();
+    $rs = crm_resumen($todas);
+    $equipoCrm = crm_usuarios();
+    $asigCrm = crm_asignaciones();
+    $notasCrm = crm_notas(); ?>
+  <p class="meta">Solo lectura. Las notas, los cambios de estado y las asignaciones los registra el equipo comercial en <b>/comercial</b>.</p>
+  <div class="vacio" style="text-align:left;margin-bottom:16px">
+    <b><?= $rs['total'] ?></b> solicitudes ·
+    <b><?= $rs['estados']['ganada'] ?></b> ganadas ·
+    <b><?= $rs['estados']['perdida'] ?></b> perdidas ·
+    cierre <b><?= $rs['cierre'] === null ? '—' : $rs['cierre'] . '%' ?></b>
+    <?php if ($rs['valor_ganado']): ?> · valor ganado declarado <b>$<?= number_format($rs['valor_ganado'], 0, ',', '.') ?></b><?php endif; ?>
+    <br>
+    <?php foreach (ESTADOS as $k => $v): ?><span class="estado-chip estado-<?= $k ?>"><?= $v ?> <?= $rs['estados'][$k] ?></span> <?php endforeach; ?>
+    <?php if ($rs['motivos']): ?><br>Por qué se perdieron:
+      <?php foreach ($rs['motivos'] as $m => $n): ?><b><?= htmlspecialchars($m) ?></b> (<?= $n ?>) · <?php endforeach; ?><?php endif; ?>
+    <?php if ($rs['equipo']): ?><br>Por responsable:
+      <?php foreach ($rs['equipo'] as $u => $c): ?>
+        <b><?= $u === '' ? 'Sin responsable' : htmlspecialchars($equipoCrm[$u]['nombre'] ?? $u) ?></b>
+        (<?= $c['asignadas'] ?> asignadas, <?= $c['ganadas'] ?> ganadas, <?= $c['perdidas'] ?> perdidas) ·
+      <?php endforeach; ?><?php endif; ?>
+  </div>
+  <?php if (!$todas): ?><div class="vacio">Todavía no hay solicitudes.</div>
+  <?php else: foreach ($todas as $s):
+        $linea = $notasCrm[$s['radicado']] ?? [];
+        foreach ($s['historial'] as $h) {
+            $dup = false;
+            foreach ($linea as $n) {
+                if ($n['tipo'] === 'estado' && $n['estado'] === $h['estado']
+                    && abs((strtotime($n['fecha_hora']) ?: 0) - (strtotime($h['fecha_hora']) ?: 1)) <= 5) { $dup = true; break; }
+            }
+            if (!$dup) $linea[] = ['fecha_hora' => $h['fecha_hora'], 'nombre' => $h['quien'], 'tipo' => 'estado',
+                                   'estado' => $h['estado'], 'motivo' => '', 'valor' => '', 'comentario' => $h['nota']];
+        }
+        usort($linea, fn($a, $b) => strcmp((string)$b['fecha_hora'], (string)$a['fecha_hora']));
+        $resp = $asigCrm[$s['radicado']] ?? ''; ?>
+    <div class="sol <?= $s['sin_atender'] ? 'sol-alerta' : '' ?>">
+      <div class="sol-estado">
+        <span class="estado-chip estado-<?= $s['estado'] ?>"><?= ESTADOS[$s['estado']] ?></span>
+        <span class="estado-desde">Responsable: <b><?= $resp === '' ? 'sin responsable' : htmlspecialchars($equipoCrm[$resp]['nombre'] ?? $resp) ?></b></span>
+      </div>
+      <div class="sol-cab">
+        <b><?= htmlspecialchars($s['nombre'] ?? '') ?></b>
+        <span><span class="sol-rad"><?= htmlspecialchars($s['radicado'] ?? '') ?></span>
+          <span class="sol-fecha"> · <?= ($f = strtotime((string)($s['fecha_hora'] ?? ''))) ? date('d/m/Y H:i', $f) : '' ?></span></span>
+      </div>
+      <div class="sol-prod"><?= htmlspecialchars($s['tipo_seguro'] ?? '') ?></div>
+      <details class="seguimiento">
+        <summary>Historial · <?= count($linea) ?> registro<?= count($linea) === 1 ? '' : 's' ?></summary>
+        <?php if ($linea): ?><ol class="historial">
+          <?php foreach ($linea as $n): ?>
+            <li><?= htmlspecialchars(date('d/m/Y H:i', strtotime((string)$n['fecha_hora']) ?: time())) ?> · <?= htmlspecialchars($n['nombre']) ?> —
+              <?php if ($n['tipo'] === 'estado'): ?><b><?= htmlspecialchars(ESTADOS[$n['estado']] ?? $n['estado']) ?></b>
+                <?php if ($n['motivo'] !== ''): ?> · Motivo: <?= htmlspecialchars($n['motivo']) ?><?php endif; ?>
+                <?php if ((string)$n['valor'] !== ''): ?> · Valor: $<?= number_format((int)$n['valor'], 0, ',', '.') ?><?php endif; ?>
+                <?= trim((string)$n['comentario']) !== '' ? ' · ' : '' ?><?php endif; ?>
+              <?= nl2br(htmlspecialchars((string)$n['comentario'])) ?></li>
+          <?php endforeach; ?></ol>
+        <?php else: ?><p class="meta">Todavía no hay notas ni cambios.</p><?php endif; ?>
+      </details>
+    </div>
+  <?php endforeach; endif; ?>
 
 <?php elseif ($vista === 'solicitudes'):
       $lista = solicitudes($busca, $estadoFiltro);
@@ -737,21 +784,7 @@ function estadoDocumento(array $doc): array {
         </div>
       <?php endif; ?>
       <details class="seguimiento" <?= $s['sin_atender'] ? 'open' : '' ?>>
-        <summary>Actualizar seguimiento<?= $s['historial'] ? ' · ' . count($s['historial']) . ' cambio' . (count($s['historial']) === 1 ? '' : 's') : '' ?></summary>
-        <form method="post" class="seguimiento-form">
-          <input type="hidden" name="accion" value="estado">
-          <input type="hidden" name="csrf" value="<?= htmlspecialchars($_SESSION['csrf']) ?>">
-          <input type="hidden" name="radicado" value="<?= htmlspecialchars($s['radicado'] ?? '') ?>">
-          <select name="estado" aria-label="Nuevo estado">
-            <?php foreach (ESTADOS as $k => $v): ?>
-              <option value="<?= $k ?>" <?= $k === ($s['estado'] === 'nueva' ? 'contactada' : $s['estado']) ? 'selected' : '' ?>><?= $v ?></option>
-            <?php endforeach; ?>
-          </select>
-          <input type="text" name="quien" required minlength="2" maxlength="60" placeholder="Quién la atendió *"
-                 value="<?= htmlspecialchars($quienPrevio) ?>" aria-label="Quién la atendió">
-          <input type="text" name="nota" maxlength="300" placeholder="Nota (opcional): qué se habló, próximo paso…" aria-label="Nota">
-          <button class="btn">Guardar</button>
-        </form>
+        <summary>Seguimiento (solo lectura; se actualiza desde /comercial)<?= $s['historial'] ? ' · ' . count($s['historial']) . ' cambio' . (count($s['historial']) === 1 ? '' : 's') : '' ?></summary>
         <?php if ($s['historial']): ?>
           <ol class="historial">
             <?php foreach (array_reverse($s['historial']) as $h): ?>
