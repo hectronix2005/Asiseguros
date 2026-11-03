@@ -53,6 +53,21 @@ if [ -n "$PHP" ] && [ -f "$DESTINO/admin/lib/reporte-diario.php" ]; then
   "$PHP" "$DESTINO/admin/lib/reporte-diario.php" >> "$REGISTRO" 2>&1 || true
 fi
 
+# Respaldo diario de los datos (solicitudes, autorizaciones, seguimiento y CRM).
+# Viven fuera de public_html y de git, así que sin esto no existe otra copia.
+# Una por día, privada, y se conservan las de los últimos 30 días. Un fallo
+# aquí no detiene el despliegue.
+DATOS="$HOME/asiseguros-datos"
+if [ -d "$DATOS" ]; then
+  mkdir -p "$HOME/respaldos" && chmod 700 "$HOME/respaldos"
+  COPIA="$HOME/respaldos/datos-$(date +%Y%m%d).tar.gz"
+  if [ ! -f "$COPIA" ]; then
+    (umask 077; tar -czf "$COPIA.tmp" -C "$HOME" asiseguros-datos && mv "$COPIA.tmp" "$COPIA") \
+      || rm -f "$COPIA.tmp"
+  fi
+  find "$HOME/respaldos" -name 'datos-*.tar.gz' -mtime +30 -exec rm -f {} + 2>/dev/null || true
+fi
+
 AHORA=$(git rev-parse HEAD)
 
 # Se compara contra el último commit DESPLEGADO, no contra el que había antes de
