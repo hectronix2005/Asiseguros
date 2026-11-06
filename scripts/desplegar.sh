@@ -153,5 +153,10 @@ cp -f admin/lib/.htaccess admin/lib/docx.php admin/lib/paginas.php \
 mkdir -p "$DESTINO/comercial"
 cp -f comercial/.htaccess comercial/index.php "$DESTINO/comercial/"
 
+# Pruebas del sistema que se pasan a «Descartada» (idempotente; ver el script)
+if [ -n "$PHP" ] && [ -f scripts/descartar-pruebas.php ]; then
+  "$PHP" scripts/descartar-pruebas.php "$DESTINO" >> "$REGISTRO" 2>&1 || true
+fi
+
 echo "$AHORA" > "$MARCA"
 echo "$(date '+%Y-%m-%d %H:%M:%S') desplegado $AHORA" >> "$REGISTRO"

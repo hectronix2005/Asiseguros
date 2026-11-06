@@ -376,6 +376,7 @@ function estadoDocumento(array $doc): array {
   .estado-negociacion { background:#fff4e0; color:#b45309; }
   .estado-ganada { background:#e6f7ec; color:#1f7a3f; }
   .estado-perdida { background:#fdeaea; color:#b42318; }
+  .estado-descartada { background:#eef0f3; color:#64748b; }
   .sin-atender { color:#b45309; }
   .estado-desde { color:var(--gray-500); }
   .seguimiento { margin-top:14px; border-top:1px dashed var(--gray-200); padding-top:10px; }

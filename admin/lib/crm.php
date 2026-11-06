@@ -229,6 +229,9 @@ function crm_registrar(string $radicado, string $usuario, string $nombre, string
         } else {
             $motivo = '';
         }
+        if ($estado === 'descartada' && mb_strlen($comentario) < 3) {
+            return ['ok' => false, 'error' => 'Anota por qué se descarta (prueba, duplicada, no es un cliente…).'];
+        }
         if ($estado === 'ganada') {
             if (mb_strlen($comentario) < 3) return ['ok' => false, 'error' => 'Anota la póliza, la aseguradora o cómo se cerró el negocio.'];
             if (strlen($valorNum) > 12) return ['ok' => false, 'error' => 'El valor es demasiado grande.'];

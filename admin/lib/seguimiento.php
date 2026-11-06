@@ -19,6 +19,7 @@ const ESTADOS = [
     'negociacion' => 'Negociación',
     'ganada'     => 'Ganada',
     'perdida'    => 'Perdida',
+    'descartada' => 'Descartada',   // pruebas o contactos que no son un lead real
 ];
 
 /** Horas sin contacto a partir de las cuales una solicitud cuenta como «sin atender». */

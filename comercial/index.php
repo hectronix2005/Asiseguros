@@ -188,6 +188,7 @@ if ($filtro !== 'sin_atender' && !isset(ESTADOS[$filtro])) $filtro = '';
   .estado-negociacion { background:#fff4e0; color:#b45309; }
   .estado-ganada { background:#e6f7ec; color:#1f7a3f; }
   .estado-perdida { background:#fdeaea; color:#b42318; }
+  .estado-descartada { background:#eef0f3; color:#64748b; }
   .datos { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:6px 18px; font-size:.88rem; }
   .datos span { color:var(--gray-400); }
   .msg { background:var(--gray-50); border-radius:8px; padding:10px 12px; font-size:.88rem; margin-top:12px; }
