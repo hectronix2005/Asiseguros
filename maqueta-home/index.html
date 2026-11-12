@@ -12,11 +12,38 @@
 .mq-hero p{max-width:640px;margin:0 auto 10px;color:#e8f0f8!important;font-size:1.1rem}
 .doors{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:-56px;padding-bottom:60px;position:relative;z-index:2}
 .door{background:#fff;border-radius:18px;padding:34px 30px;box-shadow:0 12px 34px rgba(10,26,48,.14);border-top:6px solid var(--accent);display:flex;flex-direction:column;gap:12px}
-.door.alt{border-top-color:#7df89a}
+.door{border-top-color:var(--primary-light,#1a3a5c)}
+.door i.big{color:var(--primary-light,#1a3a5c)}
+.door .btn{background:var(--primary-light,#1a3a5c)!important;color:#fff!important;border-color:var(--primary-light,#1a3a5c)!important}
+.door{background:#eaf2fa;text-align:center;align-items:center}
+.door ul{list-style:none;margin:4px 0 8px;padding:0}
+.doors .door .btn{align-self:center!important}
+.doors .door i.big{color:var(--primary-light,#1a3a5c)}
+.doors .door.alt i.big{color:#2a9d52}
+.door.alt{background:#eafdf0;border-top-color:#7df89a}
+.door.alt i.big{color:#2a9d52}
+.door.alt .btn{background:#7df89a!important;border-color:#7df89a!important;color:#0a1a30!important}
 .door i.big{font-size:2rem;color:var(--accent)}
 .door h2{font-size:1.5rem;color:var(--primary-dark,#0a1a30)}
 .door ul{margin:4px 0 8px 18px;color:#475569;line-height:1.7}
 .door .btn{align-self:flex-start;margin-top:auto}
+/* Corporativo: fotos con capa azul marino, tarjetas blancas, acentos menta (como el home real) */
+.hero{background:linear-gradient(100deg,rgba(10,26,48,.94) 0%,rgba(15,36,65,.88) 55%,rgba(10,26,48,.78) 100%),url("../assets/img/banner2.jpg") center 30%/cover no-repeat!important}
+.doors .door,.doors .door.alt{background:#fff;padding:0 28px 30px;border-top:0;overflow:hidden}
+.door .photo{height:150px;margin:0 -28px 0;background-size:cover;background-position:center;align-self:stretch;width:calc(100% + 56px)}
+.door .photo.p1{background-image:url("../assets/img/card-empresariales.jpg")}
+.door .photo.p2{background-image:url("../assets/img/banner1.png");background-position:center 25%}
+.doors .door i.big,.doors .door.alt i.big{width:70px;height:70px;line-height:70px;border-radius:50%;background:#fff;box-shadow:var(--shadow-md);margin-top:-35px;position:relative;font-size:1.7rem;color:var(--accent)}
+.doors .door .btn,.doors .door.alt .btn{background:var(--secondary,#7df89a)!important;border-color:var(--secondary,#7df89a)!important;color:var(--primary-dark,#0a1a30)!important}
+.door h2{color:var(--primary-dark,#0a1a30)}
+.mq-sec.photo{position:relative;background:linear-gradient(rgba(10,26,48,.9),rgba(10,26,48,.9)),url("../assets/img/proceso.jpg") center/cover no-repeat}
+.mq-sec.photo .section-title{color:#fff}
+.mq-sec.photo .mini{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);box-shadow:none}
+.mq-sec.photo .mini h3{color:#fff}
+.mq-sec.photo .mini p{color:rgba(255,255,255,.75)}
+.mq-sec.photo .mini i{color:var(--secondary,#7df89a)}
+.mq-sec.cta{background:linear-gradient(rgba(10,26,48,.9),rgba(10,26,48,.9)),url("../assets/img/nosotros.jpg") center/cover no-repeat}
+.mq-sec.cta .section-title,.mq-sec.cta p{color:#fff}
 .mq-sec{padding:56px 0;text-align:center}
 .mq-sec.alt{background:#f8fafc}
 .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:26px}
@@ -46,20 +73,20 @@
 
 <section class="hero"><div class="container mq-hero" style="display:block">
   <div class="hero-badge" style="display:inline-flex"><i class="fas fa-globe"></i> Agencia digital · Atendemos en toda Colombia</div>
-  <h1>Protección para tu empresa <span class="highlight">y para tu día a día</span></h1>
-  <p>Seguros con el respaldo de Seguros del Estado y asistencias cuando más las necesitas. Elige por dónde empezar.</p>
+  <h1>Seguros y asistencias <span class="highlight">en un solo lugar</span></h1>
+  <p>Agencia de seguros digital con el respaldo de Seguros del Estado, y planes de asistencia para tus imprevistos. Atendemos en toda Colombia.</p>
 </div></section>
 
 <div class="container"><div class="doors">
-  <div class="door" id="seguros"><i class="fas fa-shield-halved big"></i>
-    <h2>Seguros</h2>
-    <p style="color:#475569">Asesoría sin costo en pólizas para empresas, contratación, patrimonio, movilidad y personas.</p>
-    <ul><li>13 ramas y 71 pólizas</li><li>Cumplimiento, responsabilidad civil, manejo</li><li>Aliados de las entidades públicas</li></ul>
+  <div class="door" id="seguros"><div class="photo p1"></div><i class="fas fa-shield-halved big"></i>
+    <h2>Para tu empresa, tus contratos y tu patrimonio</h2>
+    <p style="color:#475569">Te asesoramos sin costo en pólizas de cumplimiento, responsabilidad civil, manejo, vehículo, hogar y vida.</p>
+    <ul><li>13 ramas y 71 pólizas</li><li>Aliados de las entidades públicas</li><li>Asesoría sin costo</li></ul>
     <a href="../seguros.html" class="btn btn-primary"><i class="fas fa-file-signature"></i> Cotizar un seguro</a></div>
-  <div class="door alt" id="asistencias"><i class="fas fa-truck-medical big"></i>
-    <h2>Asistencias</h2>
-    <p style="color:#475569">Planes de asistencia para los momentos inesperados, con respuesta inmediata.</p>
-    <ul><li>Legal, vial, odontológica y médica</li><li>Planes de 1 mes, 3 meses o 1 año</li><li>Regístrate, elige tu plan y solicita</li></ul>
+  <div class="door alt" id="asistencias"><div class="photo p2"></div><i class="fas fa-truck-medical big"></i>
+    <h2>Para tu día a día</h2>
+    <p style="color:#475569">Planes de asistencia legal, vial, odontológica y médica, con respuesta inmediata.</p>
+    <ul><li>Planes de 1 mes, 3 meses o 1 año</li><li>Regístrate, elige tu plan y solicita</li><li>Para ti y los tuyos</li></ul>
     <a href="../asistencias/#planes" class="btn btn-primary"><i class="fas fa-circle-check"></i> Ver planes de asistencia</a></div>
 </div></div>
 
@@ -71,7 +98,7 @@
     <div class="mini"><i class="fas fa-map-location-dot"></i><h3>Toda Colombia</h3><p>Agencia digital: te atendemos donde estés.</p></div>
   </div></div></section>
 
-<section class="mq-sec"><div class="container">
+<section class="mq-sec photo"><div class="container">
   <h2 class="section-title">De la necesidad a la protección en cuatro pasos</h2>
   <div class="grid4">
     <div class="mini"><i class="fas fa-magnifying-glass"></i><h3>Diagnóstico</h3><p>Entendemos qué necesitas proteger.</p></div>
@@ -80,9 +107,9 @@
     <div class="mini"><i class="fas fa-headset"></i><h3>Acompañamiento</h3><p>Contigo cuando lo necesites.</p></div>
   </div></div></section>
 
-<section class="mq-sec alt"><div class="container">
+<section class="mq-sec cta"><div class="container">
   <h2 class="section-title">¿Listo para proteger lo que más importa?</h2>
-  <p style="margin:10px 0 20px;color:#475569">Escríbenos y te decimos por dónde empezar.</p>
+  <p style="margin:10px 0 20px">Escríbenos y te decimos por dónde empezar.</p>
   <a href="https://wa.me/573185231290?text=Hola%2C%20quiero%20informaci%C3%B3n" class="btn btn-primary"><i class="fab fa-whatsapp"></i> Hablar con un asesor</a>
 </div></section>
 <footer class="footer"><div class="container"><div class="footer-grid">
