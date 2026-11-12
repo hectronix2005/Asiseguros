@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Propuesta de home unificado | AsiSeguros</title>
+<meta name="robots" content="noindex, nofollow">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="../css/styles.css?v=4">
+<style>
+.mq-hero{padding:56px 0 90px;text-align:center}
+.mq-hero h1{font-size:2.6rem;line-height:1.15;margin-bottom:14px}
+.hero{min-height:0!important;height:auto!important}
+.mq-hero p{max-width:640px;margin:0 auto 10px;color:#e8f0f8!important;font-size:1.1rem}
+.doors{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:-56px;padding-bottom:60px;position:relative;z-index:2}
+.door{background:#fff;border-radius:18px;padding:34px 30px;box-shadow:0 12px 34px rgba(10,26,48,.14);border-top:6px solid var(--accent);display:flex;flex-direction:column;gap:12px}
+.door.alt{border-top-color:#7df89a}
+.door i.big{font-size:2rem;color:var(--accent)}
+.door h2{font-size:1.5rem;color:var(--primary-dark,#0a1a30)}
+.door ul{margin:4px 0 8px 18px;color:#475569;line-height:1.7}
+.door .btn{align-self:flex-start;margin-top:auto}
+.mq-sec{padding:56px 0;text-align:center}
+.mq-sec.alt{background:#f8fafc}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:26px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;margin-top:26px}
+.mini{background:#fff;border-radius:14px;padding:22px;box-shadow:0 4px 14px rgba(0,0,0,.07)}
+.mini i{color:var(--accent);font-size:1.5rem;margin-bottom:8px}
+.mini h3{font-size:1.05rem;margin-bottom:6px}
+.mini p{color:#64748b;font-size:.92rem}
+.tag{position:fixed;top:8px;right:8px;z-index:99;background:#f59e0b;color:#000;font:700 12px Montserrat;padding:6px 10px;border-radius:8px}
+@media(max-width:800px){.doors,.grid3,.grid4{grid-template-columns:1fr}.mq-hero h1{font-size:1.8rem}}
+</style></head><body>
+<div class="tag">PROPUESTA · Home unificado (borrador, no es el sitio real)</div>
+<div class="top-bar"><div class="container"><div class="top-bar-left">
+<a href="tel:+573185231290"><i class="fas fa-phone-alt"></i> +57 318 523 1290</a>
+<a href="mailto:ventas@asiseguros.com"><i class="fas fa-envelope"></i> ventas@asiseguros.com</a>
+<span><i class="fas fa-clock"></i> Lun - Vie: 8:00 AM - 6:00 PM</span></div></div></div>
+<header class="header"><div class="container">
+  <a href="#" class="logo"><img src="../assets/img/logo-web.png" alt="AsiSeguros" width="90" height="55"></a>
+  <nav><ul class="nav-menu">
+    <li class="active"><a href="#">Inicio</a></li>
+    <li><a href="../seguros.html">Seguros</a></li>
+    <li><a href="../asistencias/">Asistencias</a></li>
+    <li><a href="#">Nosotros</a></li>
+    <li><a href="#">Contacto</a></li>
+    <li class="nav-cta"><a href="#" class="btn btn-primary btn-sm"><i class="fas fa-file-signature"></i> Cotiza ahora</a></li>
+  </ul></nav></div></header>
+
+<section class="hero"><div class="container mq-hero" style="display:block">
+  <div class="hero-badge" style="display:inline-flex"><i class="fas fa-globe"></i> Agencia digital · Atendemos en toda Colombia</div>
+  <h1>Protección para tu empresa <span class="highlight">y para tu día a día</span></h1>
+  <p>Seguros con el respaldo de Seguros del Estado y asistencias cuando más las necesitas. Elige por dónde empezar.</p>
+</div></section>
+
+<div class="container"><div class="doors">
+  <div class="door" id="seguros"><i class="fas fa-shield-halved big"></i>
+    <h2>Seguros</h2>
+    <p style="color:#475569">Asesoría sin costo en pólizas para empresas, contratación, patrimonio, movilidad y personas.</p>
+    <ul><li>13 ramas y 71 pólizas</li><li>Cumplimiento, responsabilidad civil, manejo</li><li>Aliados de las entidades públicas</li></ul>
+    <a href="../seguros.html" class="btn btn-primary"><i class="fas fa-file-signature"></i> Cotizar un seguro</a></div>
+  <div class="door alt" id="asistencias"><i class="fas fa-truck-medical big"></i>
+    <h2>Asistencias</h2>
+    <p style="color:#475569">Planes de asistencia para los momentos inesperados, con respuesta inmediata.</p>
+    <ul><li>Legal, vial, odontológica y médica</li><li>Planes de 1 mes, 3 meses o 1 año</li><li>Regístrate, elige tu plan y solicita</li></ul>
+    <a href="../asistencias/#planes" class="btn btn-primary"><i class="fas fa-circle-check"></i> Ver planes de asistencia</a></div>
+</div></div>
+
+<section class="mq-sec alt"><div class="container">
+  <h2 class="section-title">¿Por qué elegir ASI?</h2>
+  <div class="grid3">
+    <div class="mini"><i class="fas fa-handshake"></i><h3>Asesoría experta</h3><p>Te acompañamos en cada paso, sin costo de asesoría.</p></div>
+    <div class="mini"><i class="fas fa-bolt"></i><h3>Respuesta inmediata</h3><p>Atención ágil cuando la necesitas.</p></div>
+    <div class="mini"><i class="fas fa-map-location-dot"></i><h3>Toda Colombia</h3><p>Agencia digital: te atendemos donde estés.</p></div>
+  </div></div></section>
+
+<section class="mq-sec"><div class="container">
+  <h2 class="section-title">De la necesidad a la protección en cuatro pasos</h2>
+  <div class="grid4">
+    <div class="mini"><i class="fas fa-magnifying-glass"></i><h3>Diagnóstico</h3><p>Entendemos qué necesitas proteger.</p></div>
+    <div class="mini"><i class="fas fa-file-lines"></i><h3>Cotización o plan</h3><p>Seguro a medida o plan de asistencia.</p></div>
+    <div class="mini"><i class="fas fa-file-circle-check"></i><h3>Expedición</h3><p>Activamos tu protección.</p></div>
+    <div class="mini"><i class="fas fa-headset"></i><h3>Acompañamiento</h3><p>Contigo cuando lo necesites.</p></div>
+  </div></div></section>
+
+<section class="mq-sec alt"><div class="container">
+  <h2 class="section-title">¿Listo para proteger lo que más importa?</h2>
+  <p style="margin:10px 0 20px;color:#475569">Escríbenos y te decimos por dónde empezar.</p>
+  <a href="https://wa.me/573185231290?text=Hola%2C%20quiero%20informaci%C3%B3n" class="btn btn-primary"><i class="fab fa-whatsapp"></i> Hablar con un asesor</a>
+</div></section>
+<footer class="footer"><div class="container"><div class="footer-grid">
+<div class="footer-brand"><img src="../assets/img/logo-web.png" alt="AsiSeguros" class="footer-logo" width="82" height="50">
+<p>Agencia de seguros digital y asistencias para personas, familias y empresas en Colombia. Tu tranquilidad es nuestro compromiso.</p></div>
+<div class="footer-column"><h4>Seguros</h4><ul><li><a href="../seguros.html"><i class="fas fa-chevron-right"></i> Portafolio y preguntas frecuentes</a></li></ul></div>
+<div class="footer-column"><h4>Asistencias</h4><ul><li><a href="../asistencias/"><i class="fas fa-chevron-right"></i> Planes y asistencias</a></li></ul></div>
+<div class="footer-column"><h4>Contacto</h4>
+<div class="footer-contact-item"><i class="fab fa-whatsapp"></i><a href="https://wa.me/573185231290">+57 318 523 1290</a></div>
+<div class="footer-contact-item"><i class="fas fa-envelope"></i><a href="mailto:ventas@asiseguros.com">ventas@asiseguros.com</a></div>
+<div class="footer-contact-item"><i class="fas fa-map-marker-alt"></i><span>Calle 106 No. 51-19, piso 2, Bogotá D.C. · Cobertura nacional</span></div></div>
+</div><div class="footer-bottom"><span>&copy; 2026 AsiSeguros. Todos los derechos reservados.</span></div></div></footer>
+</body></html>
