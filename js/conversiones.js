@@ -6,7 +6,7 @@
    visitante acepta las cookies; sin aceptar, window.gtag no existe y este
    archivo no envía nada. Este archivo solo envía los eventos de conversión.
 
-   - Clic en WhatsApp y clic para llamar: cualquier enlace wa.me/573185231290,
+   - Clic en WhatsApp y clic para llamar: cualquier enlace wa.me/573160108134,
      api.whatsapp.com o tel:, incluidos los botones flotantes.
    - Envío del formulario de cotización: main.js llama a
      asiConversion('formulario') solo cuando el servidor confirma el registro.
@@ -39,7 +39,7 @@
     // de «Continuar», que sí lo abre. Así no hay conversiones dobles ni falsas.
     if (e.defaultPrevented) return;
     const href = a.getAttribute('href') || '';
-    if (href.indexOf('wa.me/573185231290') > -1 || href.indexOf('api.whatsapp.com') > -1) {
+    if (href.indexOf('wa.me/573160108134') > -1 || href.indexOf('api.whatsapp.com') > -1) {
       window.asiConversion('whatsapp');
     } else if (href.indexOf('tel:') === 0) {
       window.asiConversion('llamada');

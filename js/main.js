@@ -674,7 +674,7 @@ document.addEventListener('DOMContentLoaded', () => {
           // Conversión de Google Ads: solo con el registro confirmado por el servidor
           if (window.asiConversion) window.asiConversion('formulario');
           avisarSolicitud(1, datos.tipo_seguro);
-          const wa = contactForm.getAttribute('data-whatsapp') || '573185231290';
+          const wa = contactForm.getAttribute('data-whatsapp') || '573160108134';
           const msg = encodeURIComponent(
             `Hola, acabo de enviar una solicitud de cotización por la página web.\n` +
             `Radicado: ${res.radicado}\n` +
@@ -846,7 +846,7 @@ function initCart() {
         `Hola, quiero adquirir los siguientes planes ASI:\n\n${lines}\n\n*Total: ${fmt(total)}*`
       );
       if (window.asiConversion) window.asiConversion('whatsapp');
-      window.open(`https://wa.me/573185231290?text=${msg}`, '_blank');
+      window.open(`https://wa.me/573160108134?text=${msg}`, '_blank');
     });
   }
 
