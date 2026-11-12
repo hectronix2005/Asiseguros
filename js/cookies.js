@@ -12,7 +12,7 @@
    ======================================== */
 
 (() => {
-  // ID de la propiedad de Analytics (cuenta asisegurosmarketing@gmail.com).
+  // ID de la propiedad de Analytics (cuenta de Analytics ASISEGUROS LTDA, flujo «Sitio web AsiSeguros»).
   // Vacío = todo apagado (aviso, Analytics y Ads).
   const ID_GA = 'G-D67MJX85QQ';
   // Etiqueta de Google Ads (cuenta 477-175-2639)
