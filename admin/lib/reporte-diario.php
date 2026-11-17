@@ -32,5 +32,9 @@ $r = enviar_reporte(destinos_reporte());
 if ($r['enviados']) {
     @file_put_contents(marca_reporte(date('Y-m-d')), date('c') . ' ' . implode(',', $r['enviados']) . "\n");
 }
+// Aviso a Google Chat (opcional: solo si existe webhook-chat.txt en la carpeta de datos).
+$c = aviso_chat($r['total'], array_values(array_filter(solicitudes(), fn($x) => $x['sin_atender'])),
+    count(array_filter(solicitudes(), fn($x) => ($x['horas_espera'] ?? 999) < 24)));
+echo date('Y-m-d H:i:s') . ' aviso Google Chat: ' . $c['motivo'] . "\n";
 echo date('Y-m-d H:i:s') . ' reporte diario: ' . ($r['ok'] ? 'enviado' : 'FALLÓ') . ' a '
     . (implode(', ', $r['enviados']) ?: 'nadie') . " ({$r['total']} solicitudes, {$r['sin_atender']} sin atender)\n";

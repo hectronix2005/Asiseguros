@@ -115,6 +115,41 @@ function enviar_reporte(array $destinos, array $copias = [], string $prefijo = '
 }
 
 /**
+ * Aviso del reporte diario por Google Chat (solo informa, no se lee ahí).
+ *
+ * El webhook es un secreto: vive fuera de public_html, en la primera línea de
+ * webhook-chat.txt dentro de la carpeta de datos, y nunca en git. Si el archivo
+ * no existe, no se avisa y el correo sale igual. El mensaje lleva las cifras y
+ * la lista de solicitudes sin atender (radicado, nombre, teléfono, producto y
+ * espera), por decisión de Héctor del 17-nov-2026; legal debe saberlo, porque
+ * esos datos personales salen a Google Chat. Máximo 25 líneas por límite del mensaje.
+ */
+function aviso_chat(int $total, array $sinAtender, int $recientes): array
+{
+    $ruta = dir_datos() . '/webhook-chat.txt';
+    $url = is_file($ruta) ? trim((string)strtok((string)file_get_contents($ruta), "\n")) : '';
+    if ($url === '') return ['ok' => false, 'enviado' => false, 'motivo' => 'sin webhook'];
+    // Solo Google Chat: evita que un archivo mal pegado mande el aviso a otro sitio.
+    if (!preg_match('~^https://chat\.googleapis\.com/v1/spaces/[A-Za-z0-9_-]+/messages\?[^\s]+$~', $url)) {
+        return ['ok' => false, 'enviado' => false, 'motivo' => 'webhook no válido'];
+    }
+    $texto = '*Solicitudes AsiSeguros · ' . date('d/m/Y') . "*\n"
+        . ($sinAtender ? '⚠️ Sin atender: *' . count($sinAtender) . '*' : '✅ Todas atendidas') . "\n"
+        . implode("\n", array_map(fn($x) => "• {$x['radicado']} · {$x['nombre']} · {$x['telefono']} · {$x['tipo_seguro']} · " . hace((int)$x['horas_espera']), array_slice($sinAtender, 0, 25)))
+        . (count($sinAtender) > 25 ? "\n… y " . (count($sinAtender) - 25) . ' más' : '') . ($sinAtender ? "\n" : '')
+        . "Recibidas en las últimas 24 h: {$recientes} · Total: {$total}\n"
+        . 'Detalle en el correo y en el panel: https://www.asiseguros.com/admin/index.php?ver=solicitudes&estado=sin_atender';
+    $cuerpo = json_encode(['text' => $texto], JSON_UNESCAPED_UNICODE);
+    $ctx = stream_context_create(['http' => [
+        'method' => 'POST', 'header' => "Content-Type: application/json; charset=UTF-8\r\n",
+        'content' => $cuerpo, 'timeout' => 10, 'ignore_errors' => true]]);
+    $resp = @file_get_contents($url, false, $ctx);
+    $cab = function_exists('http_get_last_response_headers') ? (http_get_last_response_headers() ?? []) : ($http_response_header ?? []);
+    $ok = $resp !== false && isset($cab[0]) && strpos($cab[0], ' 200') !== false;
+    return ['ok' => $ok, 'enviado' => $ok, 'motivo' => $ok ? 'enviado' : 'falló el envío'];
+}
+
+/**
  * Reenvía el historial completo (resumen y Excel con todas las solicitudes) a
  * ventas@ como destinatario visible, con copia oculta a las cuentas de
  * copias-ocultas.txt y a hectorn.personal@gmail.com.
